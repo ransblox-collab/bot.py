@@ -1,2620 +1,657 @@
-keys: Rip, BeyLaunch, ContextAction, TouchTap, firecontextaction, BindAction, ringPop, RipRing, LockedIn, lockIn, slot, BeyPark
-scripts scanned: 362
+=== TARGETED MODULE DECOMP ===
 
-===== Players.RansbloxScripts.PlayerScripts.Battle.AbilityFx =====
+===== ReplicatedStorage.Bey.Launch =====
+1: local v1 = require(script.Parent.Sim)
+2: local v_u_2 = require(script.Parent.Cosmetics)
+3: local v_u_3 = require(script.Parent.PartCatalog)
+4: local v_u_25 = {
+5: 	["STYLES"] = v1.STYLES,
+6: 	["PERFECT"] = 1.05,
+7: 	["AIM_MIN"] = 0.1,
+8: 	["AIM_MAX"] = 0.85,
+9: 	["STANCE"] = table.freeze({
+10: 		["BeyLauncher"] = "Power",
+11: 		["SpeedLauncher"] = "Rush",
+12: 		["HeavyLauncher"] = "Upper",
+13: 		["SwordLauncher"] = "Bank",
+14: 		["LightLauncher"] = "Stamina"
+15: 	}),
+16: 	["SIGNATURE"] = table.freeze({
+17: 		["rantaro"] = "Leap",
+18: 		["shu"] = "Spin",
+19: 		["lui"] = "Slam",
+20: 		["wakiya"] = "Bank",
+21: 		["daigo"] = "Upper"
+22: 	}),
+23: 	["TYPE_STANCE"] = table.freeze({
+24: 		["Attack"] = "Rush",
+25: 		["Defense"] = "Upper",
+26: 		["Stamina"] = "Stamina",
+27: 		["Balance"] = "Power"
+28: 	}),
+29: 	["STANCE_STATS"] = table.freeze({
+30: 		["Power"] = table.freeze({
+31: 			["fly"] = "Power",
+32: 			["power"] = 2,
+33: 			["speed"] = 1,
+34: 			["control"] = 0,
    ...
-411: 				local v147 = p143.kit[3]
-412: 				if v147 and v147.fx[p144] ~= nil then
-413: 					return v147.fx[p144]
-414: 				else
-415: 					return nil
-416: 				end
-417: 			end
-418: 		end
-419: 	else
-420: 		return nil
-421: 	end
-422: end
-423: local function v_u_169(p149, p150) -- name: enterPhaseAuras
-424: 	-- upvalues: (copy) v_u_95, (copy) v_u_76, (copy) v_u_87, (copy) v_u_6, (copy) v_u_109, (copy) v_u_4
-425: 	local v151 = p149.phAuras
-426: 	local v152 = p150.slot
-427: 	for _, v153 in v151 do
-428: 		v_u_95(v153, v152)
-429: 	end
-430: 	table.clear(v151)
-431: 	local v154 = p149.fx
-432: 	local v155 = p149.ph
-433: 	local v156 = v154.ph
-434: 	local v157
-435: 	if v156 then
-436: 		v157 = v156[v155]
-437: 	else
-438: 		v157 = nil
-439: 	end
-440: 	local v158
-441: 	if p149.fx.clean then
-   ...
-444: 		else
-445: 			v158 = nil
-446: 		end
-447: 	else
-448: 		v158 = p149.fx.tint
-449: 	end
-450: 	local v159 = v157 and v157.aura and v_u_76(v157.aura, (v157 and v157.auraScale or (p149.fx.auraScale or 1)) * 0.58, v158)
-451: 	if v159 then
-452: 		local v160 = p149.phAuras
-453: 		table.insert(v160, v159)
-454: 	end
-455: 	if p149.fx.clean and v157 then
-456: 		v_u_87(v157.layers, p149.phAuras)
-457: 	end
-458: 	local v161 = p149.move.phases[p149.ph]
-459: 	local v162 = v161 and (v161.lunge or (v161.path or v161.rush)) and not p149.fx.clean and v_u_76("Move/Wind", 1, v_u_6.color(p150.slot))
-460: 	if v162 then
-461: 		v_u_6.calmWind(v162.inst)
-462: 		local v163 = p149.phAuras
-463: 		table.insert(v163, v162)
-464: 	end
-465: 	if p149.field then
-466: 		p149.field:Destroy()
-467: 		p149.field = nil
-468: 	end
-469: 	if v161 and (v161.field and not p149.fx.clean) then
-470: 		p149.field = v_u_109(p149.fx.tint or v_u_4.SLOT_COLORS[p149.ab])
-471: 		local v164 = p149.fx.fieldFx
-472: 		local v165 = type(v164) == "string" and v_u_76(v164, p149.fx.auraScale, v158)
-473: 		if v165 then
-474: 			local v166 = p149.phAuras
-   ...
-1073: 		end
-1074: 		local v348 = v_u_209
-1075: 		local v349 = "held"
-1076: 		local v350
-1077: 		if v224 then
-1078: 			v350 = v346 ~= nil
-1079: 		else
-1080: 			v350 = v224
-1081: 		end
-1082: 		if type(v347) ~= "string" then
-1083: 			v347 = nil
-1084: 		end
-1085: 		v348(v219, v349, v350, v347, 0.8, v_u_148(v346, "heldTint"), v304)
-1086: 		local v351
-1087: 		if v346 then
-1088: 			v351 = p213[v346.slot]
-1089: 		else
-1090: 			v351 = nil
-1091: 		end
-1092: 		if v224 and (v346 and (v351 and v221)) then
-1093: 			v_u_142("held" .. v219, "held", v351 + Vector3.new(0, 0.3, 0), v221 + Vector3.new(0, 0.3, 0), v_u_4.SLOT_COLORS[1]:Lerp(v_u_6.color(v346.slot), 0.5), 0.3)
-1094: 		else
-1095: 			local v352 = "held" .. v219
-1096: 			local v353 = v_u_28[v352]
-1097: 			if v353 then
-1098: 				v353.part:Destroy()
-1099: 				v_u_28[v352] = nil
-1100: 			end
-1101: 		end
-1102: 		local v354
-1103: 		if v220.drainT > 0 then
-1104: 			v354 = p212.beys[v220.drainBy]
-1105: 		else
-1106: 			v354 = nil
-1107: 		end
-1108: 		local v355
-1109: 		if v354 then
-1110: 			v355 = p213[v354.slot]
-1111: 		else
-1112: 			v355 = nil
-1113: 		end
-1114: 		if v224 and (v354 and (v355 and v221)) then
-1115: 			v_u_142("drain" .. v219, "drain", v221 + Vector3.new(0, 0.35, 0), v355 + Vector3.new(0, 0.35, 0), v_u_21.drain.tint, 0.35)
-1116: 		else
-1117: 			local v356 = "drain" .. v219
-1118: 			local v357 = v_u_28[v356]
-1119: 			if v357 then
-1120: 				v357.part:Destroy()
-1121: 				v_u_28[v356] = nil
-1122: 			end
-1123: 		end
-1124: 		if v220.lingT <= 0 or not v224 then
-1125: 			continue
-   ...
-1160: 	if p371 > 1 then
-1161: 		local v374 = p369.phSfx
-1162: 		if type(v374) == "string" then
-1163: 			local _ = p369.phSfx
-1164: 		end
-1165: 	end
-1166: 	local v375 = p369.ph
-1167: 	local v376
-1168: 	if v375 then
-1169: 		v376 = v375[p371]
-1170: 	else
-1171: 		v376 = nil
-1172: 	end
-1173: 	if v376 then
-1174: 		local v377 = v376.cut
-1175: 		if type(v377) == "string" and (p370 == 3 and #p367.beys <= 2 or p368.slot == v_u_23) then
-1176: 			local v378 = v_u_3.opponentOf(p367, p368)
-1177: 			local v_u_379 = p368.slot
-1178: 			if v376.cut == "ri
-
-===== Players.RansbloxScripts.PlayerScripts.Battle.AimPointer =====
-   ...
-83: 	v_u_35.Parent = v34
-84: 	local function v41(p36, p37, p38, p39) -- name: image
-85: 		-- upvalues: (ref) v_u_3, (copy) v_u_35
-86: 		local v40 = Instance.new("ImageLabel")
-87: 		v40.Name = p36
-88: 		v40.BackgroundTransparency = 1
-89: 		v40.Image = "rbxassetid://108887166863769"
-90: 		v40.ImageColor3 = p39 or v_u_3
-91: 		v40.ImageTransparency = p38
-92: 		v40.AnchorPoint = Vector2.new(0.5, 0.5)
-93: 		v40.Position = UDim2.fromScale(0.5, 0.5)
-94: 		v40.Size = UDim2.fromScale(p37, p37)
-95: 		v40.Parent = v_u_35
-96: 		return v40
-97: 	end
-98: 	local v42 = v41("Ripple", 0.6, 0.6)
-99: 	v41("Shade", 0.92, 0.45, v_u_4)
-100: 	local v43 = v41("Reticle", 0.86, 0)
-101: 	local v44 = Instance.new("Attachment")
-102: 	v44.Parent = v_u_17
-103: 	local v45 = Instance.new("Attachment")
-104: 	v45.Parent = v_u_17
-105: 	local v46 = Instance.new("Beam")
-106: 	v46.Attachment0 = v44
-107: 	v46.Attachment1 = v45
-108: 	v46.Width0 = 0.55
-109: 	v46.Width1 = 0.05
-110: 	v46.FaceCamera = true
-111: 	v46.LightEmission = 1
-112: 	v46.LightInfluence = 0
-113: 	v46.Color = ColorSequence.new(v_u_2, v_u_3)
-
-===== Players.RansbloxScripts.PlayerScripts.Battle.BattleCamera =====
-1: local v_u_1 = game:GetService("Players")
-2: local v_u_2 = game:GetService("RunService")
-3: local v_u_3 = game:GetService("TweenService")
-4: local v_u_4 = game:GetService("ContextActionService")
-5: local v_u_5 = game:GetService("ReplicatedStorage")
-6: require(v_u_5.Bey.Sim)
-7: local v_u_6 = require(v_u_5.Bey.Stadiums)
-8: local v_u_7 = require(script.Parent.Parent.UI.Kit)
-9: local v_u_8 = require(script.Parent.Parent.UI.UiSfx)
-10: local v_u_9 = require(script.Parent.TouchPad)
-11: local v_u_10 = require(script.Parent.HudSkin)
-12: local v_u_11 = require(script.Parent.BattleInput)
-13: local v_u_12 = require(v_u_5.Packets)
-14: local v_u_13 = {}
-15: local v_u_14 = {
-16: 	[0] = "NORMAL",
-17: 	[1] = "TOP-DOWN",
-18: 	[2] = "BROADCAST",
-19: 	[3] = "ACTION"
-   ...
-312: 			v125.CFrame = CFrame.lookAt(v126.Position - v130 * (not v128 and 7.2 or v128.dist), v126.Position)
-313: 			v125.CameraType = Enum.CameraType.Custom
-314: 		end
-315: 	end
-316: 	v_u_121(true)
-317: 	if p123 then
-318: 		v_u_1.LocalPlayer:SetAttribute("CamView", v124)
-319: 		v_u_12.SettingsSet:Fire("CamView", v124)
-320: 	end
-321: end
-322: local function v_u_133(_, p132, _) -- name: onViewAction
-323: 	-- upvalues: (ref) v_u_50, (copy) v_u_131, (ref) v_u_42
-324: 	if p132 == Enum.UserInputState.Begin and not v_u_50 then
-325: 		v_u_131(v_u_42 + 1, true)
-326: 	end
-327: 	return Enum.ContextActionResult.Sink
-328: end
-329: local v_u_134 = Vector2.new(1712, 963)
-330: local v_u_135 = Vector2.new(286, 58)
-331: local function v_u_168() -- name: makeViewGui
-332: 	-- upvalues: (copy) v_u_135, (copy) v_u_10, (copy) v_u_14, (ref) v_u_42, (copy) v_u_131, (copy) v_u_1, (copy) v_u_134
-333: 	local v136 = Instance.new("ScreenGui")
-334: 	v136.Name = "BattleView"
-335: 	v136.ResetOnSpawn = false
-336: 	v136.DisplayOrder = 21
-337: 	local v_u_137 = Instance.new("TextButton")
-338: 	v_u_137.Name = "View"
-339: 	v_u_137.Text = ""
-340: 	v_u_137.AutoButtonColor = false
-341: 	v_u_137.BackgroundTransparency = 1
-342: 	local v138 = game:GetService("UserInputService").PreferredInput == Enum.PreferredInput.Touch
-   ...
-456: 	v166()
-457: 	local v_u_167 = v_u_154:GetPropertyChangedSignal("ViewportSize"):Connect(v166)
-458: 	v136.Destroying:Once(function()
-459: 		-- upvalues: (copy) v_u_167
-460: 		v_u_167:Disconnect()
-461: 	end)
-462: 	return v136
-463: end
-464: local function v_u_170(_, p169, _) -- name: onLockAction
-465: 	-- upvalues: (ref) v_u_71, (ref) v_u_73, (copy) v_u_112, (ref) v_u_32, (ref) v_u_33, (copy) v_u_8
-466: 	if p169 == Enum.UserInputState.Begin and not (v_u_71 or v_u_73) then
-467: 		v_u_112(not v_u_32)
-468: 		v_u_33 = v_u_32
-469: 		v_u_8.play(v_u_32 and "on" or "off")
-470: 	end
-471: 	return Enum.ContextActionResult.Sink
-472: end
-473: local function v_u_179(p171) -- name: markRival
-474: 	-- upvalues: (ref) v_u_30, (ref) v_u_29, (ref) v_u_70, (ref) v_u_34
-475: 	local v172 = v_u_30
-476: 	local v173 = v_u_29
-477: 	if v172 and v173 then
-478: 		v172.StudsOffsetWorldSpace = p171 - v173.Position
-479: 		local v174 = v172:FindFirstChild("Ring", true)
-480: 		if v174 then
-481: 			v174.Rotation = v_u_70 * 70 % 360
-482: 		end
-483: 		local v175 = v172:FindFirstChild("Brackets", true)
-484: 		local v176 = v_u_70 - v_u_34
-485: 		if v175 and v176 > 0.35 then
-486: 			local v177 = (v176 - 0.35) * 5.5
-   ...
-1334: 		local v468 = v_u_6.standAngle(p440, p442)
-1335: 		local v469 = math.cos(v468)
-1336: 		local v470 = math.sin(v468)
-1337: 		local v471 = p439:PointToWorldSpace(Vector3.new(v469, 0, v470) * 0.848048096156426 * 7.2 + Vector3.new(0, 4.2654185, 0))
-1338: 		v444.CFrame = CFrame.lookAt(v471, v_u_455.Position)
-1339: 		v_u_443.CameraMinZoomDistance = 7.2
-1340: 		v_u_443.CameraMaxZoomDistance = 7.2
-1341: 		task.delay(0.1, function()
-1342: 			-- upvalues: (ref) v_u_29, (copy) v_u_455, (copy) v_u_443
-1343: 			if v_u_29 == v_u_455 then
-1344: 				v_u_443.CameraMinZoomDistance = 2.5
-1345: 				v_u_443.CameraMaxZoomDistance = 40
-1346: 			end
-1347: 		end)
-1348: 		if v_u_11.LOCK_ON then
-1349: 			v_u_4:BindActionAtPriority("BeyCam
-
-===== Players.RansbloxScripts.PlayerScripts.Battle.BattleFx =====
-   ...
-675: 		if v273:IsA("ParticleEmitter") then
-676: 			v273.Enabled = false
-677: 			local v274 = v273.Lifetime.Max
-678: 			v272 = math.max(v272, v274)
-679: 		else
-680: 			if not v273:IsA("Light") then
-681: 				continue
-682: 			end
-683: 			v273.Enabled = false
-684: 		end
-685: 	end
-686: 	v_u_3:AddItem(p271, v272 + 0.2)
-687: end
-688: local function v_u_462(p276, p277) -- name: tipFx
-689: 	-- upvalues: (copy) v_u_21, (copy) v_u_9, (ref) v_u_18, (copy) v_u_6, (copy) v_u_212, (copy) v_u_77, (ref) v_u_17, (copy) v_u_129, (copy) v_u_7, (ref) v_u_19, (copy) v_u_104, (copy) v_u_194, (copy) v_u_241, (ref) v_u_24
-690: 	local v278 = v_u_21[p276.slot]
-691: 	if not (v278 and v_u_9.Skills[p276.skill]) then
-692: 		return
-693: 	end
-694: 	local v279 = v_u_18
-695: 	local v280 = not v279 and 1 or v_u_6.lengthScale(v279)
-696: 	local v281 = p277.beys[p276.slot]
-697: 	if v281 then
-698: 		v281 = v281.kit[1]
-699: 	end
-700: 	if v281 then
-701: 		v281 = v281.fx
-702: 	end
-703: 	local v282, v283, v284, v285, v286, v287, v288, v289, v290, v291, v292, v293, v294, v295, v296, v297, v298, v299, v300, v301, v302, v303, v304, v305, v306, v307, v308, v309, v310, v311, v312, v313, v314, v315, v316, v317, v318, v319, v320, v321, v322, v323, v324, v325, v326, v327, v328, v329, v330, v331, v332, v333, v334, v335, v336, v337, v338, v339, v340, v341, v342, v343, v344, v345, v346, v347, v348, v349, v350, v351, v352, v353, v354, v355, v356, v357, v358, v359, v360, v361, v362, v363, v364, v365, v366, v367, v368, v369, v370, v371, v372, v373
-704: 	if v281 then
-705: 		local v374 = v281.light
-706: 		if typeof(v374) == "Color3" then
-707: 			v282 = v281.light
-708: 			v283 = v278.anchor.CFrame
-709: 			v284 = v283.Position
-710: 			v285 = p276.skill
-711: 			v286 = p276.stage
-   ...
-3137: 					v836 = v835.fx.clean == true
-3138: 				end
-3139: 				if v836 then
-3140: 					continue
-3141: 				end
-3142: 				local v837 = v_u_202
-3143: 				local v838 = v747.x
-3144: 				local v839 = v747.z
-3145: 				local v840 = v_u_18
-3146: 				local v841 = v838 * v838 + v839 * v839
-3147: 				local v842 = math.sqrt(v841)
-3148: 				local v843 = not v840 and 0 or v_u_7.height(v840, v842)
-3149: 				v837(v832, (v_u_19 * CFrame.new(v838, v843 + 0.35, v839)).Position, v833.anchor.Position)
-3150: 			end
-3151: 		elseif v748 == "Wall" then
-3152: 			local v844 = v_u_21[v747.slot]
-3153: 			local v845 = v_u_18
-3154: 			local v846 = v747.x * v747.x + v747.z * v747.z
-3155: 			local v847 = math.sqrt(v846)
-3156: 			if not v844 or (not v845 or v847 <= 0.001) then
-3157: 				continue
-3158: 			end
-3159: 			local v848 = v747.x / v847 * v845.bowlRadius
-3160: 			local v849 = v747.z / v847 * v845.bowlRadius
-3161: 			local v850 = v_u_18
-3162: 			local v851 = v848 * v848 + v849 * v849
-3163: 			local v852 = math.sqrt(v851)
-3164: 			local v853 = not v850 and 0 or v_u_7.height(v850, v852)
-3165: 			local v854 = (v_u_19 * CFrame.new(v848, v853 + 0.35, v849)).Position
-3166: 			local v855 = v747.v / 18
-3167: 			local v856 = math.clamp(v855, 0.2, 1.4)
-   ...
-3239: 					continue
-3240: 				end
-3241: 				v888 = v888:FindFirstChild(v889)
-3242: 			end
-3243: 			v887(v888, 0.28, 1.1 + math.random() * 0.1)
-3244: 		elseif v748 == "Tip" then
-3245: 			v_u_462(v747, p746)
-3246: 		elseif v748 == "TipHit" then
-3247: 			local v890 = v_u_21[v747.target]
-3248: 			if not v890 then
-3249: 				continue
-3250: 			end
-3251: 			v_u_212("HitWhite", v890.anchor.CFrame, 0.5)
-3252: 			v890.knockUntil = v_u_24 + 0.22
-3253: 		elseif v748 == "Dash" or v748 == "Sling" then
-3254: 			local v891 = v_u_21[v747.slot]
-3255: 			if v891 then
-3256: 				local v892 = v_u_77
-3257: 				local v893 = v_u_17
-3258: 				for v894 in string.gmatch("Spec/Wind", "[^/]+") do
-3259: 					if not v893 then
-3260: 						continue
-3261: 					end
-3262: 					v893 = v893:FindFirstChild(v894)
-3263: 				end
-3264: 				v892(v893, v891.anchor.CFrame, 0.8)
-3265: 				v891.boostUntil = v_u_24 + 0.6
-3266: 			end
-3267: 			if v748 == "Dash" then
-3268: 				local v895 = v_u_129
-3269: 				local v896 = v_u_17
-   ...
-
-
-===== Players.RansbloxScripts.PlayerScripts.Battle.BattleHud =====
-1: local v_u_1 = game:GetService("Players")
-2: local v_u_2 = game:GetService("UserInputService")
-3: local v_u_3 = game:GetService("ContextActionService")
-4: local v_u_4 = game:GetService("GuiService")
-5: local v5 = game:GetService("ReplicatedStorage")
-6: local v_u_6 = require(v5.Bey.Sim)
-7: local v_u_7 = require(v5.Bey.PartCatalog)
-8: local v_u_8 = require(v5.Bey.Abilities)
-9: local v_u_9 = require(v5.Bey.TipSkills)
-10: local v_u_10 = require(v5.Bey.MoveText)
-11: local v_u_11 = require(script.Parent.Parent.UI.Tip)
-12: local v_u_12 = require(script.Parent.Parent.UI.Locale)
-13: local v_u_13 = require(v5.Bey.Launch)
-14: local v_u_14 = game:GetService("TweenService")
-15: local v_u_15 = require(script.Parent.BattleInput)
-16: local v_u_16 = require(script.Parent.TouchPad)
-17: local v_u_17 = require(script.Parent.BeyView)
-18: local v_u_18 = require(script.Parent.Parent.UI.PearlUI)
-   ...
-642: 		["Scale"] = 1
-643: 	}, v165)
-644: 	local v167 = v_u_46("Frame", {
-645: 		["Name"] = "Stage",
-646: 		["BackgroundTransparency"] = 1,
-647: 		["AnchorPoint"] = nil,
-648: 		["Position"] = nil,
-649: 		["Size"] = nil,
-650: 		["ZIndex"] = 30,
-651: 		["AnchorPoint"] = Vector2.new(0.5, 0.5),
-652: 		["Position"] = UDim2.fromScale(0.5, 0.37),
-653: 		["Size"] = UDim2.fromOffset(1, 1)
-654: 	}, v_u_142)
-655: 	v_u_37.stage = v167
-656: 	local v168 = v_u_46("Frame", {
-657: 		["Name"] = "RipRing",
-658: 		["BackgroundTransparency"] = 1,
-659: 		["AnchorPoint"] = nil,
-660: 		["Position"] = nil,
-661: 		["Size"] = nil,
-662: 		["Visible"] = false,
-663: 		["ZIndex"] = 30,
-664: 		["AnchorPoint"] = Vector2.new(0.5, 0.5),
-665: 		["Position"] = UDim2.fromOffset(0, 24),
-666: 		["Size"] = UDim2.fromOffset(236, 236)
-667: 	}, v167)
-668: 	v_u_37.ringPop = v_u_46("UIScale", {
-669: 		["Scale"] = 1
-670: 	}, v168)
-671: 	local v169 = v_u_46("Frame", {
-672: 		["Name"] = "Target",
-673: 		["AnchorPoint"] = nil,
-674: 		["BorderSizePixel"] = 0,
-675: 		["Position"] = nil,
-676: 		["Size"] = nil,
-677: 		["ZIndex"] = 31,
-678: 		["AnchorPoint"] = Vector2.new(0.5, 0.5),
-679: 		["Position"] = UDim2.fromScale(0.5, 0.5),
-680: 		["Size"] = UDim2.fromOffset(236, 236)
-681: 	}, v168)
-682: 	local v170 = v_u_22.face(v169, v_u_19.MINE[1], v_u_19.MINE[2], {
-683: 		["radius"] = 118,
-   ...
-1012: 		["Position"] = UDim2.new(0.5, 0, 1, -150),
-1013: 		["Size"] = UDim2.fromOffset(300, 78)
-1014: 	}, v_u_142)
-1015: 	v_u_37.aimBox = v208
-1016: 	v_u_37.aimPop = v_u_46("UIScale", {
-1017: 		["Scale"] = 1
-1018: 	}, v208)
-1019: 	v_u_19.panel(v208, "Glass", UDim2.fromOffset(0, 0), Vector2.new(300, 78), v_u_19.MINE, 22, 24)
-1020: 	local v209
-1021: 	if v207 then
-1022: 		v209 = 24
-1023: 	else
-1024: 		local v210 = v_u_19.keycap
-1025: 		local v211
-1026: 		if v206 == Enum.PreferredInput.Gamepad then
-1027: 			v211 = v_u_15.padName(v_u_15.padFor("Rip"))
-1028: 		else
-1029: 			v211 = v_u_15.keyName(v_u_15.keyFor("Rip"))
-1030: 		end
-1031: 		local _, v212 = v210(v208, v211, UDim2.fromOffset(56, 39), Vector2.new(60, 50), 26)
-1032: 		v212.TextSize = 34
-1033: 		v209 = 100
-1034: 	end
-1035: 	local v213 = v_u_19.text
-1036: 	local v214 = v207 and "TAP READY" or "GET SET"
-1037: 	local v215 = 30
-1038: 	local v216 = {
-1039: 		["Position"] = nil,
-1040: 		["Size"] = nil,
-1041: 		["TextXAlignment"] = nil,
-1042: 		["ZIndex"] = 26,
-1043: 		["Position"] = UDim2.fromOffset(v209, 12),
-1044: 		["Size"] = UDim2.fromOffset(276 - v209, 40)
-   ...
-1221: 			if not v282 then
-1222: 				continue
-1223: 			end
-1224: 			local v283
-1225: 			if v281.ally then
-1226: 				v283 = v_u_19.MINE
-1227: 			else
-1228: 				v283 = v_u_19.RIVAL
-1229: 			end
-1230: 			local v284 = v_u_46("Frame", {
-1231: 				["Name"] = nil,
-1232: 				["LayoutOrder"] = nil,
-1233: 				["BackgroundTransparency"] = 1,
-1234: 				["Size"] = nil,
-1235: 				["ZIndex"] = 2,
-1236: 				["Name"] = "Mate" .. v281.slot,
-1237: 				["LayoutOrder"] = v280,
-1238: 				["Size"] = UDim2.fromOffset(440, 84)
-1239: 			}, v282)
-1240: 			local v285 = v_u_46("Frame", {
-1241: 				["Name"] = "Card",
-1242: 				["BorderSize
-
-===== Players.RansbloxScripts.PlayerScripts.Battle.BattleInput =====
-1: local v_u_1 = game:GetService("Players")
-2: local v_u_2 = game:GetService("ContextActionService")
-3: local v_u_3 = game:GetService("RunService")
-4: local v_u_4 = game:GetService("UserInputService")
-5: local v5 = game:GetService("ReplicatedStorage")
-6: local v_u_6 = require(v5.Bey.Sim)
-7: local v_u_7 = require(v5.Bey.Stadiums)
-8: local v_u_8 = require(script.Parent.TouchPad)
-9: local v_u_9 = require(script.Parent.Parent.Controllers.DataController)
-10: local v_u_10 = require(script.Parent.Parent.UI.Kit)
-11: local v_u_11 = {}
-12: local v_u_12 = {
-13: 	["Dash"] = 1,
-14: 	["Counter"] = nil,
-15: 	["Brace"] = 4,
-16: 	["Ultimate"] = 8,
-17: 	["Primary"] = 32,
-   ...
-121: 		["pad"] = nil,
-122: 		["about"] = "Your bey\'s strongest move. Ready when its bar is full.",
-123: 		["key"] = Enum.KeyCode.V,
-124: 		["pad"] = Enum.KeyCode.ButtonY
-125: 	},
-126: 	{
-127: 		["id"] = "Awaken",
-128: 		["label"] = "Awaken",
-129: 		["key"] = nil,
-130: 		["pad"] = nil,
-131: 		["about"] = "Once a match, with a full meter: your bey gets faster and stronger for a while.",
-132: 		["key"] = Enum.KeyCode.E,
-133: 		["pad"] = Enum.KeyCode.DPadUp
-134: 	},
-135: 	{
-136: 		["id"] = "Rip",
-137: 		["label"] = "Rip",
-138: 		["key"] = nil,
-139: 		["pad"] = nil,
-140: 		["about"] = "Locks in your launch, then press it on each ring to rip.",
-141: 		["key"] = Enum.KeyCode.Q,
-142: 		["pad"] = Enum.KeyCode.ButtonR2
-143: 	},
-144: 	{
-145: 		["id"] = "Aim",
-146: 		["label"] = "Aim (hold)",
-147: 		["key"] = nil,
-148: 		["pad"] = nil,
-149: 		["about"] = "Hold it and point: your moves go that way instead of at the nearest rival.",
-150: 		["key"] = Enum.KeyCode.LeftShift,
-151: 		["pad"] = Enum.KeyCode.ButtonL2
-152: 	},
-   ...
-268: 		v44 = v_u_11.keyName(v_u_11.keyFor("Brace"))
-269: 		v45 = ("press %*"):format((v_u_11.keyName(v_u_11.keyFor("Awaken"))))
-270: 	end
-271: 	local v46 = string.gsub(p42, "%(F%)", (("(%*)"):format(v44)))
-272: 	local v47 = string.gsub(v46, "press E([%s%.,!])", v45 .. "%1")
-273: 	return string.gsub(v47, "press E$", v45)
-274: end
-275: local v_u_48 = {}
-276: local v_u_49 = nil
-277: local v_u_50 = nil
-278: local v_u_51 = nil
-279: local function v_u_58(p52) -- name: hold
-280: 	-- upvalues: (ref) v_u_50, (copy) v_u_7, (copy) v_u_48, (ref) v_u_49
-281: 	local v53 = p52:FindFirstChild("HumanoidRootPart")
-282: 	local v54 = v_u_50
-283: 	local v55 = v54 and (v53 and v53:IsA("BasePart")) and v_u_7.standPivot(v54.frame, v54.slot, p52, v54.count)
-284: 	if v55 then
-285: 		v53.Anchored = false
-286: 		p52:PivotTo(v55)
-287: 	end
-288: 	if v53 and (v53:IsA("BasePart") and not v53.Anchored) then
-289: 		v53.Anchored = true
-290: 		local v56 = v_u_48
-291: 		table.insert(v56, v53)
-292: 	end
-293: 	local v57 = p52:FindFirstChildOfClass("Humanoid")
-294: 	if v57 then
-295: 		v57:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
-296: 		v_u_49 = v57
-297: 	end
-298: end
-299: function v_u_11.start(p59, p60, p61) -- name: start
-300: 	-- upvalues: (ref) v_u_21, (ref) v_u_50, (ref) v_u_18, (ref) v_u_19, (ref) v_u_22, (ref) v_u_23, (ref) v_u_24, (ref) v_u_25, (copy) v_u_2, (copy) v_u_11, (copy) v_u_27, (ref) v_u_26, (copy) v_u_8, (copy) v_u_13, (copy) v_u_17, (copy) v_u_12, (copy) v_u_1, (copy) v_u_58, (ref) v_u_51
-301: 	if not v_u_21 then
-302: 		v_u_21 = true
-303: 		v_u_50 = p59 and p60 and {
-304: 			["frame"] = p59,
-305: 			["slot"] = p60,
-306: 			["count"] = p61 or 2
-307: 		} or nil
-308: 		v_u_18 = 0
-309: 		v_u_19 = 0
-310: 		local v62 = Vector2.zero
-311: 		v_u_22 = false
-312: 		v_u_23 = v62
-313: 		v_u_24 = 0
-314: 		v_u_25 = false
-315: 		v_u_2:BindActionAtPriority("BeyAim", function(_, p63, _)
-316: 			-- upvalues: (ref) v_u_22
-317: 			v_u_22 = p63 == Enum.UserInputState.Begin and true or p63 == Enum.UserInputState.Change
-318: 			return Enum.ContextActionResult.Sink
-319: 		end, false, Enum.ContextActionPriority.High.Value, v_u_11.keyFor("Aim"), v_u_11.padFor("Aim"))
-320: 		v_u_2:BindActionAtPriority("BeyPing", function(_, p64, p65)
-321: 			-- upvalues: (ref) v_u_27, (ref) v_u_26
-322: 			local 
-
-===== Players.RansbloxScripts.PlayerScripts.Battle.BeyView =====
-   ...
-30: 			v11.CanTouch = false
-31: 			v11.CastShadow = true
-32: 		else
-33: 			if not (v11:IsA("Script") or (v11:IsA("LocalScript") or v11:IsA("ValueBase"))) then
-34: 				continue
-35: 			end
-36: 			v11:Destroy()
-37: 		end
-38: 	end
-39: 	return v10
-40: end
-41: local v_u_13 = Color3.fromRGB(255, 236, 170)
-42: local function v_u_33(p14, p15) -- name: shine
-43: 	-- upvalues: (copy) v_u_5, (copy) v_u_13, (copy) v_u_1
-44: 	local v16 = nil
-45: 	for _, v17 in v_u_5.slots(p14) do
-46: 		if v17.clear then
-47: 			continue
-48: 		end
-49: 		v16 = v17.color
-50: 	end
-51: 	local v18, v19, v20 = (v16 or v_u_13):ToHSV()
-52: 	local v21
-53: 	if v16 and (v20 >= 0.35 and v19 >= 0.15) then
-54: 		v21 = Color3.fromHSV(v18, math.min(v19, 0.8), 1)
-55: 	else
-56: 		v21 = v_u_13
-57: 	end
-58: 	local v22 = Instance.new("Highlight")
-59: 	v22.Name = "ShinyGlow"
-60: 	v22.DepthMode = Enum.HighlightDepthMode.Occluded
-
-===== Players.RansbloxScripts.PlayerScripts.Battle.HitMarkers =====
-   ...
-123: 	end
-124: 	v_u_11 = 1
-125: end
-126: function v_u_4.stop() -- name: stop
-127: 	-- upvalues: (copy) v_u_10
-128: 	for _, v29 in v_u_10 do
-129: 		v29.part:Destroy()
-130: 	end
-131: 	table.clear(v_u_10)
-132: end
-133: v_u_4.hush = false
-134: function v_u_4.quietFor(p30, p31, p32) -- name: quietFor
-135: 	if #p31.beys <= 2 then
-136: 		return false
-137: 	else
-138: 		return p30.slot ~= p32 and (p30.target ~= p32 and (p30.by ~= p32 and (p30.a ~= p32 and (p30.b ~= p32 and p30.winner ~= p32)))) and p30.loser ~= p32
-139: 	end
-140: end
-141: local v_u_33 = {
-142: 	["FEINT!"] = true,
-143: 	["CANCEL!"] = true,
-144: 	["OPEN!"] = true,
-145: 	["YAW!"] = true,
-146: 	["NOT YET!"] = true,
-147: 	["SECOND WIND!"] = true,
-148: 	["LAST STAND!"] = true,
-149: 	["RAIL RUSH!"] = true,
-150: 	["BANK SHOT!"] = true,
-151: 	["+SPIN"] = true,
-152: 	["CAUGHT!"] = true,
-153: 	["SIPHON!"] = true,
-
-===== Players.RansbloxScripts.PlayerScripts.Battle.Launcher =====
-   ...
-69: function v_u_9.build(p28, p29) -- name: build
-70: 	-- upvalues: (copy) v_u_2, (copy) v_u_15, (copy) v_u_27, (copy) v_u_4, (copy) v_u_6, (copy) v_u_5, (copy) v_u_7
-71: 	local _, v30 = v_u_2.launcherFor(p28, p29)
-72: 	local v31 = v_u_2.model(p28, p29)
-73: 	local v32 = v_u_15("Launchers", v31)
-74: 	if not v32 then
-75: 		return nil
-76: 	end
-77: 	local v33 = v32:FindFirstChild("BeyAttachment", true)
-78: 	if not (v33 and v33:IsA("Attachment")) then
-79: 		v32:Destroy()
-80: 		return nil
-81: 	end
-82: 	local v34 = v33.Parent
-83: 	local v35 = Instance.new("Model")
-84: 	v35.Name = "BeyLauncher"
-85: 	v32.Name = "Launcher"
-86: 	v32.Parent = v35
-87: 	local v36 = CFrame.identity
-88: 	local v37 = false
-89: 	local v38
-90: 	if #v30.mounts > 0 then
-91: 		local v39 = v_u_15("Grips", p28.grip)
-92: 		local v40
-93: 		if v39 then
-94: 			v40 = v39:FindFirstChild("launcherInsertion", true)
-95: 		else
-96: 			v40 = v39
-97: 		end
-98: 		local v41 = v32:FindFirstChild("orientationPoint" .. p28.mount, true)
-99: 		local v42
-   ...
-168: 		v_u_27(v53, v52, v51, v35)
-169: 	elseif v51 then
-170: 		v51:Destroy()
-171: 	end
-172: 	v35.PrimaryPart = v38
-173: 	return v35, v38, v36, v34, v33
-174: end
-175: local function v_u_60(p54, p55) -- name: findPull
-176: 	local v56 = nil
-177: 	local v57 = nil
-178: 	for _, v58 in p54:GetDescendants() do
-179: 		if not v58:IsA("BasePart") then
-180: 			continue
-181: 		end
-182: 		local v59 = v58.Name
-183: 		if string.find(v59, "_Ripcord", 1, true) then
-184: 			v57 = v58
-185: 		else
-186: 			if not string.find(v59, "Pull", 1, true) and string.sub(v59, -6) ~= "Handle" then
-187: 				continue
-188: 			end
-189: 			v56 = v58
-190: 		end
-191: 	end
-192: 	if p55 == "ripcord" then
-193: 		return v56 or v57
-194: 	else
-195: 		return v56
-196: 	end
-197: end
-198: function v_u_9.attach(p61, p62, p63, p64) -- name: attach
-   ...
-219: 			for _, v78 in v68:GetDescendants() do
-220: 				if not v78:IsA("WeldConstraint") then
-221: 					continue
-222: 				end
-223: 				local v79 = v78.Part0
-224: 				local v80 = v78.Part1
-225: 				if v79 and v80 then
-226: 					if v79 ~= v74 and v80 ~= v74 then
-227: 						continue
-228: 					end
-229: 					if v79 == v74 then
-230: 						v79 = v80
-231: 					end
-232: 					if v73.pull == "ripcord" then
-233: 						local v81 = v79.Name
-234: 						if (string.find(v81, "_Ripcord", 1, true) ~= nil or (string.sub(v81, -3) == "RED" or string.sub(v81, -5) == "WHITE")) and true or string.sub(v81, -5) == "BLACK" then
-235: 							continue
-236: 						end
-237: 					end
-238: 					v78:Destroy()
-239: 				else
-240: 					v78:Destroy()
-241: 				end
-242: 			end
-243: 			v75 = Instance.new("Weld")
-244: 			v75.Name = "PullWeld"
-245: 			v75.Part0 = v71
-246: 			v75.Part1 = v74
-247: 			v75.C0 = v76
-248: 			v75.Parent = v68
-249: 		end
-   ...
-284: 			else
-285: 				v87 = v86.Part0
-286: 			end
-287: 			if not v87 then
-288: 				continue
-289: 			end
-290: 			v85[v87] = true
-291: 		end
-292: 	end
-293: 	local v88 = {}
-294: 	for _, v89 in v68:GetDescendants() do
-295: 		if not v89:IsA("BasePart") or (v89 == v69 or (v89.Transparency >= 0.9 or v85[v89])) then
-296: 			continue
+245: 	["GEAR_CAP"] = 10,
+246: 	["withStance"] = function(p5, p6) -- name: withStance
+247: 		-- upvalues: (copy) v_u_25
+248: 		local v7 = p5 or {}
+249: 		local v8 = v_u_25.statsOf(p6)
+250: 		local v9 = v_u_25.GEAR_CAP
+251: 		local v10 = {}
+252: 		local v11 = (v7.power or 0) + v8.power
+253: 		v10.power = math.min(v11, v9)
+254: 		local v12 = (v7.speed or 0) + v8.speed
+255: 		v10.speed = math.min(v12, v9)
+256: 		local v13 = (v7.control or 0) + v8.control
+257: 		v10.control = math.min(v13, v9)
+258: 		local v14 = (v7.stability or 0) + v8.stability
+259: 		v10.stability = math.min(v14, v9)
+260: 		return v10
+261: 	end,
+262: 	["stanceFor"] = function(p15, p16) -- name: stanceFor
+263: 		-- upvalues: (copy) v_u_25, (copy) v_u_2, (copy) v_u_3
+264: 		if p16 then
+265: 			local v17 = v_u_25.SIGNATURE[string.match(p16, "^[^_]+") or p16]
+266: 			if v17 then
+267: 				return v17
+268: 			end
+269: 			local v18 = 0
+270: 			for v19 = 1, #p16 do
+271: 				v18 = (v18 * 31 + string.byte(p16, v19)) % 1000003
+272: 			end
+273: 			local v20 = v_u_2.LAUNCH_STYLES
+274: 			return v20[v18 % #v20 + 1].id
+275: 		end
+276: 		if p15 and (p15.ai ~= nil and p15.combo) then
+277: 			return v_u_25.TYPE_STANCE[v_u_3.layer(p15.combo.layer).type] or "Power"
+278: 		end
+279: 		local v21 = v_u_2.launchStance
+280: 		local v22
+281: 		if p15 then
+282: 			v22 = p15.style
+283: 		else
+284: 			v22 = p15
+285: 		end
+286: 		local v23 = v21(v22)
+287: 		if v23 then
+288: 			return v23
+289: 		end
+290: 		if p15 then
+291: 			local v24 = p15.launcher
+292: 			if type(v24) == "table" then
+293: 				p15 = p15.launcher.launcher
+294: 			else
+295: 				p15 = false
+296: 			end
 297: 		end
-298: 		local v90 = v89.Name
-299: 		if (string.find(v90, "_Ripcord", 1, true) ~= nil or (string.sub(v90, -3) == "RED" or string.sub(v90, -5) == "WHITE")) and true or string.sub(v90, -5) == "BLACK" then
-300: 			continue
-301: 		end
-302: 		local v91 = {
-303: 			["off"] = v84:ToObjectSpace(v89.CFrame),
-304: 			["half"] = v89.Size / 2
-305: 		}
-306: 		table.insert(v88, v91)
-307: 	end
-308: 	local v92 = v84:ToObjectSpace(v72.WorldCFrame)
-309: 	local v93 = v84:ToObjectSpace(v71.CFrame)
-310: 	local v94 = Instance.new("Weld")
-311: 	v94.Name = "HandWeld"
-312: 	v94.Part0 = v67
-313: 	v94.Part1 = v69
-314: 	v94.C0 = CFrame.new(0, v66, 0) * v_u_8 * CFrame.Angles(0, 0, 3.141592653589793):Inverse() * v70:Inverse()
+298: 		return (type(p15) ~= "string" or not v_u_25.STANCE[p15]) and "Power" or v_u_25.STANCE[p15]
+299: 	end,
+300: 	["GRADE_TEXT"] = table.freeze({
+301: 		["Perfect"] = "PERFECT RIP!",
+302: 		["Great"] = "GREAT RIP!",
+303: 		["Good"] = "GOOD RIP",
+304: 		["Late"] = "LATE..."
+305: 	})
+306: }
+307: return table.freeze(v_u_25)
 
-===== Players.RansbloxScripts.PlayerScripts.Battle.SwapScreen =====
-1: local v_u_1 = game:GetService("ContextActionService")
-2: local v_u_2 = game:GetService("GuiService")
-3: local v_u_3 = game:GetService("Players")
-4: local v_u_4 = game:GetService("RunService")
-5: local v_u_5 = game:GetService("UserInputService")
-6: local v6 = game:GetService("ReplicatedStorage")
-7: local v_u_7 = require(v6.Bey.PartCatalog)
-8: local v_u_8 = require(script.Parent.Parent.UI.Kit)
-9: local v_u_9 = require(script.Parent.BeyView)
-10: local v_u_10 = {}
-11: local v_u_11 = Vector2.new(1280, 720)
-12: local v_u_12 = Vector2.new(260, 330)
-13: local v_u_13 = { Enum.KeyCode.One, Enum.KeyCode.Two, Enum.KeyCode.Three }
-14: local v_u_14 = {
-15: 	["Attack"] = v_u_8.Hues.red,
-16: 	["Defense"] = v_u_8.Hues.blue,
+===== ReplicatedStorage.Bey.Net =====
+1: local v_u_1 = require(script.Parent.Sim)
+2: local v_u_63 = {
+3: 	["MAX_INPUTS"] = 8,
+4: 	["encodeInputs"] = function(p2, p3, p4) -- name: encodeInputs
+5: 		-- upvalues: (copy) v_u_63
+6: 		local v5 = #p4
+7: 		local v6 = v_u_63.MAX_INPUTS
+8: 		local v7 = math.min(v5, v6)
+9: 		local v8 = buffer.create(v7 * 4 + 7)
+10: 		buffer.writeu16(v8, 0, p2)
+11: 		buffer.writeu32(v8, 2, p3)
+12: 		buffer.writeu8(v8, 6, v7)
+13: 		local v9 = #p4 - v7
+14: 		for v10 = 1, v7 do
+15: 			local v11 = p4[v9 + v10]
+16: 			local v12 = (v10 - 1) * 4 + 7
+17: 			local v13 = v11.sx * 127
+18: 			local v14 = math.round(v13)
+19: 			local v15 = math.clamp(v14, -127, 127)
+20: 			buffer.writei8(v8, v12, v15)
+21: 			local v16 = v12 + 1
    ...
-402: 			v_u_1:UnbindAction("BeySwapPick")
-403: 			v_u_38.sub.Text = "TIME!"
-404: 		end
-405: 		for _, v82 in v_u_42 do
-406: 			v82.model:PivotTo(v82.base * CFrame.Angles(0, (os.clock() - v_u_74) * (v_u_8.reduced() and 0.4 or 1.4), 0))
-407: 		end
-408: 	end
-409: 	table.insert(v76, v77:Connect(v83))
-410: 	v32.Parent = v_u_3.LocalPlayer:WaitForChild("PlayerGui")
-411: 	local v84 = v_u_38.conns
-412: 	local v85 = v_u_8.fitScale
-413: 	local v86 = v_u_11
-414: 	table.insert(v84, v85(v32, v35, v86, 0.3))
-415: 	v_u_15 = v_u_38
-416: 	local v87 = v_u_13
-417: 	v_u_1:BindActionAtPriority("BeySwapPick", function(_, p88, p89) -- name: onKey
-418: 		-- upvalues: (ref) v_u_13, (ref) v_u_28, (copy) v_u_38
-419: 		local v90 = p88 == Enum.UserInputState.Begin and table.find(v_u_13, p89.KeyCode)
-420: 		if v90 then
-421: 			v_u_28(v_u_38, v90)
-422: 		end
-423: 		return Enum.ContextActionResult.Sink
-424: 	end, false, Enum.ContextActionPriority.High.Value + 20, table.unpack(v87, 1, v39))
-425: 	if v_u_5.PreferredInput == Enum.PreferredInput.Gamepad then
-426: 		v_u_2.SelectedObject = v_u_38.cards[p_u_31.current] or v_u_38.cards[1]
-427: 	end
-428: end
-429: return v_u_10
+109: 		end
+110: 	end
+111: }
+112: local v_u_64 = {
+113: 	"x",
+114: 	"z",
+115: 	"vx",
+116: 	"vz",
+117: 	"spin",
+118: 	"burst",
+119: 	"special",
+120: 	"dashCd",
+121: 	"drift",
+122: 	"ridge",
+123: 	"ridgeCd",
+124: 	"rideTime",
+125: 	"rush",
+126: 	"guard",
+127: 	"absorb",
+128: 	"upper",
+129: 	"counter",
+130: 	"stun",
+131: 	"prevB",
+132: 	"outTick",
+133: 	"wobble",
+134: 	"lip",
+135: 	"down",
+136: 	"aimA",
+137: 	"aimD",
+138: 	"aimS",
+139: 	"press",
+140: 	"ripTick",
+141: 	"ripQ",
+142: 	"landTick",
+143: 	"clashS",
+144: 	"clashC",
+145: 	"clashG",
+146: 	"ab",
+147: 	"abPh",
+148: 	"abT",
+149: 	"abHits",
+150: 	"abHitCd",
+151: 	"abBanks",
+152: 	"abAx",
+153: 	"abAz",
+154: 	"abA",
+155: 	"abA0",
+156: 	"abDx",
+157: 	"abDz",
+158: 	"abRx",
+159: 	"abRz",
+160: 	"abSeed",
+161: 	"cd1",
+   ...
+216: 	"hitTk",
+217: 	"hx",
+218: 	"hz",
+219: 	"pilot",
+220: 	"tireT",
+221: 	"smashC",
+222: 	"shoveT",
+223: 	"gbT",
+224: 	"holdT",
+225: 	"mvKey",
+226: 	"mvTook",
+227: 	"caT",
+228: 	"caHit",
+229: 	"noStealT",
+230: 	"railT",
+231: 	"rimT",
+232: 	"rimL",
+233: 	"rimB",
+234: 	"diveK",
+235: 	"won",
+236: 	"springT",
+237: 	"springN",
+238: 	"reboot",
+239: 	"sweptBy",
+240: 	"abSweeps",
+241: 	"springCut"
+242: }
+243: local v_u_65 = {
+244: 	"clash",
+245: 	"clashT",
+246: 	"clashAt",
+247: 	"clashA",
+248: 	"clashB",
+249: 	"clashX",
+250: 	"clashE",
+251: 	"clashNx",
+252: 	"clashNz",
+253: 	"clashCx",
+254: 	"clashCz",
+255: 	"clashUlt",
+256: 	"clashCd",
+257: 	"clashN0",
+258: 	"awaken",
+259: 	"awakenAt",
+260: 	"lastOut",
+261: 	"first",
+262: 	"ot",
+263: 	"clashAsA",
+264: 	"clashAsB",
+265: 	"winner",
+266: 	"live",
+267: 	"landLive",
+268: 	"awakenClutch"
+269: }
+270: local v_u_66 = {
+271: 	"driftHeld",
+272: 	"brace",
+273: 	"onRidge",
+274: 	"prevIn",
+275: 	"launched",
+276: 	"tired",
+277: 	"rimUsed"
+278: }
+279: local v_u_67 = {
+280: 	"think",
+281: 	"sx",
+282: 	"sz",
+283: 	"b",
+284: 	"mashT",
+285: 	"beat"
+286: }
+287: local v_u_68 = {
+288: 	"Burst",
+289: 	"Over",
+290: 	"Spin",
+291: 	"Draw"
+292: }
+293: local v_u_69 = {
+294: 	["Burst"] = 1,
+295: 	["Over"] = 2,
 
-===== Players.RansbloxScripts.PlayerScripts.Battle.TouchPad =====
-1: local v_u_1 = game:GetService("ContextActionService")
-2: local v_u_2 = require(script.Parent.Parent.UI.RivalsKit)
-3: local v_u_3 = {}
-4: local v_u_4 = Enum.Font.FredokaOne
-5: local v_u_5 = Color3.new(1, 1, 1)
-6: local v_u_6 = Color3.fromRGB(12, 10, 16)
-7: local v_u_7 = {
-8: 	["BeyLaunch"] = {
-9: 		["size"] = 70,
-10: 		["at"] = nil,
-11: 		["color"] = nil,
-12: 		["lit"] = true,
-13: 		["at"] = Vector2.new(-58, -58),
-14: 		["color"] = Color3.fromRGB(255, 210, 60)
-15: 	},
-16: 	["BeyDash"] = {
-17: 		["size"] = 68,
-18: 		["at"] = nil,
-19: 		["color"] = nil,
-20: 		["at"] = Vector2.new(-58, -58),
-21: 		["color"] = Color3.fromRGB(255, 110, 80)
-22: 	},
-23: 	["BeyDrift"] = {
-   ...
-119: 			end
-120: 			local v_u_33 = Instance.new("UIScale")
-121: 			v_u_33.Parent = p21
-122: 			p21.InputBegan:Connect(function(p34)
-123: 				-- upvalues: (copy) v_u_33
-124: 				if p34.UserInputType == Enum.UserInputType.Touch then
-125: 					v_u_33.Scale = 0.88
-126: 				end
-127: 			end)
-128: 			p21.InputEnded:Connect(function(p35)
-129: 				-- upvalues: (copy) v_u_33
-130: 				if p35.UserInputType == Enum.UserInputType.Touch then
-131: 					v_u_33.Scale = 1
-132: 				end
-133: 			end)
-134: 			if p_u_19 ~= "BeyLaunch" then
-135: 				p21.Visible = v_u_9 == true
-136: 			end
-137: 		end)
-138: 	end
-139: end
-140: function v_u_3.button(p36) -- name: button
-141: 	-- upvalues: (copy) v_u_11
-142: 	local v37 = v_u_11[p36]
-143: 	if v37 and v37.Parent then
-144: 		return v37
-145: 	else
-146: 		return nil
-147: 	end
-148: end
-149: local v_u_38 = false
-150: local v_u_39 = false
-151: function v_u_3.cinema(p40) -- name: cinema
-152: 	-- upvalues: (ref) v_u_39, (ref) v_u_38
-153: 	v_u_39 = p40
-154: 	local v41 = game:GetService("Players").LocalPlayer:FindFirstChildOfClass("PlayerGui")
-155: 	if v41 then
-156: 		v41 = v41:FindFirstChild("ContextActionGui")
-157: 	end
-158: 	if v41 and v41:IsA("ScreenGui") then
-159: 		v41.Enabled = not p40
-160: 	end
-161: 	local v42 = game:GetService("GuiService")
-162: 	if p40 and v42.TouchControlsEnabled then
-163: 		v42.TouchControlsEnabled = false
-164: 		v_u_38 = true
-165: 	elseif not p40 and v_u_38 then
-166: 		v42.TouchControlsEnabled = true
-167: 		v_u_38 = false
-168: 	end
-169: end
-170: function v_u_3.inCinema() -- name: inCinema
-171: 	-- upvalues: (ref) v_u_39
-   ...
-191: 		v_u_48 = p46
-192: 	end
-193: 	if v_u_9 ~= v_u_48 or v_u_10 ~= p46 then
-194: 		v_u_9 = v_u_48
-195: 		v_u_10 = p46
-196: 		for _, v49 in v_u_8 do
-197: 			if next(v_u_1:GetBoundActionInfo(v49)) == nil then
-198: 				continue
-199: 			end
-200: 			v_u_18("show " .. v49, v49, function(p50)
-201: 				-- upvalues: (copy) v_u_48
-202: 				p50.Visible = v_u_48
-203: 			end)
-204: 		end
-205: 		local v_u_51 = not p46
-206: 		v_u_18("show BeyLaunch", "BeyLaunch", function(p52)
-207: 			-- upvalues: (copy) v_u_51
-208: 			p52.Visible = v_u_51
-209: 		end)
-210: 	end
-211: end
-212: return v_u_3
+===== ReplicatedStorage.Packets =====
+1: local v1 = require(script.Parent.Packet)
+2: return {
+3: 	["Ping"] = v1("Ping"):Response(v1.NumberF64):RateLimit(5, 1),
+4: 	["Track"] = v1("Track", v1.String, v1.String):RateLimit(8, 4),
+5: 	["TelPlace"] = v1("TelPlace", v1.String, v1.String, v1.String, v1.String):RateLimit(10, 5),
+6: 	["TelBatch"] = v1("TelBatch", v1.StringLong):RateLimit(6, 60),
+7: 	["BattleState"] = v1("BattleState", v1.StringLong),
+8: 	["BattleLaunch"] = v1("BattleLaunch", v1.NumberU16, v1.NumberF32, v1.NumberF32, v1.NumberU8):RateLimit(4, 1),
+9: 	["BattleForfeit"] = v1("BattleForfeit", v1.NumberU16):RateLimit(1, 1),
+10: 	["BattleStuck"] = v1("BattleStuck", v1.NumberU16):RateLimit(1, 5),
+11: 	["TutorialWarp"] = v1("TutorialWarp", v1.NumberU16, v1.NumberF32):RateLimit(6, 1),
+12: 	["BattlePing"] = v1("BattlePing", v1.NumberU16, v1.NumberU8):RateLimit(3, 1),
+13: 	["SpectateBattle"] = v1("SpectateBattle", v1.String):Response(v1.Boolean8, v1.String):RateLimit(2, 1),
+14: 	["SpectateStop"] = v1("SpectateStop"):RateLimit(2, 1),
+15: 	["BattlePinged"] = v1("BattlePinged", v1.NumberU8, v1.NumberU8, v1.NumberU8),
+16: 	["BattleSwap"] = v1("BattleSwap", v1.NumberU16, v1.NumberU8):RateLimit(4, 1),
+17: 	["TrainerChallenge"] = v1("TrainerChallenge", v1.String):RateLimit(2, 1),
+18: 	["TrainerResult"] = v1("TrainerResult", v1.String),
+19: 	["WorkshopEquipLauncher"] = v1("WorkshopEquipLauncher", v1.String, v1.String, v1.String, v1.String, v1.String, v1.String):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+20: 	["WorkshopEquipBey"] = v1("WorkshopEquipBey", v1.String, v1.String, v1.String):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+21: 	["WorkshopPaint"] = v1("WorkshopPaint", v1.String, v1.String):Response(v1.Boolean8, v1.String):RateLimit(6, 1),
+22: 	["WorkshopLaunchStyle"] = v1("WorkshopLaunchStyle", v1.String):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+23: 	["ShopBuy"] = v1("ShopBuy", v1.String, v1.String, v1.String):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+24: 	["TrainingStart"] = v1("TrainingStart", v1.String, v1.String):Response(v1.Boolean8, v1.String):RateLimit(2, 2),
+25: 	["TrainingResult"] = v1("TrainingResult", v1.String),
+26: 	["PartyLead"] = v1("PartyLead", v1.NumberU8):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+27: 	["PartyNew"] = v1("PartyNew"):Response(v1.Boolean8, v1.String):RateLimit(2, 2),
+28: 	["BoxMove"] = v1("BoxMove", v1.Boolean8, v1.NumberU8):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+29: 	["PartyRepair"] = v1("PartyRepair"):Response(v1.Boolean8, v1.String):RateLimit(2, 2),
+30: 	["SettingsSet"] = v1("SettingsSet", v1.String, v1.NumberF32):RateLimit(10, 1),
+31: 	["PvpChallenge"] = v1("PvpChallenge", v1.NumberF64):RateLimit(2, 1),
+32: 	["PvpOffer"] = v1("PvpOffer", v1.NumberF64),
+33: 	["PvpAnswer"] = v1("PvpAnswer", v1.NumberF64, v1.Boolean8):RateLimit(2, 1),
+34: 	["PvpNotice"] = v1("PvpNotice", v1.String),
+35: 	["PvpBusy"] = v1("PvpBusy", v1.Boolean8):RateLimit(6, 1),
+36: 	["StoryReady"] = v1("StoryReady"):RateLimit(1, 2),
+37: 	["StoryTrigger"] = v1("StoryTrigger", v1.String):RateLimit(4, 1),
+38: 	["CutscenePlay"] = v1("CutscenePlay", v1.String, v1.NumberU16, v1.Boolean8),
+39: 	["CutsceneBattle"] = v1("CutsceneBattle", v1.NumberU16):RateLimit(2, 1),
+40: 	["CutsceneChoice"] = v1("CutsceneChoice", v1.NumberU16, v1.NumberU8):RateLimit(2, 1),
+41: 	["SaveGame"] = v1("SaveGame"):Response(v1.Boolean8, v1.String):RateLimit(2, 10),
+42: 	["CutsceneDone"] = v1("CutsceneDone", v1.NumberU16):RateLimit(2, 1),
+43: 	["CutsceneAbort"] = v1("CutsceneAbort", v1.NumberU16):RateLimit(2, 1),
+44: 	["RivalsPull"] = v1("RivalsPull", v1.String, v1.NumberU8, v1.Boolean8):Response(v1.Boolean8, v1.String, v1.StringLong):RateLimit(3, 1),
+45: 	["RivalsMerge"] = v1("RivalsMerge", v1.String, v1.StringLong):Response(v1.Boolean8, v1.String, v1.String):RateLimit(3, 1),
+46: 	["RivalsTrait"] = v1("RivalsTrait", v1.String, v1.NumberU8, v1.Boolean8):Response(v1.Boolean8, v1.String, v1.String):RateLimit(4, 1),
+47: 	["RivalsStar"] = v1("RivalsStar", v1.String):Response(v1.Boolean8, v1.String, v1.String):RateLimit(4, 1),
+48: 	["RivalsEvolve"] = v1("RivalsEvolve", v1.String):Response(v1.Boolean8, v1.String, v1.String):RateLimit(2, 1),
+49: 	["GymStart"] = v1("GymStart", v1.String):Response(v1.Boolean8, v1.String, v1.String):RateLimit(2, 1),
+50: 	["GymEnd"] = v1("GymEnd", v1.NumberU8, v1.NumberU16):Response(v1.Boolean8, v1.String, v1.String):RateLimit(2, 1),
+51: 	["RivalsTitle"] = v1("RivalsTitle", v1.String):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+52: 	["RivalsNameRoll"] = v1("RivalsNameRoll", v1.Boolean8):Response(v1.Boolean8, v1.String, v1.String):RateLimit(3, 1),
+53: 	["RivalsNamePick"] = v1("RivalsNamePick", v1.Boolean8):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+54: 	["RivalsNameSlot"] = v1("RivalsNameSlot", v1.NumberU8):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+55: 	["TutorialBattle"] = v1("TutorialBattle"):Response(v1.Boolean8, v1.String):RateLimit(1, 1),
+56: 	["TutorialPick"] = v1("TutorialPick", v1.NumberU8):Response(v1.Boolean8, v1.String, v1.String):RateLimit(2, 1),
+57: 	["TutorialTour"] = v1("TutorialTour", v1.Boolean8):Response(v1.Boolean8, v1.String, v1.String):RateLimit(2, 5),
+58: 	["OpeningSeen"] = v1("OpeningSeen"):RateLimit(1, 5),
+59: 	["RankedQueue"] = v1("RankedQueue", v1.String):Response(v1.Boolean8, v1.String):RateLimit(2, 3),
+60: 	["RankedCancel"] = v1("RankedCancel"):Response(v1.Boolean8, v1.String):RateLimit(2, 2),
+61: 	["RankedState"] = v1("RankedState", v1.StringLong),
+62: 	["RankedReady"] = v1("RankedReady"):RateLimit(2, 5),
+63: 	["RankedOrder"] = v1("RankedOrder", v1.NumberU8):RateLimit(4, 1),
+64: 	["RankedChallenge"] = v1("RankedChallenge", v1.NumberF64):Response(v1.Boolean8, v1.String):RateLimit(2, 5),
+65: 	["RankedOffer"] = v1("RankedOffer", v1.NumberF64),
+66: 	["RankedAnswer"] = v1("RankedAnswer", v1.NumberF64, v1.Boolean8):RateLimit(3, 1),
+67: 	["HalloweenAct"] = v1("HalloweenAct", v1.String, v1.String):Response(v1.Boolean8, v1.String, v1.StringLong):RateLimit(
 
-===== Players.RansbloxScripts.PlayerScripts.Battle.AwakenCinematic =====
-   ...
-1238: 		if not v355 then
-1239: 			continue
-1240: 		end
-1241: 		if p347 then
-1242: 			local v356 = v_u_102
-1243: 			local v357 = v355.level
-1244: 			v356(v355, (math.max(v357, 1)))
-1245: 			if v355 == p346.bey then
-1246: 				local v358 = v_u_107
-1247: 				local v359 = v355.width
-1248: 				v358(v355, (math.min(v359, 0.6)))
-1249: 			end
-1250: 			local v360 = v_u_288
-1251: 			local v361 = {
-1252: 				["aura"] = v355,
-1253: 				["slot"] = p346.ctx.slot
-1254: 			}
-1255: 			table.insert(v360, v361)
-1256: 		else
-1257: 			v_u_129(v355)
-1258: 		end
-1259: 	end
-1260: 	local v362 = p346.glow
-1261: 	if v362 then
-1262: 		if p347 then
-1263: 			local v363 = v_u_289
-1264: 			local v364 = {
-1265: 				["glow"] = v362,
-1266: 				["slot"] = p346.ctx.slot
-1267: 			}
-1268: 			table.insert(v363, v364)
-1269: 			v_u_4:Create(v362, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-1270: 				["FillTransparency"] = 0.85,
-1271: 				["OutlineTransparency"] = 0.25
-1272: 			}):Play()
-1273: 			return
-1274: 		end
-1275: 		v362:Destroy()
-1276: 	end
-1277: end
-1278: local function v_u_412(p366) -- name: beats
-1279: 	-- upvalues: (copy) v_u_4, (copy) v_u_17, (copy) v_u_5, (copy) v_u_102, (copy) v_u_8, (copy) v_u_107, (copy) v_u_116, (copy) v_u_7, (copy) v_u_194, (copy) v_u_126, (copy) v_u_6
-1280: 	local v367 = p366.ctx
-1281: 	local v368 = p366.t
-   ...
-1610: 	if v429 then
-1611: 		local v430 = v_u_146
-1612: 		local v431 = v_u_59(p428)
-1613: 		local v432
-1614: 		if p428.aura == nil then
-1615: 			v432 = false
-1616: 		else
-1617: 			v432 = p428.aura.cycle == true
-1618: 		end
-1619: 		local v433 = v430(v429, v431, v432)
-1620: 		if v433 then
-1621: 			v_u_102(v433, 1)
-1622: 			local v434 = v_u_288
-1623: 			local v435 = {
-1624: 				["aura"] = v433,
-1625: 				["slot"] = p428.slot
-1626: 			}
-1627: 			table.insert(v434, v435)
-1628: 		end
-1629: 		p428.pose((("awaken_%*"):format(v_u_19[p428.beyType] or "roar")))
-1630: 	end
-1631: 	p428.band()
-1632: 	v_u_5.play(v_u_5.find("Sounds/Rivals/Stinger"), 0.12, 1.2)
-1633: end
-1634: function v_u_15.update(p436, p437) -- name: update
-1635: 	-- upvalues: (ref) v_u_287, (copy) v_u_365, (copy) v_u_126, (copy) v_u_412, (copy) v_u_288, (copy) v_u_345
-1636: 	local v438 = v_u_287
-1637: 	local v439, v440, v441
-1638: 	if v438 and not p437 then
-1639: 		local v442
-1640: 		if v438.done.out then
-   ...
-1725: 			end
-1726: 		end
-1727: 		for v451, v452 in v_u_288 do
-1728: 			v_u_126(v452.aura)
-1729: 		end
-1730: 		for v453, v454 in v_u_345 do
-1731: 			v454.update(p436)
-1732: 		end
-1733: 		return
-1734: 	end
-1735: end
-1736: function v_u_15.release(p455) -- name: release
-1737: 	-- upvalues: (copy) v_u_288, (copy) v_u_102, (copy) v_u_107, (copy) v_u_129, (copy) v_u_289, (copy) v_u_4
-1738: 	for v456 = #v_u_288, 1, -1 do
-1739: 		local v457 = v_u_288[v456]
-1740: 		if v457.slot ~= p455 then
-1741: 			continue
-1742: 		end
-1743: 		table.remove(v_u_288, v456)
-1744: 		local v_u_458 = v457.aura
-1745: 		v_u_102(v_u_458, 0)
-1746: 		v_u_107(v_u_458, 0)
-1747: 		task.delay(1.2, function()
-1748: 			-- upvalues: (ref) v_u_129, (copy) v_u_458
-1749: 			v_u_129(v_u_458)
-1750: 		end)
-1751: 	end
-1752: 	for v459 = #v_u_289, 1, -1 do
-1753: 		local v_u_460 = v_u_289[v459]
-1754: 		if v_u_460.slot ~= p455 then
-1755: 			continue
-1756: 		end
-1757: 		table.remove(v_u_289, v459)
-1758: 		v_u_4:Create(v_u_460.glow, TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-1759: 			["FillTransparency"] = 1,
-1760: 			["OutlineTransparency"] = 1
-1761: 		}):Play()
-1762: 		task.delay(0.7, function()
-1763: 			-- upvalues: (copy) v_u_460
-1764: 			v_u_460.glow:Destroy()
-1765: 		end)
-1766: 	end
-1767: end
-1768: function v_u_15.cancel() -- name: cancel
-1769: 	-- upvalues: (ref) v_u_287, (copy) v_u_365
+=== LOADED MODULES ===
 
-===== Players.RansbloxScripts.PlayerScripts.Battle.CombatFeel =====
+===== ReplicatedStorage.Bey.Net (loaded) =====
+1: local v_u_1 = require(script.Parent.Sim)
+2: local v_u_63 = {
+3: 	["MAX_INPUTS"] = 8,
+4: 	["encodeInputs"] = function(p2, p3, p4) -- name: encodeInputs
+5: 		-- upvalues: (copy) v_u_63
+6: 		local v5 = #p4
+7: 		local v6 = v_u_63.MAX_INPUTS
+8: 		local v7 = math.min(v5, v6)
+9: 		local v8 = buffer.create(v7 * 4 + 7)
+10: 		buffer.writeu16(v8, 0, p2)
+11: 		buffer.writeu32(v8, 2, p3)
+12: 		buffer.writeu8(v8, 6, v7)
+13: 		local v9 = #p4 - v7
+14: 		for v10 = 1, v7 do
+15: 			local v11 = p4[v9 + v10]
+16: 			local v12 = (v10 - 1) * 4 + 7
+17: 			local v13 = v11.sx * 127
+18: 			local v14 = math.round(v13)
+19: 			local v15 = math.clamp(v14, -127, 127)
+20: 			buffer.writei8(v8, v12, v15)
+21: 			local v16 = v12 + 1
    ...
-234: 	else
-235: 		return
-236: 	end
-237: end
-238: function v_u_13.start(_) -- name: start
-239: 	-- upvalues: (ref) v_u_29, (ref) v_u_30, (copy) v_u_37
-240: 	v_u_29 = false
-241: 	v_u_30 = false
-242: 	v_u_37()
-243: end
-244: function v_u_13.events(p65, p66, p67, p68, p69) -- name: events
-245: 	-- upvalues: (copy) v_u_8, (copy) v_u_9, (copy) v_u_17, (copy) v_u_10, (copy) v_u_15, (copy) v_u_14, (copy) v_u_13, (copy) v_u_26, (copy) v_u_16, (ref) v_u_29, (copy) v_u_4, (copy) v_u_47, (copy) v_u_18, (copy) v_u_23, (copy) v_u_19, (copy) v_u_6, (ref) v_u_30, (copy) v_u_64
-246: 	local v70 = p66.beys[p67]
-247: 	for _, v71 in p65 do
-248: 		local v72 = v71.kind
-249: 		local v73 = v71.slot == p67
-250: 		v_u_8.hush = v_u_8.quietFor(v71, p66, p67)
-251: 		local v74, v75, v76, v77
-252: 		if v72 == "AbilityStart" and (v71.wind or 0) > 0 then
-253: 			v_u_9.sound("Sounds/Rivals/CountTick", v73 and 0.12 or 0.2, 1.6)
-254: 			if v72 == "Clash" and (not v_u_30 and (not p69.veteran and (v71.a == p67 or v71.b == p67))) then
-255: 				v_u_30 = true
-256: 				p69.toast(v71.same and "SAME SPIN! Hits break burst locks faster, so bursts come sooner." or "OPPOSITE SPINS! Whoever hits harder steals some of the other\'s spin.", 2.6)
-257: 			end
-258: 			if v72 == "Clash" and (v71.a == p67 or v71.b == p67) then
-259: 				if v71.a == p67 then
-260: 					v74 = v71.b
-261: 				else
-262: 					v74 = v71.a
-263: 				end
-264: 				if v71.a == p67 and v71.share < 0.45 then
-265: 					v75 = true
-266: 				elseif v71.b == p67 then
-267: 					v75 = v71.share > 0.55
-268: 				else
-269: 					v75 = false
-270: 				end
-271: 				v76 = p68[v74]
-272: 				if not (v75 and v76) then
-273: 					continue
-274: 				end
-275: 				v_u_64(v76.position)
-276: 			else
-277: 				if v72 ~= "AbilityHit" or v71.target ~= p67 then
-278: 					continue
-279: 				end
-280: 				v77 = p68[v71.slot]
-281: 				if not v77 then
-282: 					continue
-283: 				end
-284: 				v_u_64(v77.position)
-285: 			end
-286: 		elseif v72 == "Cancel" then
-287: 			local v78 = v71.slot
-288: 			local v79 = v71.feint and "FEINT!" or "CANCEL!"
-289: 			local v80 = v_u_17
-290: 			local v81 = v71.feint
-291: 			local v82 = p68[v78]
-292: 			if v82 then
-293: 				v_u_8.show(v82.position + Vector3.new(0, 1.7, 0), v79, v80, v81)
-294: 			end
-295: 			if v73 then
-296: 				v_u_10.punch(4)
-297: 			end
-298: 			if v72 == "Clash" and (not v_u_30 and (not p69.veteran and (v71.a == p67 or v71.b == p67))) then
-299: 				v_u_30 = true
-300: 				p69.toast(v71.same and "SAME SPIN! Hits break burst locks faster, so bursts come sooner." or "OPPOSITE SPINS! Whoever hits harder steals some of the other\'s spin.", 2.6)
-301: 			end
-302: 			if v72 == "Clash" and (v71.a == p67 or v71.b == p67) then
+109: 		end
+110: 	end
+111: }
+112: local v_u_64 = {
+113: 	"x",
+114: 	"z",
+115: 	"vx",
+116: 	"vz",
+117: 	"spin",
+118: 	"burst",
+119: 	"special",
+120: 	"dashCd",
+121: 	"drift",
+122: 	"ridge",
+123: 	"ridgeCd",
+124: 	"rideTime",
+125: 	"rush",
+126: 	"guard",
+127: 	"absorb",
+128: 	"upper",
+129: 	"counter",
+130: 	"stun",
+131: 	"prevB",
+132: 	"outTick",
+133: 	"wobble",
+134: 	"lip",
+135: 	"down",
+136: 	"aimA",
+137: 	"aimD",
+138: 	"aimS",
+139: 	"press",
+140: 	"ripTick",
+141: 	"ripQ",
+142: 	"landTick",
+143: 	"clashS",
+144: 	"clashC",
+145: 	"clashG",
+146: 	"ab",
+147: 	"abPh",
+148: 	"abT",
+149: 	"abHits",
+150: 	"abHitCd",
+151: 	"abBanks",
+152: 	"abAx",
+153: 	"abAz",
+154: 	"abA",
+155: 	"abA0",
+156: 	"abDx",
+157: 	"abDz",
+158: 	"abRx",
+159: 	"abRz",
+160: 	"abSeed",
+161: 	"cd1",
    ...
-309: 					v75 = true
-310: 				elseif v71.b == p67 then
-311: 					v75 = v71.share > 0.55
-312: 				else
-313: 					v75 = false
-314: 				end
-315: 				v76 = p68[v74]
-316: 				if not (v75 and v76) then
-317: 					continue
-318: 				end
-319: 				v_u_64(v76.position)
-320: 			else
-321: 				if v72 ~= "AbilityHit" or v71.target ~= p67 then
-322: 					continue
-323: 				end
-324: 				v77 = p68[v71.slot]
-325: 				if not v77 then
-326: 					continue
-327: 				end
-328: 				v_u_64(v77.position)
-329: 			end
-330: 		elseif v72 == "AbilityEnd" and (v71.whiff and v71.n ~= 3) then
-331: 			local v83 = v71.slot
-332: 			local v84 = v_u_15
-333: 			local v85 = v71.slot
-334: 			local v86 = p66.beys[v85]
-335: 			local v87
-336: 			if v85 == p67 then
-337: 				v87 = true
-338: 			elseif v86 == nil or v70 == nil then
-339: 				v87 = false
-340: 			else
-341: 				v87 = v86.team == v70.team
-342: 			end
-343: 			local v88 = not v87
-344: 			local v89 = p68[v83]
-345: 			if v89 then
-346: 				v_u_8.show(v89.position + Vector3.new(0, 1.7, 0), "OPEN!", v84, v88)
-347: 			end
-348: 			if v72 == "Clash" and (not v_u_30 and (not p69.veteran and (v71.a == p67 or v71.b == p67))) then
-   ...
-359: 					v75 = true
-360: 				elseif v71.b == p67 then
-361: 					v75 = v71.share > 0.55
-362: 				else
-363: 					v75 = false
-364: 				end
-365: 				v76 
+216: 	"hitTk",
+217: 	"hx",
+218: 	"hz",
+219: 	"pilot",
+220: 	"tireT",
+221: 	"smashC",
+222: 	"shoveT",
+223: 	"gbT",
+224: 	"holdT",
+225: 	"mvKey",
+226: 	"mvTook",
+227: 	"caT",
+228: 	"caHit",
+229: 	"noStealT",
+230: 	"railT",
+231: 	"rimT",
+232: 	"rimL",
+233: 	"rimB",
+234: 	"diveK",
+235: 	"won",
+236: 	"springT",
+237: 	"springN",
+238: 	"reboot",
+239: 	"sweptBy",
+240: 	"abSweeps",
+241: 	"springCut"
+242: }
+243: local v_u_65 = {
+244: 	"clash",
+245: 	"clashT",
+246: 	"clashAt",
+247: 	"clashA",
+248: 	"clashB",
+249: 	"clashX",
+250: 	"clashE",
+251: 	"clashNx",
+252: 	"clashNz",
+253: 	"clashCx",
+254: 	"clashCz",
+255: 	"clashUlt",
+256: 	"clashCd",
+257: 	"clashN0",
+258: 	"awaken",
+259: 	"awakenAt",
+260: 	"lastOut",
+261: 	"first",
+262: 	"ot",
+263: 	"clashAsA",
+264: 	"clashAsB",
+265: 	"winner",
+266: 	"live",
+267: 	"landLive",
+268: 	"awakenClutch"
+269: }
+270: local v_u_66 = {
+271: 	"driftHeld",
+272: 	"brace",
+273: 	"onRidge",
+274: 	"prevIn",
+275: 	"launched",
+276: 	"tired",
+277: 	"rimUsed"
+278: }
+279: local v_u_67 = {
+280: 	"think",
+281: 	"sx",
+282: 	"sz",
+283: 	"b",
+284: 	"mashT",
+285: 	"beat"
+286: }
+287: local v_u_68 = {
+288: 	"Burst",
+289: 	"Over",
+290: 	"Spin",
+291: 	"Draw"
+292: }
+293: local v_u_69 = {
+294: 	["Burst"] = 1,
+295: 	["Over"] = 2,
 
-===== Players.RansbloxScripts.PlayerScripts.Battle.RebootCinematic =====
+===== ReplicatedStorage.Bey.Launch (loaded) =====
+1: local v1 = require(script.Parent.Sim)
+2: local v_u_2 = require(script.Parent.Cosmetics)
+3: local v_u_3 = require(script.Parent.PartCatalog)
+4: local v_u_25 = {
+5: 	["STYLES"] = v1.STYLES,
+6: 	["PERFECT"] = 1.05,
+7: 	["AIM_MIN"] = 0.1,
+8: 	["AIM_MAX"] = 0.85,
+9: 	["STANCE"] = table.freeze({
+10: 		["BeyLauncher"] = "Power",
+11: 		["SpeedLauncher"] = "Rush",
+12: 		["HeavyLauncher"] = "Upper",
+13: 		["SwordLauncher"] = "Bank",
+14: 		["LightLauncher"] = "Stamina"
+15: 	}),
+16: 	["SIGNATURE"] = table.freeze({
+17: 		["rantaro"] = "Leap",
+18: 		["shu"] = "Spin",
+19: 		["lui"] = "Slam",
+20: 		["wakiya"] = "Bank",
+21: 		["daigo"] = "Upper"
+22: 	}),
+23: 	["TYPE_STANCE"] = table.freeze({
+24: 		["Attack"] = "Rush",
+25: 		["Defense"] = "Upper",
+26: 		["Stamina"] = "Stamina",
+27: 		["Balance"] = "Power"
+28: 	}),
+29: 	["STANCE_STATS"] = table.freeze({
+30: 		["Power"] = table.freeze({
+31: 			["fly"] = "Power",
+32: 			["power"] = 2,
+33: 			["speed"] = 1,
+34: 			["control"] = 0,
    ...
-553: 	return v_u_17 ~= nil
-554: end
-555: function v11.clock() -- name: clock
-556: 	-- upvalues: (ref) v_u_17
-557: 	local v181 = v_u_17
-558: 	if v181 then
-559: 		return v181.t
-560: 	else
-561: 		return nil
-562: 	end
-563: end
-564: function v11.waiting(p182) -- name: waiting
-565: 	-- upvalues: (ref) v_u_17, (copy) v_u_12
-566: 	local v183 = v_u_17
-567: 	local v184
-568: 	if v183 == nil or v183.ctx.slot ~= p182 then
-569: 		v184 = false
-570: 	else
-571: 		v184 = v183.t < v_u_12
-572: 	end
-573: 	return v184
-574: end
-575: function v11.cancel() -- name: cancel
-576: 	-- upvalues: (ref) v_u_17, (copy) v_u_115
-577: 	local v185 = v_u_17
-578: 	if v185 then
-579: 		v_u_115(v185)
-580: 	end
-581: end
-582: return v11
+245: 	["GEAR_CAP"] = 10,
+246: 	["withStance"] = function(p5, p6) -- name: withStance
+247: 		-- upvalues: (copy) v_u_25
+248: 		local v7 = p5 or {}
+249: 		local v8 = v_u_25.statsOf(p6)
+250: 		local v9 = v_u_25.GEAR_CAP
+251: 		local v10 = {}
+252: 		local v11 = (v7.power or 0) + v8.power
+253: 		v10.power = math.min(v11, v9)
+254: 		local v12 = (v7.speed or 0) + v8.speed
+255: 		v10.speed = math.min(v12, v9)
+256: 		local v13 = (v7.control or 0) + v8.control
+257: 		v10.control = math.min(v13, v9)
+258: 		local v14 = (v7.stability or 0) + v8.stability
+259: 		v10.stability = math.min(v14, v9)
+260: 		return v10
+261: 	end,
+262: 	["stanceFor"] = function(p15, p16) -- name: stanceFor
+263: 		-- upvalues: (copy) v_u_25, (copy) v_u_2, (copy) v_u_3
+264: 		if p16 then
+265: 			local v17 = v_u_25.SIGNATURE[string.match(p16, "^[^_]+") or p16]
+266: 			if v17 then
+267: 				return v17
+268: 			end
+269: 			local v18 = 0
+270: 			for v19 = 1, #p16 do
+271: 				v18 = (v18 * 31 + string.byte(p16, v19)) % 1000003
+272: 			end
+273: 			local v20 = v_u_2.LAUNCH_STYLES
+274: 			return v20[v18 % #v20 + 1].id
+275: 		end
+276: 		if p15 and (p15.ai ~= nil and p15.combo) then
+277: 			return v_u_25.TYPE_STANCE[v_u_3.layer(p15.combo.layer).type] or "Power"
+278: 		end
+279: 		local v21 = v_u_2.launchStance
+280: 		local v22
+281: 		if p15 then
+282: 			v22 = p15.style
+283: 		else
+284: 			v22 = p15
+285: 		end
+286: 		local v23 = v21(v22)
+287: 		if v23 then
+288: 			return v23
+289: 		end
+290: 		if p15 then
+291: 			local v24 = p15.launcher
+292: 			if type(v24) == "table" then
+293: 				p15 = p15.launcher.launcher
+294: 			else
+295: 				p15 = false
+296: 			end
+297: 		end
+298: 		return (type(p15) ~= "string" or not v_u_25.STANCE[p15]) and "Power" or v_u_25.STANCE[p15]
+299: 	end,
+300: 	["GRADE_TEXT"] = table.freeze({
+301: 		["Perfect"] = "PERFECT RIP!",
+302: 		["Great"] = "GREAT RIP!",
+303: 		["Good"] = "GOOD RIP",
+304: 		["Late"] = "LATE..."
+305: 	})
+306: }
+307: return table.freeze(v_u_25)
 
-===== Players.RansbloxScripts.PlayerScripts.Character.Poses =====
-   ...
-3259: 				["launch"] = (Vector3.new(0.35, -0.35, -1)).Unit,
-3260: 				["pull"] = (Vector3.new(0.95, -0.45, 0.35)).Unit,
-3261: 				["gaze"] = v_u_53
-3262: 			}
-3263: 		}
-3264: 	},
-3265: 	["finish"] = {
-3266: 		["twist"] = -0.95,
-3267: 		["lean"] = -0.68,
-3268: 		["launch"] = nil,
-3269: 		["pull"] = nil,
-3270: 		["launch"] = (Vector3.new(0.35, -0.45, -1)).Unit,
-3271: 		["pull"] = (Vector3.new(0.9, -0.35, 0.45)).Unit
-3272: 	}
-3273: }
-3274: v688("ReaperRip", v721)
-3275: local v_u_722 = {
-3276: 	{
-3277: 		0.12,
-3278: 		{
-3279: 			["lean"] = -0.5,
-3280: 			["head"] = nil,
-3281: 			["launch"] = nil,
-3282: 			["pull"] = nil,
-3283: 			["head"] = Vector2.new(-0.75, 0),
-3284: 			["launch"] = (Vector3.new(-0.3, -1, -0.25)).Unit,
-3285: 			["pull"] = (Vector3.new(0.3, -1, -0.25)).Unit
-3286: 		}
-3287: 	},
-3288: 	{
-3289: 		0.95,
-
-===== Players.RansbloxScripts.PlayerScripts.Controllers.BattleController =====
-1: local v_u_1 = game:GetService("Players")
-2: local v_u_2 = game:GetService("ContentProvider")
-3: local v_u_3 = game:GetService("RunService")
-4: local v_u_4 = game:GetService("ReplicatedStorage")
-5: local v_u_5 = game:GetService("HttpService")
-6: local v_u_6 = game:GetService("CollectionService")
-7: local v_u_7 = game:GetService("ContextActionService")
-8: local v_u_8 = game:GetService("UserInputService")
-9: local v_u_9 = game:GetService("StarterGui")
-10: local v_u_10 = game:GetService("HapticService")
-11: local v_u_11 = require(v_u_4.Packets)
-12: local v12 = require(v_u_4.Packages.Signal)
-13: local v_u_13 = require(v_u_4.Bey.Sim)
-14: local v_u_14 = require(v_u_4.Bey.Net)
-15: local v_u_15 = require(v_u_4.Bey.Launch)
-16: local v_u_16 = require(v_u_4.Bey.LauncherCatalog)
-17: local v_u_17 = require(v_u_4.Bey.Stadiums)
-18: local v_u_18 = require(script.Parent.Parent.Battle.AvatarFlip)
-19: local v_u_19 = require(v_u_4.Bey.PartCatalog)
-20: local v_u_20 = require(v_u_4.Bey.Passives)
-21: local v_u_21 = require(v_u_4.Rivals.Catalog)
-22: local v_u_22 = require(v_u_4.Rivals.Shop)
-   ...
-520: 			{ "FinishFx", v_u_46.stop },
-521: 			{ "VsIntro", v_u_49.clear },
-522: 			{ "SwapScreen", v_u_50.close },
-523: 			{ "Crowd", v_u_55.stop }
-524: 		} do
-525: 			local v211 = v210[1]
-526: 			local v212 = v210[2]
-527: 			local v213 = debug.traceback
-528: 			local v214, v215 = xpcall(v212, v213)
-529: 			if v214 then
-530: 				continue
-531: 			end
-532: 			warn((("[BattleController] teardown %*: %*"):format(v211, v215)))
-533: 		end
-534: 		v_u_1.LocalPlayer:SetAttribute("MatchPoint", nil)
-535: 		v_u_7:UnbindAction("BeyLaunch")
-536: 		v_u_7:UnbindAction("BeyClashTriggers")
-537: 		v_u_31.modePick(nil, nil)
-538: 		v_u_7:UnbindAction("BeyMode")
-539: 		local function v218()
-540: 			-- upvalues: (copy) v_u_181, (ref) v_u_7, (ref) v_u_3, (ref) v_u_39
-541: 			if v_u_181.watch then
-542: 				v_u_7:UnbindAction("BeyWatchLeave")
-543: 				v_u_7:UnbindAction("BeyWatchCycle")
-544: 				v_u_3:UnbindFromRenderStep("BeyWatchCam")
-545: 				local v216 = v_u_181.held
-546: 				local v217 = v_u_181.touchGui
-547: 				if v216 and v216.Parent then
-548: 					v216.Anchored = false
-549: 				end
-550: 				if v217 and v217.Parent then
-   ...
-662: 		v264 = nil
-663: 	end
-664: 	local v265
-665: 	if type(v264) == "string" and v264 ~= "" then
-666: 		v265 = v_u_22.item("aura", v264)
-667: 	else
-668: 		v265 = nil
-669: 	end
-670: 	local v267 = {
-671: 		["aura"] = v265 and (v265.c1 and v265.c2) and {
-672: 			["c1"] = v265.c1,
-673: 			["c2"] = v265.c2,
-674: 			["pack"] = v265.pack,
-675: 			["cycle"] = v265.cycle
-676: 		} or nil,
-677: 		["slot"] = p_u_256,
-678: 		["mine"] = p_u_256 == p_u_254.mySlot,
-679: 		["blader"] = p_u_254.bladers[p_u_256],
-680: 		["bey"] = function() -- name: bey
-681: 			-- upvalues: (copy) p_u_254, (copy) p_u_256
-682: 			local v266 = p_u_254.views[p_u_256]
-683: 			if v266 then
-684: 				return v266.position
-685: 			else
-686: 				return nil
-687: 			end
-688: 		end
-689: 	}
-690: 	local v268
-691: 	if v262 then
-692: 		v268 = v262.model
-   ...
-760: 	local v286 = v279 * 16 + v_u_280
-761: 	if v285 and p_u_276.rebootKey ~= v286 then
-762: 		p_u_276.rebootKey = v286
-763: 		local v287 = p_u_275.views[v_u_280]
-764: 		if v278.rules.quickAwaken == true and true or v_u_1.LocalPlayer:GetAttribute("QuickAwaken") == true or (v283 >= 100 or p_u_275.replay) then
-765: 			if v287 then
-766: 				v287:rebootIn(0)
-767: 				v_u_42.ignite(v287.position, v_u_280 == p_u_275.mySlot)
-768: 			end
-769: 		else
-770: 			if v287 then
-771: 				v287:rebootIn(v_u_42.DROP - v283 * v_u_13.TICK)
-772: 			end
-773: 			v_u_43.cancel()
-774: 			v_u_42.begin({
-775: 				["slot"] = v_u_280,
-776: 				["mine"] = v_u_280 == p_u_275.mySlot,
-777: 				["bey"] = function() -- name: bey
-778: 					-- upvalues: (copy) p_u_275, (ref) v_u_280
-779: 					local v288 = p_u_275.views[v_u_280]
-780: 					if v288 then
-781: 						return v288.position
-782: 					else
-783: 						return nil
-784: 					end
-785: 				end,
-786: 				["centre"] = p_u_275.origin.Pos
-
-===== Players.RansbloxScripts.PlayerScripts.Controllers.CharacterController =====
-1: local v_u_1 = game:GetService("Players")
-2: local v_u_2 = game:GetService("RunService")
-3: local v_u_3 = game:GetService("CollectionService")
-4: local v_u_4 = game:GetService("ContextActionService")
-5: local v_u_5 = game:GetService("UserInputService")
-6: local v_u_6 = require(script.Parent.Parent.Character.Motion)
-7: local v_u_7 = require(script.Parent.Parent.Character.FacePlate)
-8: local v_u_8 = require(script.Parent.Parent.World.Footsteps)
-9: local v_u_9 = require(script.Parent.Parent.Character.Presence)
-10: require(script.Parent.Parent.Character.Poses)
-11: local v_u_10 = {
-12: 	["Name"] = "CharacterController"
-13: }
-14: local v_u_11 = { "walk_a", "walk_c", "walk_b" }
-15: local v_u_12 = { "run_a", "run_b", "run_c" }
-16: local v_u_13 = {
-17: 	{ "idle_a", "idle_b" },
-18: 	{ "idle_b", "idle_a", "idle_c" },
-19: 	{ "idle_a", "idle_c" }
-   ...
-423: 			continue
-424: 		end
-425: 		if v138.due then
-426: 			v138.due = false
-427: 			v138.mo:Apply()
-428: 		else
-429: 			v138.mo:Rewrite()
-430: 		end
-431: 	end
-432: end
-433: local function v_u_141(_, p140, _) -- name: onSprint
-434: 	-- upvalues: (ref) v_u_18
-435: 	if p140 == Enum.UserInputState.Begin then
-436: 		v_u_18 = not v_u_18
-437: 	end
-438: 	return Enum.ContextActionResult.Pass
-439: end
-440: function v_u_10.Play(p142, p143, p144) -- name: Play
-441: 	-- upvalues: (copy) v_u_15
-442: 	if p142 then
-443: 		p142 = v_u_15[p142]
-444: 	end
-445: 	if p142 then
-446: 		p142 = p142.mo:Play(p143, p144)
-447: 	end
-448: 	return p142
-449: end
-450: function v_u_10.Stop(p145, p146, p147) -- name: Stop
-451: 	-- upvalues: (copy) v_u_15
-452: 	if p145 then
-453: 		p145 = v_u_15[p145]
-   ...
-588: 		-- upvalues: (ref) v_u_65, (ref) v_u_7
-589: 		if p184:IsA("Model") then
-590: 			v_u_65(p184)
-591: 			v_u_7.drop(p184)
-592: 		end
-593: 	end
-594: 	table.insert(v182, v183:Connect(v185))
-595: 	local v186 = v_u_16
-596: 	local v187 = v_u_2.RenderStepped
-597: 	local v188 = v_u_137
-598: 	table.insert(v186, v187:Connect(v188))
-599: 	local v189 = v_u_16
-600: 	local v190 = v_u_2.PreSimulation
-601: 	local v191 = v_u_139
-602: 	table.insert(v189, v190:Connect(v191))
-603: 	v_u_4:BindAction("BeyRun", v_u_141, true, Enum.KeyCode.LeftControl, Enum.KeyCode.RightControl, Enum.KeyCode.ButtonL3)
-604: 	local function v_u_214() -- name: placeNow
-605: 		-- upvalues: (ref) v_u_4, (ref) v_u_1
-606: 		v_u_4:SetTitle("BeyRun", "RUN")
-607: 		local v192 = v_u_1.LocalPlayer:FindFirstChild("PlayerGui")
-608: 		local v193
-609: 		if v192 then
-610: 			v193 = v192:FindFirstChild("TouchGui")
-611: 		else
-612: 			v193 = v192
-613: 		end
-614: 		if v193 then
-615: 			v193 = v193:FindFirstChild("JumpButton", true)
-616: 		end
-617: 		local v194
-618: 		if v192 then
-619: 			v194 = v192:FindFirstChild("ContextActionGui")
-620: 		else
-621: 			v194 = v192
-622: 		end
-623: 		if v194 then
-624: 			v194 = v194:FindFirstChild("ContextButtonFrame")
-625: 		end
-626: 		local v195 = v_u_4:GetButton("BeyRun")
-627: 		if not (v193 and (v193:IsA("GuiObject") and (v194 and (v194:IsA("GuiObject") and v195)))) then
-628: 			v_u_4:SetPosition("BeyRun", UDim2.new(1, -148, 1, -78))
-629: 			return
-630: 		end
-631: 		local v196 = v193.AbsoluteSize.X * 0.55
-632: 		local v197 = math.floor(v196)
-633: 		local v198 = math.max(45, v197)
-634: 		v195.Size = UDim2.fromOffset(v198, v198)
-
-===== Players.RansbloxScripts.PlayerScripts.Controllers.CutsceneController =====
-1: local v_u_1 = game:GetService("CollectionService")
-2: local v_u_2 = game:GetService("ContextActionService")
-3: local v_u_3 = game:GetService("GuiService")
-4: local v_u_4 = game:GetService("HttpService")
-5: local v_u_5 = game:GetService("Players")
-6: local v_u_6 = game:GetService("ProximityPromptService")
-7: local v_u_7 = game:GetService("ReplicatedStorage")
-8: local v_u_8 = game:GetService("RunService")
-9: local v_u_9 = game:GetService("SoundService")
-10: local v_u_10 = game:GetService("StarterGui")
-11: local v_u_11 = game:GetService("TweenService")
-12: local v_u_12 = require(v_u_7.Packets)
-13: local v_u_13 = require(v_u_7.Registries.Cast)
-14: local v_u_14 = require(v_u_7.Registries.Cutscenes)
-15: local v_u_15 = require(script.Parent.Parent.UI.Dialogue)
-16: local v_u_16 = require(script.Parent.Parent.UI.Workshop)
-17: local v_u_17 = require(script.Parent.Parent.Cutscene.Actors)
-   ...
-298: local function v_u_122(p120) -- name: stopSounds
-299: 	for _, v121 in p120.sounds do
-300: 		if not v121.Parent then
-301: 			continue
-302: 		end
-303: 		v121:Destroy()
-304: 	end
-305: 	table.clear(p120.sounds)
-306: end
-307: local function v_u_141(p_u_123) -- name: bindSkip
-308: 	-- upvalues: (copy) v_u_19, (ref) v_u_49, (ref) v_u_50, (copy) v_u_2, (copy) v_u_8, (copy) v_u_119, (copy) v_u_122, (copy) v_u_15
-309: 	if p_u_123.seen and not p_u_123.skipping then
-310: 		v_u_19.skip(true)
-311: 		v_u_49 = false
-312: 		v_u_50 = 0
-313: 		v_u_2:BindActionAtPriority("CutsceneSkip", function(_, p124, _)
-314: 			-- upvalues: (ref) v_u_49
-315: 			v_u_49 = p124 == Enum.UserInputState.Begin
-316: 			return Enum.ContextActionResult.Sink
-317: 		end, false, Enum.ContextActionPriority.High.Value + 5, Enum.KeyCode.Q, Enum.KeyCode.ButtonB)
-318: 		local v125 = v_u_19.skipButton()
-319: 		local v126 = p_u_123.conns
-320: 		local v127 = v125.InputBegan
-321: 		local function v129(p128)
-322: 			-- upvalues: (ref) v_u_49
-323: 			if p128.UserInputType == Enum.UserInputType.Touch or p128.UserInputType == Enum.UserInputType.MouseButton1 then
-324: 				v_u_49 = true
-325: 			end
-326: 		end
-327: 		table.insert(v126, v127:Connect(v129))
-328: 		local v130 = p_u_123.conns
-329: 		local v131 = v125.InputEnded
-330: 		local function v133(p132)
-331: 			-- upvalues: (ref) v_u_49
-332: 			if p132.UserInputType == Enum.UserInputType.Touch or p132.UserInputType == Enum.UserInputType.MouseButton1 then
-
-===== Players.RansbloxScripts.PlayerScripts.Controllers.MenuController =====
-1: local v_u_1 = game:GetService("ContextActionService")
-2: local v_u_2 = game:GetService("GuiService")
-3: local v_u_3 = game:GetService("Players")
-4: local v4 = game:GetService("ReplicatedStorage")
-5: local v_u_5 = game:GetService("RunService")
-6: local v_u_6 = game:GetService("UserInputService")
-7: local v_u_7 = require(v4.Packets)
-8: local v_u_8 = require(v4.Registries.Objectives)
-9: local v_u_9 = require(v4.Config.GameConfig)
-10: local v_u_10 = require(script.Parent.Parent.UI.Kit)
-11: local v_u_11 = require(script.Parent.Parent.UI.Menu)
-12: local v_u_12 = require(script.Parent.Parent.UI.Dialogue)
-13: local v_u_13 = require(script.Parent.Parent.UI.Results)
-14: local v_u_14 = require(script.Parent.Parent.UI.Workshop)
-15: local v_u_15 = require(script.Parent.BattleController)
-16: local v_u_16 = require(script.Parent.DataController)
-   ...
-133: 					v_u_21:Open()
-134: 				end
-135: 			end
-136: 			return v49, v48
-137: 		end,
-138: 		["boxMove"] = function(p50, p51) -- name: boxMove
-139: 			-- upvalues: (ref) v_u_43, (ref) v_u_7
-140: 			return v_u_43(v_u_7.BoxMove:Fire(p50, p51))
-141: 		end
-142: 	}
-143: 	return v44
-144: end
-145: local function v_u_56(_, p53, p54) -- name: onNav
-146: 	-- upvalues: (copy) v_u_11, (copy) v_u_17
-147: 	if p53 ~= Enum.UserInputState.Begin then
-148: 		return Enum.ContextActionResult.Sink
-149: 	end
-150: 	local v55 = p54.KeyCode
-151: 	if v55 == Enum.KeyCode.Up or (v55 == Enum.KeyCode.W or v55 == Enum.KeyCode.DPadUp) then
-152: 		v_u_11.step(-1)
-153: 	elseif v55 == Enum.KeyCode.Down or (v55 == Enum.KeyCode.S or v55 == Enum.KeyCode.DPadDown) then
-154: 		v_u_11.step(1)
-155: 	elseif v55 == Enum.KeyCode.Return or (v55 == Enum.KeyCode.KeypadEnter or v55 == Enum.KeyCode.ButtonA) then
-156: 		v_u_11.confirm()
-157: 	else
-158: 		v_u_17:Close()
-159: 	end
-160: 	return Enum.ContextActionResult.Sink
-161: end
-162: function v_u_17.Open(_, p57) -- name: Open
-163: 	-- upvalues: (copy) v_u_11, (copy) v_u_39, (copy) v_u_52, (copy) v_u_1, (copy) v_u_56, (copy) v_u_36, (ref) v_u_30, (ref) v_u_31, (copy) v_u_2
-164: 	if not (v_u_11.isOpen() or v_u_39()) then
-165: 		v_u_11.open(v_u_52(), p57)
-166: 		v_u_1:BindActionAtPriority("MenuNav", v_u_56, false, Enum.ContextActionPriority.High.Value + 5, Enum.KeyCode.Up, Enum.KeyCode.Down, Enum.KeyCode.W, Enum.KeyCode.S, Enum.KeyCode.DPadUp, Enum.KeyCode.DPadDown, Enum.KeyCode.Return, Enum.KeyCode.KeypadEnter, Enum.KeyCode.ButtonA, Enum.KeyCode.Backspace, Enum.KeyCode.ButtonB, Enum.KeyCode.M)
-167: 		local v58 = v_u_36()
-168: 		if v58 then
-169: 			v58:Disable()
-170: 			v_u_30 = true
-171: 		end
-172: 		if v_u_31 == nil then
-173: 			v_u_31 = v_u_2.TouchControlsEnabled
-174: 			v_u_2.TouchControlsEnabled = false
-175: 		end
-176: 	end
-177: end
-178: function v_u_17.Close(_) -- name: Close
-179: 	-- upvalues: (copy) v_u_11, (copy) v_u_1, (ref) v_u_30, (copy) v_u_36, (ref) v_u_31, (copy) v_u_2
-180: 	if v_u_11.isOpen() then
-181: 		v_u_11.close()
-   ...
-184: 			v_u_30 = false
-185: 			local v59 = v_u_36()
-186: 			if v59 then
-187: 				v59:Enable()
-188: 			end
-189: 		end
-190: 		if v_u_31 ~= nil then
-191: 			v_u_2.TouchControlsEnabled = v_u_31
-192: 			v_u_31 = nil
-193: 		end
-194: 	end
-195: end
-196: local function v_u_61(_, p60, _) -- name: onToggle
-197: 	-- upvalues: (copy) v_u_11, (copy) v_u_17, (copy) v_u_39
-198: 	if p60 ~= Enum.UserInputState.Begin then
-199: 		return Enum.ContextActionResult.Pass
-200: 	end
-201: 	if v_u_11.isOpen() then
-202: 		v_u_17:Close()
-203: 		return Enum.ContextActionResult.Sink
-204: 	end
-205: 	if v_u_39() then
-206: 		return Enum.ContextActionResult.Pass
-207: 	end
-208: 	v_u_17:Open()
-209: 	return Enum.ContextActionResult.Sink
-210: end
-211: local function v_u_64(p62) -- name: slam
-212: 	-- upvalues: (copy) v_u_10
-213: 	if not v_u_10.reduced() then
-214: 		p62.cardScale.Scale = 1.15
-215: 		v_u_10.tween(p62.cardScale, v_u_10.T.slam, {
-216: 			["Scale"] = 1
-217: 		})
-218: 		local v_u_63 = v_u_10.make("Frame", {
-219: 			["BackgroundColor3"] = nil,
-220: 			["BackgroundTransparency"] = 0.35,
-22
-
-===== Players.RansbloxScripts.PlayerScripts.Controllers.SettingsController =====
-1: local v_u_1 = game:GetService("ContextActionService")
-2: local v2 = game:GetService("ReplicatedStorage")
-3: local v_u_3 = game:GetService("RunService")
-4: local v_u_4 = game:GetService("SoundService")
-5: local v_u_5 = require(v2.Packets)
-6: local v_u_6 = require(script.Parent.Parent.UI.Kit)
-7: local v_u_7 = require(script.Parent.Parent.UI.RivalsFrame)
-8: local v_u_8 = require(script.Parent.Parent.UI.RivalsKit)
-9: local v_u_9 = require(script.Parent.Parent.UI.UiSfx)
-10: local v_u_10 = require(script.Parent.Parent.UI.Dialogue)
-11: local v_u_11 = require(script.Parent.Parent.UI.Workshop)
-12: local v_u_12 = require(script.Parent.Parent.Battle.BattleInput)
-13: local v_u_13 = require(script.Parent.Parent.Battle.FxBudget)
-14: local v_u_14 = require(script.Parent.Parent.World.Quality)
-15: local v_u_15 = game:GetService("Players")
-16: local v_u_16 = game:GetService("UserInputService")
-   ...
-847: 			end
-848: 			local v303 = v292(v282, v293, Rect.new(185, 29, 345, 93), v278 and "gold" or "theme", v_u_20, 43, function()
-849: 				-- upvalues: (ref) v_u_256, (copy) v_u_273, (ref) v_u_9, (ref) v_u_257, (ref) v_u_254, (ref) v_u_17, (ref) v_u_12, (ref) v_u_1, (ref) v_u_250, (ref) v_u_268, (ref) v_u_253, (ref) v_u_16
-850: 				if v_u_256 then
-851: 					return
-852: 				else
-853: 					v_u_256 = v_u_273.id
-854: 					v_u_9.play("open")
-855: 					v_u_257()
-856: 					if v_u_254 then
-857: 						v_u_17.SelectedObject = nil
-858: 						local v_u_295 = os.clock()
-859: 						local v296 = table.clone(v_u_12.PAD_BUTTONS)
-860: 						local v297 = Enum.KeyCode.ButtonStart
-861: 						table.insert(v296, v297)
-862: 						v_u_1:BindActionAtPriority("SettingsPadCapture", function(_, p298, p299)
-863: 							-- upvalues: (copy) v_u_295, (ref) v_u_250, (ref) v_u_1, (ref) v_u_256, (ref) v_u_268, (ref) v_u_273, (ref) v_u_257, (ref) v_u_253
-864: 							if p298 ~= Enum.UserInputState.Begin or os.clock() - v_u_295 < 0.2 then
-865: 								return Enum.ContextActionResult.Sink
-866: 							end
-867: 							local v300 = v_u_250
-868: 							v_u_250 = nil
-869: 							if v300 then
-870: 								v300:Disconnect()
-871: 							end
-872: 							v_u_1:UnbindAction("SettingsPadCapture")
-873: 							v_u_256 = nil
-874: 							if p299.KeyCode ~= Enum.KeyCode.ButtonStart then
-875: 								v_u_268(v_u_273, p299.KeyCode)
-876: 							end
-877: 							v_u_257()
-878: 							task.delay(0.3, function()
-879: 								-- upvalues: (ref) v_u_253, (ref) v_u_257
-880: 								if v_u_253.Parent then
-881: 									v_u_257()
-882: 								end
-883: 							end)
-884: 							return Enum.ContextActionResult.Sink
-885: 						end, false, Enum.ContextActionPriority.High.Value + 20, table.unpack(v296))
-886: 					else
-887: 						v_u_250 = v_u_16.InputBegan:Connect(function(p301, _)
-888: 							-- upvalues: (ref) v_u_250, (ref) v_u_1, (ref) v_u_256, (ref) v_u_268, (ref) v_u_273, (ref) v_u_257, (ref) v_u_253
-889: 							if p301.UserInputType == Enum.UserInputType.Keyboard then
-890: 								local v302 = v_u_250
-891: 								v_u_250 = nil
-892: 								if v302 then
-893: 									v302:Disconnect()
-894: 								end
-895: 								v_u_1:UnbindAction("SettingsPadCapture")
-896: 								v_u_256 = nil
-897: 								if p301.KeyCode ~= Enum.KeyCode.Escape then
-898: 									v_u_268(v_u_273, p301.KeyCode)
-899: 								end
-900: 								v_u_257()
-   ...
-1077: 		end
-1078: 		local v324 = #v321 * 70 + 6
-1079: 		v_u_8.label(v320, "Icons by Lorc, Delapouite, Skoll, Carl Olsen, guard13007, sbed and Quoting from game-icons.net (CC BY 3.0).", 17, {
-1080: 			["Position"] = nil,
-1081: 			["Size"] = nil,
-1082: 			["TextXAlignment"] = nil,
-1083: 			["TextColor3"] = nil,
-1084: 			["ZIndex"] = 13,
-1085: 			["Position"] = UDim2.fromOffset(36, v324),
-1086: 			["Size"] = UDim2.fromOffset(1072, 26),
-1087: 			["TextXAlignment"] = Enum.TextXAlignment.Left,
-1088: 			["TextColor3"] = v_u_8.MUTED
-1089: 		})
-1090: 		v320.CanvasSize = UDim2.fromOffset(0, v324 + 32)
-1091: 		v_u_8.slideIn(v321, 30)
-1092: 		v_u_1:BindActionAtPriority("SettingsClose", function(_, p325,
-
-===== Players.RansbloxScripts.PlayerScripts.Controllers.TitleController =====
-1: local v_u_1 = game:GetService("ContextActionService")
-2: local v_u_2 = game:GetService("Debris")
-3: local v_u_3 = game:GetService("GuiService")
-4: local v_u_4 = game:GetService("Lighting")
-5: local v_u_5 = game:GetService("Players")
-6: local v_u_6 = game:GetService("ProximityPromptService")
-7: local v_u_7 = game:GetService("ReplicatedStorage")
-8: local v_u_8 = game:GetService("RunService")
-9: local v_u_9 = game:GetService("SoundService")
-10: local v_u_10 = game:GetService("UserInputService")
-11: local v_u_11 = game:GetService("Workspace")
-12: local v_u_12 = require(v_u_7.Bey.PartCatalog)
-13: local v_u_13 = require(v_u_7.Config.GameConfig)
-14: local v_u_14 = require(script.Parent.Parent.UI.Kit)
-15: local v_u_15 = require(script.Parent.Parent.UI.UiSfx)
-16: local v_u_16 = require(script.Parent.Parent.Cutscene.Screen)
-   ...
-253: 		["Size"] = UDim2.fromOffset(400, 30)
-254: 	})
-255: 	v_u_46.Parent = v_u_43:WaitForChild("PlayerGui")
-256: 	local v63 = v_u_14.fitScale
-257: 	local v64 = v_u_20
-258: 	table.insert(v_u_50, v63(v_u_46, v55, v64, 0.3))
-259: 	local v65 = v_u_31()
-260: 	if v65 then
-261: 		v65:Disable()
-262: 	end
-263: 	local v_u_66 = v_u_3.TouchControlsEnabled
-264: 	v_u_3.TouchControlsEnabled = false
-265: 	local v_u_67 = v_u_6.Enabled
-266: 	v_u_6.Enabled = false
-267: 	v_u_16.hud(false)
-268: 	v_u_1:BindActionAtPriority("TitleSink", function()
-269: 		return Enum.ContextActionResult.Sink
-270: 	end, false, Enum.ContextActionPriority.High.Value + 30, Enum.KeyCode.Space, Enum.KeyCode.ButtonA, Enum.KeyCode.Return)
-271: 	local v_u_68 = v_u_4:FindFirstChildOfClass("DepthOfFieldEffect")
-272: 	local v_u_69 = v_u_68 and {
-273: 		["FarIntensity"] = v_u_68.FarIntensity,
-274: 		["NearIntensity"] = v_u_68.NearIntensity,
-275: 		["FocusDistance"] = v_u_68.FocusDistance,
-276: 		["InFocusRadius"] = v_u_68.InFocusRadius,
-277: 		["Enabled"] = v_u_68.Enabled
-278: 	} or nil
-279: 	if v_u_68 and not v_u_44 then
-280: 		v_u_68.Enabled = true
-281: 		v_u_68.FarIntensity = 0.32
-282: 		v_u_68.NearIntensity = 0
-283: 		v_u_68.InFocusRadius = 16
-284: 	end
-285: 	if not v_u_44 then
-
-===== Players.RansbloxScripts.PlayerScripts.Controllers.WorkshopController =====
-1: local v_u_1 = game:GetService("CollectionService")
-2: local v_u_2 = game:GetService("ContentProvider")
-3: local v_u_3 = game:GetService("ContextActionService")
-4: local v_u_4 = game:GetService("GuiService")
-5: local v_u_5 = game:GetService("Players")
-6: local v_u_6 = game:GetService("ReplicatedStorage")
-7: local v_u_7 = game:GetService("RunService")
-8: local v_u_8 = require(v_u_6.Packets)
-9: local v_u_9 = require(v_u_6.Bey.LauncherCatalog)
-10: local v_u_10 = require(v_u_6.Bey.Cosmetics)
-11: local v_u_11 = require(v_u_6.Bey.Loadout)
-12: local v_u_12 = require(v_u_6.Bey.PartCatalog)
-13: local v_u_13 = require(v_u_6.Rivals.Catalog)
-14: local v_u_14 = require(v_u_6.Registries.Shops)
-15: local v_u_15 = require(v_u_6.Config.GameConfig)
-16: local v_u_16 = require(script.Parent.Parent.UI.Kit)
-17: local v_u_17 = require(script.Parent.Parent.UI.Workshop)
-18: local v_u_18 = require(script.Parent.Parent.UI.Dialogue)
-   ...
-402: end
-403: local function v_u_138(p134) -- name: launchStyle
-404: 	-- upvalues: (copy) v_u_8
-405: 	local v135, v136 = v_u_8.WorkshopLaunchStyle:Fire(p134)
-406: 	if v135 == nil then
-407: 		return false, "No answer from the server. Try again."
-408: 	else
-409: 		local v137 = v135 == true
-410: 		if v136 == "" then
-411: 			return v137, nil
-412: 		else
-413: 			return v137, v136
-414: 		end
-415: 	end
-416: end
-417: local function v_u_144(p139, p140) -- name: slot
-418: 	-- upvalues: (copy) v_u_8
-419: 	local v141, v142 = v_u_8.RivalsLoadout:Fire(p139, p140)
-420: 	if v141 == nil then
-421: 		return false, "No answer from the server. Try again."
-422: 	else
-423: 		local v143 = v141 == true
-424: 		if v142 == "" then
-425: 			return v143, nil
-426: 		else
-427: 			return v143, v142
-428: 		end
-429: 	end
-430: end
-431: local function v_u_148() -- name: repair
-432: 	-- upvalues: (copy) v_u_8
-   ...
-486: 			local v163
-487: 			if p156 then
-488: 				v163 = v_u_155
-489: 			else
-490: 				v163 = nil
-491: 			end
-492: 			v162.buy = v163
-493: 			v162.paint = v_u_133
-494: 			v162.launchStyle = v_u_138
-495: 			local v164
-496: 			if v157.rivals then
-497: 				v164 = v_u_144
-498: 			else
-499: 				v164 = nil
-500: 			end
-501: 			v162.slot = v164
-502: 			v161(v157, v162)
-503: 			local v165 = not v_u_23
-504: 			if v165 then
-505: 				v165 = not v_u_17.isOpen()
-506: 			end
-507: 			for _, v166 in v_u_29 do
-508: 				v166.Enabled = v165
-509: 			end
-510: 			local v167 = v_u_34()
-511: 			if v167 then
-512: 				v167:Disable()
-513: 				v_u_25 = true
-514: 			end
-515: 			v_u_26 = v_u_4.TouchControlsEnabled
-516: 			v_u_4.TouchControlsEnabled = false
-   ...
-549: 	else
-550: 		return
-551: 	end
-552: end
-553: local function v_u_176(p174) -- name: removeCounter
-554: 	-- upvalues: (copy) v_u_29
-555: 	local v175 = v_u_29[p174]
-556: 	if v175 then
-557: 		v_u_29[p174] = nil
-558: 		v175:Destroy()
-559: 	end
-560: end
-561: local function v_u_178(_, p177, _) -- name: onToggle
-562: 	-- upvalues: (copy) v_u_17, (copy) v_u_109, (copy) v_u_113, (copy) v_u_168
-563: 	if p177 ~= Enum.UserInputState.Begin then
-564: 		return Enum.ContextActionResult.Pass
-565: 	end
-566: 	if not (v_u_17.isOpen() or v_u_109()) then
-567: 		return Enum.ContextActionResult.Pass
-568: 	end
-569: 	if v_u_17.isOpen() then
-570: 		v_u_113()
-571: 	else
-572: 		v_u_168(nil)
-573: 	end
-574: 	return Enum.ContextActionResult.Sink
-575: end
-576: local function v_u_180() -- name: queueUpdate
-577: 	-- upvalues: (ref) v_u_27, (copy) v_u_17, (copy) v_u_106
-578: 	if not v_u_27 and v_u_17.isOpen() then
-579: 		v_u_27 = true
-580: 		task.defer(function()
-581: 			-- upvalues: (ref) v_u_27, (ref) v_u_106, (ref) v_u_17
-582: 			v_u_27 = false
-583: 			local v179 = v_u_106()
-584: 			if v179 and v_u_17.isOpen() then
-585: 				v_u_17.update(v179)
-586: 			end
-587: 		end)
-588: 	end
-589: end
-   ...
-599: 	v_u_168(nil)
-600: end
-601: function v21.Start(_) -- name: Start
-602: 	-- upvalues: (copy) v_u_5, (copy) v_u_6, (copy) v_u_2, (copy) v_u_3, (copy) v_u_178, (copy) v_u_22, (copy) v_u_19, (ref) v_u_23, (copy) v_u_113, (copy) v_u_17, (copy) v_u_29, (copy)
-
-===== Players.RansbloxScripts.PlayerScripts.Controllers.RivalsController =====
-1: local v_u_1 = game:GetService("ContextActionService")
-2: local v_u_2 = game:GetService("GuiService")
-3: local v_u_3 = game:GetService("Players")
-4: local v4 = game:GetService("ReplicatedStorage")
-5: local v_u_5 = game:GetService("RunService")
-6: local v_u_6 = game:GetService("HttpService")
-7: local v_u_7 = game:GetService("UserInputService")
-8: local v_u_8 = require(v4.Config.GameConfig)
-9: local v_u_9 = require(v4.Packets)
-10: local v_u_10 = require(v4.Rivals.Catalog)
-11: local v_u_11 = require(script.Parent.Parent.UI.RivalsHud)
-12: local v_u_12 = require(script.Parent.Parent.UI.Kit)
-13: local v_u_13 = require(script.Parent.Parent.UI.RivalsFrame)
-14: local v_u_14 = require(script.Parent.Parent.UI.RivalsBag)
-15: local v_u_15 = require(script.Parent.Parent.UI.RivalsTraits)
-16: local v_u_16 = require(script.Parent.Parent.UI.RivalsSpin)
-   ...
-356: 	[Enum.KeyCode.J] = "RivalsBag"
-357: }
-358: local function v_u_121(_, p113, p114) -- name: onKey
-359: 	-- upvalues: (copy) v_u_112, (ref) v_u_50, (copy) v_u_13, (copy) v_u_25, (copy) v_u_3, (copy) v_u_24, (copy) v_u_26, (copy) v_u_11, (copy) v_u_21, (copy) v_u_38, (ref) v_u_81, (copy) v_u_55, (copy) v_u_23, (copy) v_u_2
-360: 	local v115 = v_u_112[p114.KeyCode]
-361: 	if p113 == Enum.UserInputState.Begin and (v115 or p114.KeyCode == Enum.KeyCode.B) and (not v_u_50 and (v_u_13.isOpen() or v_u_25.isOpen())) then
-362: 		local v116
-363: 		if v115 then
-364: 			v116 = v_u_3.LocalPlayer.PlayerGui:FindFirstChild(v115)
-365: 		else
-366: 			v116 = nil
-367: 		end
-368: 		if v116 and (v116:IsA("ScreenGui") and v116.Enabled) then
-369: 			v_u_13.closeAll("Back")
-370: 		end
-371: 		return Enum.ContextActionResult.Sink
-372: 	end
-373: 	if p113 == Enum.UserInputState.Begin and (p114.KeyCode == Enum.KeyCode.ButtonSelect and v_u_13.isOpen()) then
-374: 		v_u_13.focus()
-375: 		return Enum.ContextActionResult.Sink
-376: 	end
-377: 	if p113 ~= Enum.UserInputState.Begin or v_u_50 or (v_u_13.isOpen() or (v_u_24.isOpen() or v_u_25.isOpen()) or (v_u_26.isOpen() or v_u_3.LocalPlayer:GetAttribute("InTutorial") == true)) then
-378: 		return Enum.ContextActionResult.Pass
-379: 	end
-380: 	local v117 = p114.KeyCode
-381: 	if v117 == Enum.KeyCode.F then
-382: 		v_u_11.press("play")
-383: 		if not v_u_50 then
-384: 			if v_u_3.LocalPlayer:GetAttribute("InTutorial") == true or v_u_3.LocalPlayer:GetAttribute("InTour") == true then
-385: 				v_u_21.toast("Step onto a queue pad at a stadium to battle!")
-386: 			else
-387: 				v_u_38.go("1v1")
-388: 			end
-389: 		end
-390: 	elseif v117 == Enum.KeyCode.H then
-391: 		v_u_11.press("summon")
-392: 		v_u_81("banner")
-393: 	elseif v117 == Enum.KeyCode.J then
-   ...
-417: 			v_u_21.toast("No live battles right now. Try again in a moment!")
-418: 		end
-419: 	elseif v117 == Enum.KeyCode.ButtonY then
-420: 		v_u_11.press("play")
-421: 		if not v_u_50 then
-422: 			if v_u_3.LocalPlayer:GetAttribute("InTutorial") == true or v_u_3.LocalPlayer:GetAttribute("InTour") == true then
-423: 				v_u_21.toast("Step onto a queue pad at a stadium to battle!")
-424: 			else
-425: 				v_u_38.go("1v1")
-426: 			end
-427: 		end
-428: 	elseif v117 == Enum.KeyCode.ButtonSelect then
-429: 		v_u_11.focus()
-430: 	else
-431: 		if v117 ~= Enum.KeyCode.DPadRight then
-432: 			return Enum.ContextActionResult.Pass
-433: 		end
-434: 		if v_u_2.SelectedObject ~= nil then
-435: 			return Enum.ContextActionResult.Pass
-436: 		end
-437: 		v_u_11.press("spectate")
-438: 		local v120 = not v_u_55.spectate
-439: 		if v_u_23.spectate(v120) then
-440: 			v_u_55.spectate = v120
-441: 			v_u_11.setToggle("spectate", v120)
-442: 			v_u_21.toast(v120 and "Spectate ON" or "Spectate OFF")
-443: 		else
-444: 			v_u_55.spectate = false
-445: 			v_u_11.setToggle("spectate", false)
-446: 			v_u_21.toast("No live battles right now. Try again in a moment!")
-447: 		end
-448: 	end
-449: 	return Enum.ContextActionResult.Sink
-450: end
-451: function v44.Init(_, p122) -- name: Init
-452: 	-- upvalues: (ref) v_u_46, (ref) v_u_47, (ref) v_u_48, (ref) v_u_49
-453: 	v_u_46 = p122.SettingsCo
-
-===== Players.RansbloxScripts.PlayerScripts.Controllers.DoorController =====
-   ...
-42: 	for _, v15 in v_u_2:GetPlayers() do
-43: 		local v16 = v15.Character
-44: 		if v16 then
-45: 			v16 = v16:FindFirstChild("HumanoidRootPart")
-46: 		end
-47: 		if not v16 or (not v16:IsA("BasePart") or (v16.Position - p14).Magnitude >= 10) then
-48: 			continue
-49: 		end
-50: 		return true
-51: 	end
-52: 	return false
-53: end
-54: function v4.Init(_, _) -- name: Init end
-55: function v4.Start(_) -- name: Start
-56: 	-- upvalues: (copy) v_u_1, (copy) v_u_13, (copy) v_u_6, (copy) v_u_5, (copy) v_u_3, (copy) v_u_17
-57: 	for _, v18 in v_u_1:GetTagged("BeyParkDoor") do
-58: 		v_u_13(v18)
-59: 	end
-60: 	local v19 = v_u_6
-61: 	local v20 = v_u_1:GetInstanceAddedSignal("BeyParkDoor")
-62: 	local v21 = v_u_13
-63: 	table.insert(v19, v20:Connect(v21))
-64: 	local v22 = v_u_6
-65: 	local v23 = v_u_1:GetInstanceRemovedSignal("BeyParkDoor")
-66: 	local function v25(p24)
-67: 		-- upvalues: (ref) v_u_5
-68: 		v_u_5[p24] = nil
-69: 	end
-70: 	table.insert(v22, v23:Connect(v25))
-71: 	local v_u_26 = 0
-72: 	local v27 = v_u_6
-73: 	local v28 = v_u_3.Heartbeat
-74: 	local function v38(p29)
-75: 		-- upvalues: (ref) v_u_26, (ref) v_u_5, (ref) v_u_17
-76: 		v_u_26 = v_u_26 + p29
-77: 		if v_u_26 >= 0.1 then
-78: 			v_u_26 = 0
-79: 			for _, v30 in v_u_5 do
-80: 				v30.want = v_u_17(v30.centre)
-
-===== Players.RansbloxScripts.PlayerScripts.Controllers.StadiumZoneController =====
-   ...
-309: 					return ("NPC joins in %* \194\183 unranked"):format(v98)
-310: 				else
-311: 					return ("NPC joins in %*"):format(v98)
-312: 				end
-313: 			else
-314: 				return ("Starting in %*"):format(v98)
-315: 			end
-316: 		else
-317: 			return v_u_86(p92)
-318: 		end
-319: 	end
-320: end
-321: function v10.Init(_, _) -- name: Init end
-322: function v10.Start(_) -- name: Start
-323: 	-- upvalues: (copy) v_u_1, (copy) v_u_40, (copy) v_u_19, (copy) v_u_18, (copy) v_u_8, (copy) v_u_91, (ref) v_u_20, (copy) v_u_3, (copy) v_u_64, (copy) v_u_71, (copy) v_u_79, (copy) v_u_99, (copy) v_u_12, (copy) v_u_17
-324: 	for _, v100 in v_u_1:GetTagged("BeyParkZone") do
-325: 		v_u_40(v100)
-326: 	end
-327: 	local v101 = v_u_19
-328: 	local v102 = v_u_1:GetInstanceAddedSignal("BeyParkZone")
-329: 	local v103 = v_u_40
-330: 	table.insert(v101, v102:Connect(v103))
-331: 	local v104 = v_u_19
-332: 	local v105 = v_u_1:GetInstanceRemovedSignal("BeyParkZone")
-333: 	local function v109(p106)
-334: 		-- upvalues: (ref) v_u_18
-335: 		local v107 = v_u_18[p106]
-336: 		local v108 = v107 and v107.wall
-337: 		if v108 then
-338: 			v108:Destroy()
-339: 			v107.wall = nil
-340: 		end
-341: 		v_u_18[p106] = nil
-342: 	end
-343: 	table.insert(v104, v105:Connect(v109))
-344: 	local v110 = v_u_19
-345: 	local v111 = v_u_8.Started
-346: 	local function v112()
-347: 		-- upvalues: (ref) v_u_91
-   ...
-358: 				v115.gui.Enabled = true
-359: 			end
-360: 			v115.shown = -1
-361: 		end
-362: 	end
-363: 	table.insert(v113, v114:Connect(v116))
-364: 	local v_u_117 = 0
-365: 	local v118 = v_u_19
-366: 	local v119 = v_u_3.Heartbeat
-367: 	local function v128(p120)
-368: 		-- upvalues: (ref) v_u_117, (ref) v_u_1, (ref) v_u_18, (ref) v_u_40, (ref) v_u_64, (ref) v_u_71, (ref) v_u_20, (ref) v_u_79, (ref) v_u_99, (ref) v_u_12, (ref) v_u_17
-369: 		v_u_117 = v_u_117 + p120
-370: 		if v_u_117 >= 0.2 then
-371: 			v_u_117 = 0
-372: 			local v121 = os.clock()
-373: 			for _, v122 in v_u_1:GetTagged("BeyParkZone") do
-374: 				if v_u_18[v122] then
-375: 					continue
-376: 				end
-377: 				v_u_40(v122)
-378: 			end
-379: 			for _, v123 in v_u_18 do
-380: 				v_u_64(v123, v121)
-381: 				local v124 = v123.model:GetAttribute("Queued")
-382: 				if type(v124) ~= "number" then
-383: 					v124 = v_u_71(v123)
-384: 				end
-385: 				if v124 ~= v123.shown and not v_u_20 then
-386: 					v_u_79(v123, v124)
-387: 				end
-388: 				local v125 = v_u_99(v123)
-
-===== Players.RansbloxScripts.PlayerScripts.Controllers.TutorialController =====
-1: local v_u_1 = game:GetService("Players")
-2: local v_u_2 = game:GetService("ReplicatedStorage")
-3: local v_u_3 = game:GetService("RunService")
-4: local v_u_4 = game:GetService("TweenService")
-5: local v_u_5 = game:GetService("UserInputService")
-6: local v_u_6 = game:GetService("ContextActionService")
-7: local v_u_7 = game:GetService("CollectionService")
-8: local v_u_8 = game:GetService("HttpService")
-9: local v_u_9 = game:GetService("Workspace")
-10: local v_u_10 = game:GetService("GuiService")
-11: local v_u_11 = game:GetService("TextService")
-12: local v_u_12 = require(v_u_2.Config.GameConfig)
-13: local v_u_13 = require(v_u_2.Packets)
-14: local v_u_14 = require(v_u_2.Rivals.Catalog)
-15: local v_u_15 = require(v_u_2.Rivals.PartIcons)
-16: local v_u_16 = require(v_u_2.Bey.PartCatalog)
-17: local v_u_17 = require(v_u_2.Bey.Abilities)
-18: local v_u_18 = require(v_u_2.Bey.TipSkills)
-19: local v_u_19 = require(script.Parent.Parent.UI.Kit)
-20: local v_u_20 = require(script.Parent.Parent.UI.Locale)
-21: local v_u_21 = require(script.Parent.Parent.UI.RivalsKit)
-   ...
-330: 			v_u_64 = v136
-331: 		end
-332: 	else
-333: 		return
-334: 	end
-335: end
-336: local function v_u_156(p138) -- name: tourWalls
-337: 	-- upvalues: (ref) v_u_65, (copy) v_u_7, (copy) v_u_9
-338: 	if v_u_65 then
-339: 		v_u_65:Destroy()
-340: 		v_u_65 = nil
-341: 	end
-342: 	if p138 then
-343: 		local v139 = Instance.new("Folder")
-344: 		v139.Name = "TourWalls"
-345: 		for _, v140 in v_u_7:GetTagged("BeyParkZone") do
-346: 			local v141 = v140:GetAttribute("Centre")
-347: 			local v142 = v140:GetAttribute("Radius")
-348: 			local v143 = v_u_9:FindFirstChild("World")
-349: 			if v143 then
-350: 				v143 = v_u_9.World:FindFirstChild("BeyPark")
-351: 			end
-352: 			if typeof(v141) ~= "Vector3" or (type(v142) ~= "number" or not (v143 and v140:IsDescendantOf(v143))) then
-353: 				continue
-354: 			end
-355: 			local v144 = 6.283185307179586 * v142 / 32 * 1.06
-356: 			for v145 = 0, 31 do
-357: 				local v146 = v145 / 32 * 2 * 3.141592653589793
-358: 				local v147 = math.cos(v146) * v142
-359: 				local v148 = math.sin(v146) * v142
-360: 				local v149 = v141 + Vector3.new(v147, 0, v148)
-361: 				local v150 = CFrame.lookAt
-362: 				local v151 = v141.X
-363: 				local v152 = v149.Y
-364: 				local v153 = v141.Z
-365: 				local v154 = v150(v149, (Vector3.new(v151, v152, v153)))
-   ...
-573: 		}):Play()
-574: 		v_u_23.play("open")
-575: 		v_u_67 = v193
-576: 	end
-577: end
-578: local v_u_195 = {
-579: 	["c1"] = Color3.fromRGB(58, 54, 72),
-580: 	["c2"] = Color3.fromRGB(22, 20, 30)
-581: }
-582: local v_u_196 = 0
-583: local function v_u_200(p_u_197) -- name: padSkip
-584: 	-- upvalues: (copy) v_u_6, (ref) v_u_196
-585: 	v_u_6:UnbindAction("TutorialPadSkip")
-586: 	v_u_196 = v_u_196 + 1
-587: 	if p_u_197 then
-588: 		v_u_6:BindActionAtPriority("TutorialPadSkip", function(_, p198)
-589: 			-- upvalues: (ref) v_u_196, (copy) p_u_197
-590: 			v_u_196 = v_u_196 + 1
-591: 			if p198 == Enum.UserInputState.Begin then
-592: 				local v_u_199 = v_u_196
-593: 				task.delay(0.8, function()
-594: 					-- upvalues: (ref) v_u_196, (copy) v_u_199, (ref) p_u_197
-595: 					if v_u_196 == v_u_199 then
-596: 						p_u_197()
-597: 					end
-598: 				end)
-599: 			end
-600: 			return Enum.ContextActionResult.Sink
-601: 		end, false, Enum.ContextActionPriority.High.Value + 5, Enum.KeyCode.ButtonY)
-602: 	end
-603: end
-604: local function v_u_204(p201) -- name: showSkip
-605: 	-- upvalues: (copy) v_u_6, (ref) v_u_196, (ref) v_u_71, (ref) v_u_59, (copy) v_u_24, (copy) v_u_23, (copy) v_u_21, (copy) v_u_190, (copy) v_u_5, (copy) v_u_195, (copy) v_u_200
-606: 	v_u_6:UnbindAction("TutorialPadSkip")
-607: 	v_u_196 = v_u_196 + 1
-608: 	if v_u_71 then
-609: 		v_u_71:Destroy()
-610: 		v_u_71 = nil
-611: 	end
-612: 	if p201 then
-613: 		local function v202() -- name: doSkip
-614: 			-- upvalues: (ref) v_u_59, (ref) v_u_24, (ref) v_u_23
-615: 			if not v_u_59 then
-616: 				v_u_59 = true
-   ...
-657: 	else
-658: 		return v_u_43.keyName(v_u_43.keyFor(p213))
-659: 	end
-660: end
-661
-
-===== Players.RansbloxScripts.PlayerScripts.Controllers.EmoteController =====
-1: local v_u_1 = game:GetService("ContextActionService")
-2: local v_u_2 = game:GetService("Players")
-3: local v3 = game:GetService("ReplicatedStorage")
-4: local v_u_4 = game:GetService("RunService")
-5: local v_u_5 = game:GetService("UserInputService")
-6: local v_u_6 = game:GetService("GuiService")
-7: local v_u_7 = require(v3.Config.GameConfig)
-8: local v_u_8 = require(v3.Packets)
-9: local v_u_9 = require(v3.Rivals.Shop)
-10: local v_u_10 = require(script.Parent.Parent.Character.Motion)
-11: require(script.Parent.Parent.Character.Emotes)
-12: local v_u_11 = require(script.Parent.Parent.UI.RivalsKit)
-13: local v_u_12 = require(script.Parent.Parent.UI.Kit)
-14: local v_u_13 = require(script.Parent.Parent.UI.Locale)
-15: local v_u_14 = require(script.Parent.Parent.UI.EmoteView)
-16: local v_u_15 = require(script.Parent.Parent.UI.UiSfx)
-   ...
-427: 				return
-428: 			end
-429: 		end
-430: 	end
-431: end
-432: function v_u_16.try(_, p109, p110) -- name: try
-433: 	-- upvalues: (copy) v_u_2, (copy) v_u_31
-434: 	local v111 = v_u_2.LocalPlayer.Character
-435: 	if v111 then
-436: 		v_u_31(v111, p109, p110)
-437: 	end
-438: end
-439: local function v_u_117(_, p112, p113) -- name: onKey
-440: 	-- upvalues: (copy) v_u_5, (copy) v_u_6, (copy) v_u_16, (ref) v_u_22, (copy) v_u_49, (copy) v_u_42, (ref) v_u_24, (copy) v_u_8
-441: 	if p112 ~= Enum.UserInputState.Begin then
-442: 		return Enum.ContextActionResult.Pass
-443: 	end
-444: 	local v114 = p113.KeyCode
-445: 	if v114 == Enum.KeyCode.DPadDown then
-446: 		if v_u_5:GetFocusedTextBox() or v114 == Enum.KeyCode.DPadDown and v_u_6.SelectedObject ~= nil then
-447: 			return Enum.ContextActionResult.Pass
-448: 		end
-449: 		v_u_16:toggle()
-450: 		return Enum.ContextActionResult.Sink
-451: 	end
-452: 	if v114 ~= Enum.KeyCode.ButtonB then
-453: 		if v_u_22 then
-454: 			local v115 = v114.Value - Enum.KeyCode.One.Value + 1
-455: 			if v115 >= 1 and v115 <= 8 then
-456: 				local v116 = v_u_42()[(v_u_24 - 1) * 8 + v115]
-457: 				if v116 then
-458: 					v_u_49()
-459: 					v_u_8.RivalsEmote:Fire(v116.id)
-460: 				end
-461: 				return Enum.ContextActionResult.Sink
-462: 			end
-463: 		end
-464: 		return Enum.ContextActionResult.Pass
-465: 	end
-466: 	if not v_u_22 then
-467: 		return Enum.ContextActionResult.Pass
-468: 	end
-469: 	v_u_49()
-470: 	return Enum.ContextActionResult.Sink
-471: end
-472: function v_u_16.Init(_, p118) -- name: Init
-473: 	-- upvalues: (ref) v_u_17, (ref) v_u_18, (ref) v_u_19
-474: 	v_u_17 = p118.CharacterController
-475: 	v_u_18 = p118.DataController
-476: 	v_u_19 = p118.BattleController
-477: end
-478: function v_u_16.Start(_) -- name: Start
-479: 	-- upvalues: (copy) v_u_7, (copy) v_u_20, (copy) v_u_8, (copy) v_u_2, (copy) v_u_9, (copy) v_u_31, (copy) v_u_21, (ref) v_u_17, (copy) v_u_4, (copy) v_u_38, (ref) v_u_19, (ref) v_u_23, (copy) v_u_49, (copy) v_u_1, (copy) v_u_117
-480: 	if v_u_7.Mode == "Rivals" then
-481: 		local v119 = v_u_20
-482: 		local v120 = v_u_8.RivalsEmoted.OnClientEvent
-483: 		local function v126(p121, p122)
-484: 			-- upvalues: (ref) v_u_2, (ref) v_u_9, (ref) v_u_31, (ref) v_u_21, (ref) v_u_17
-485: 			local v123 = v_u_2:GetPlayerByUserId(p121)
-   ...
-514: 			v_u_49()
-515: 		end
-516: 		table.insert(v130, v131:Connect(v132))
-517: 		local v133 = v_u_20
-518: 		local v134 = v_u_19.Ended
-519: 		local function v135()
-520: 			-- upvalues: (ref) v_u_23
-521: 			v_u_23 = false
-522: 		end
-523: 		table.insert(v133, v134:Connect(v135))
-524: 		local v136 = { Enum.KeyCode.DPadDown, Enum.KeyCode.ButtonB }
-525: 		for v137 = 0, 7 do
-526: 			local v138 = Enum.KeyCode:FromValue(Enum.KeyCode.One.Value + v137)
-527: 			table.insert(v136, v138)
-528: 		end
-529: 		v_u_1:BindAction("RivalsEmoteWheel", v_u_117, false, table.unpack(v136))
-530: 	end
-531: end
-532: function v_u_16.Destroy(_) -- name: Destroy
-533: 	-- upvalues: (copy) v_u_1, (copy) v_u_49, (copy) v_u_20, (copy) v_u_21, (ref) v_u_17
-534: 	v_u_1:UnbindAction("RivalsEmoteWheel")
-535: 	v_u_49()
-536: 	for _, v139 in v_u_20 do
-537: 		v139:Disconnect()
-538: 	end
-539: 	table.clear(
-
-===== Players.RansbloxScripts.PlayerScripts.Controllers.ShowOffController =====
-1: local v_u_1 = game:GetService("ContextActionService")
-2: local v_u_2 = game:GetService("HttpService")
-3: local v_u_3 = game:GetService("Players")
-4: local v_u_4 = game:GetService("ReplicatedStorage")
-5: local v_u_5 = game:GetService("RunService")
-6: local v_u_6 = game:GetService("UserInputService")
-7: local v_u_7 = game:GetService("GuiService")
-8: local v_u_8 = game:GetService("Workspace")
-9: local v_u_9 = require(v_u_4.Config.GameConfig)
-10: local v_u_10 = require(v_u_4.Packets)
-11: local v_u_11 = require(v_u_4.Bey.PartCatalog)
-12: local v_u_12 = require(v_u_4.Rivals.Catalog)
-13: local v_u_13 = require(v_u_4.Bey.LauncherCatalog)
-14: local v_u_14 = require(v_u_4.Bey.Cosmetics)
-15: local v15 = require(script.Parent.Parent.Character.Motion)
-16: local v_u_16 = require(script.Parent.Parent.Battle.Launcher)
-   ...
-600: end
-601: function v_u_21.setHold(p214) -- name: setHold
-602: 	-- upvalues: (copy) v_u_10
-603: 	v_u_10.RivalsHold:Fire(p214)
-604: end
-605: function v_u_21.setResonance(p215) -- name: setResonance
-606: 	-- upvalues: (copy) v_u_3, (copy) v_u_10
-607: 	if p215 and v_u_3.LocalPlayer:GetAttribute("ShowHold") ~= true then
-608: 		v_u_10.RivalsHold:Fire(true)
-609: 	end
-610: 	v_u_10.RivalsResonance:Fire(p215)
-611: end
-612: local function v_u_221(p216, p217, p218) -- name: onToolKey
-613: 	-- upvalues: (copy) v_u_6, (copy) v_u_20, (copy) v_u_7, (copy) v_u_3, (copy) v_u_19, (copy) v_u_21
-614: 	if p217 ~= Enum.UserInputState.Begin or (v_u_6:GetFocusedTextBox() or v_u_20.isOpen()) then
-615: 		return Enum.ContextActionResult.Pass
-616: 	end
-617: 	if p218.UserInputType ~= Enum.UserInputType.Keyboard and v_u_7.SelectedObject ~= nil then
-618: 		return Enum.ContextActionResult.Pass
-619: 	end
-620: 	local v219 = v_u_3.LocalPlayer
-621: 	local v220 = v219:FindFirstChildOfClass("PlayerGui")
-622: 	if v220 and v220:FindFirstChild("EmoteWheel") then
-623: 		return Enum.ContextActionResult.Pass
-624: 	end
-625: 	if v219:GetAttribute("Battling") == true or v219:GetAttribute("InTutorial") == true then
-626: 		return Enum.ContextActionResult.Pass
-627: 	end
-628: 	if p216 == "RivalsHold" then
-629: 		v_u_19.press("hold")
-630: 		v_u_21.setHold(v219:GetAttribute("ShowHold") ~= true)
-631: 	else
-632: 		v_u_19.press("resonance")
-633: 		v_u_21.setResonance(v219:GetAttribute("ShowResonance") ~= true)
-634: 	end
-635: 	return Enum.ContextActionResult.Sink
-636: end
-637: local function v_u_231() -- name: toolbarShow
-638: 	-- upvalues: (copy) v_u_3, (copy) v_u_19
-639: 	local v222 = v_u_3.LocalPlayer
-640: 	local v223 = v222:GetAttribute("ShowBey")
-641: 	local v224
-642: 	if type(v223) == "string" then
-643: 		v224 = string.match(v223, "^([^|]+)|")
-644: 	else
-645: 		v224 = nil
-646: 	end
-647: 	local v225 = v_u_19.toolbar
-648: 	local v226 = v222:GetAttribute("ShowHold") == true
-649: 	local v227 = v222:GetAttribute("ShowResonance") == true
-650: 	local v228 = tonumber(v222:GetAttribute("ShowEvo")) or 0
-   ...
-660: 	-- upvalues: (copy) v_u_9, (copy) v_u_29, (copy) v_u_5, (copy) v_u_213, (copy) v_u_231, (copy) v_u_1, (copy) v_u_221, (copy) v_u_193, (copy) v_u_3
-661: 	if v_u_9.Mode == "Rivals" then
-662: 		local v_u_233 = 0.5
-663: 		local v234 = v_u_29
-664: 		local v235 = v_u_5.Heartbeat
-665: 		local function v237(p236)
-666: 			-- upvalues: (ref) v_u_233, (ref) v_u_213, (ref) v_u_231
-667: 			v_u_233 = v_u_233 + p236
-668: 			if v_u_233 >= 0.5 then
-669: 				v_u_233 = 0
-670: 				v_u_213()
-671: 				v_u_231()
-672: 			end
-673: 		end
-674: 		table.insert(v234, v235:Connect(v237))
-675: 		v_u_1:BindAction("RivalsHold", v_u_221, false, Enum.KeyCode.One, Enum.KeyCode.DPadUp)
-676: 		v_u_1:BindAction("RivalsResonance", v_u_221, false, Enum.KeyCode.Two, Enum.KeyCode.DPadLeft)
-677: 		v_u_5:BindToRenderStep("HeldBeys", Enum.RenderPriority.Character.Value + 2, v_u_193)
-678: 		local v238 = v_u_3.LocalPlayer
-679: 		for _, v239 in {
-680: 			"ShowHold",
-681: 			"ShowResonance",
-682: 			"ShowBey",
-683: 			"ShowEvo",
-684: 			"ShowRarity",
-685: 			"ShowShiny"
-686: 		} do
-687: 			local v240 = v_u_29
-688:
-
-===== Players.RansbloxScripts.PlayerScripts.Controllers.LiveController =====
-1: local v_u_1 = game:GetService("CollectionService")
-2: local v_u_2 = game:GetService("Players")
-3: local v_u_3 = game:GetService("TweenService")
-4: local v_u_4 = game:GetService("HttpService")
-5: local v_u_5 = game:GetService("ContextActionService")
-6: local v_u_6 = game:GetService("UserInputService")
-7: local v_u_7 = game:GetService("ReplicatedStorage")
-8: local v_u_8 = require(v_u_7.Packets)
-9: local v_u_9 = require(script.Parent.BattleController)
-10: local v_u_10 = require(script.Parent.Parent.UI.RivalsKit)
-11: local v_u_11 = require(script.Parent.Parent.UI.HudKit)
-12: local v_u_12 = require(script.Parent.Parent.UI.Kit)
-13: local v_u_13 = {
-14: 	["Name"] = "LiveController"
-15: }
-16: local v_u_14 = nil
-17: v_u_13.leadersChanged = Instance.new("BindableEvent")
-18: function v_u_13.leaders() -- name: leaders
-19: 	-- upvalues: (ref) v_u_14
-20: 	return v_u_14
-   ...
-819: 						["TextXAlignment"] = Enum.TextXAlignment.Right,
-820: 						["TextColor3"] = v_u_20
-821: 					})
-822: 				end
-823: 			end
-824: 		else
-825: 			return
-826: 		end
-827: 	else
-828: 		return
-829: 	end
-830: end
-831: local function v_u_257() -- name: boardFrame
-832: 	local v255 = workspace:FindFirstChild("World")
-833: 	if v255 then
-834: 		v255 = v255:FindFirstChild("BeyPark")
-835: 	end
-836: 	if v255 then
-837: 		v255 = v255:FindFirstChild("Site")
-838: 	end
-839: 	if v255 then
-840: 		v255 = v255:FindFirstChild("Board")
-841: 	end
-842: 	local v256
-843: 	if v255 then
-844: 		v256 = v255:FindFirstChild("BoardScreen") or v255:FindFirstChild("BoardFrame")
-845: 	else
-846: 		v256 = v255
-847: 	end
-848: 	if v255 and (v256 and v256:IsA("BasePart")) then
-849: 		return v255, v256
-   ...
-1932: 	task.spawn(v_u_287)
-1933: 	for _, v569 in v_u_1:GetTagged("ParkAllBoard") do
-1934: 		task.spawn(v_u_536, v569)
-1935: 	end
-1936: 	local v570 = v_u_22
-1937: 	local v571 = v_u_1:GetInstanceAddedSignal("ParkAllBoard")
-1938: 	local function v573(p572)
-1939: 		-- upvalues: (ref) v_u_536
-1940: 		task.spawn(v_u_536, p572)
-1941: 	end
-1942: 	table.insert(v570, v571:Connect(v573))
-1943: 	local v574 = v_u_22
-1944: 	local v575 = v_u_1:GetInstanceRemovedSignal("ParkAllBoard")
-1945: 	local v576 = v_u_539
-1946: 	table.insert(v574, v575:Connect(v576))
-1947: 	v_u_5:BindActionAtPriority("ParkBoardWheel", function(_, p577, p578)
-1948: 		-- upvalues: (ref) v_u_498
-1949: 		local v579
-1950: 		if p577 == Enum.UserInputState.Change then
-1951: 			v579 = v_u_498(p578.Position)
-1952: 		else
-1953: 			v579 = nil
-1954: 		end
-1955: 		if not v579 then
-1956: 			return Enum.ContextActionResult.Pass
-1957: 		end
-1958: 		local v580 = v579.AbsoluteCanvasSize.Y - v579.AbsoluteWindowSize.Y
-1959: 		local v581 = math.max(0, v580)
-1960: 		local v582 = Vector2.new
-1961: 		local v583 = v579.CanvasPosition.Y - p578.Position.Z * (v579.AbsoluteWindowSize.Y + 6) / 5
-1962: 		v579.CanvasPosition = v582(0, (math.clamp(v583, 0, v581)))
-1963: 		return Enum.ContextActionResult.Sink
-1964: 	end, false, Enum.ContextActionPriority.High.Value, Enum.UserInputType.MouseWheel)
-1965: 	local v584 = v_u_22
-1966: 	local v585 = v_u_6.InputBegan
-1967: 	local function v590(p586, p587)
-1968: 		-- upvalues: (ref) v_u_490
-1969: 		local v588 = p586.UserInputType
-1970: 		if not p587 and (v588 == Enum.UserInputType.MouseButton1 or v588 == Enum.UserInputType.Touch) then
-1971: 			local v589 = v_u_490(p586.Position)
-1972: 			if v589 then
-1973: 				v589()
-1974: 			end
-1975: 		end
-1976: 	end
-1977: 	table.insert(v584, v585:Connect(v590))
-1978: 	local v_u_591 = {}
-1979: 	v_u_209 = v_u_591
-
-===== Players.RansbloxScripts.PlayerScripts.Controllers.RankedController =====
-   ...
-184: 					end
-185: 					v43:Disconnect()
-186: 				end)
-187: 			end
-188: 		end)
-189: 		task.delay(120, function()
-190: 			-- upvalues: (ref) v_u_38
-191: 			v_u_38:Disconnect()
-192: 		end)
-193: 		task.spawn(function()
-194: 			-- upvalues: (ref) v_u_12, (ref) v_u_4, (ref) v_u_11, (ref) v_u_16, (ref) v_u_26
-195: 			local v46 = false
-196: 			while v_u_12 do
-197: 				local v47 = v_u_4:FindFirstChild("World")
-198: 				if v47 then
-199: 					v47 = v47:FindFirstChild("BeyPark")
-200: 				end
-201: 				if v47 then
-202: 					v47 = v47:FindFirstChild("Volt")
-203: 				end
-204: 				local v48
-205: 				if v47 then
-206: 					v48 = v47:FindFirstChild("HumanoidRootPart")
-207: 				else
-208: 					v48 = v47
-209: 				end
-210: 				local v49 = v47 ~= nil and v47:IsA("Model")
-211: 				if v49 then
-212: 					if v48 == nil then
-213: 						v49 = false
-214: 					else
-   ...
-222: 					v51 = false
-223: 				else
-224: 					v51 = v50.Parent.Name == "RankedActors"
-225: 				end
-226: 				if not v50 or (not v50.Parent or v51 and v49) then
-227: 					if v51 and v50 then
-228: 						v50:Destroy()
-229: 					end
-230: 					v_u_11 = nil
-231: 					if v49 then
-232: 						v_u_11 = v47
-233: 						v_u_16(v47, v48)
-234: 					elseif not v46 then
-235: 						local v52 = v_u_4:FindFirstChild("World")
-236: 						if v52 then
-237: 							v52 = v52:FindFirstChild("BeyPark")
-238: 						end
-239: 						if v52 then
-240: 							v52 = v52:FindFirstChild("RankedValtSpot")
-241: 						end
-242: 						if not (v52 and v52:IsA("BasePart")) then
-243: 							v52 = nil
-244: 						end
-245: 						if v52 then
-246: 							v_u_26(v52)
-247: 						end
-248: 					end
-249: 				end
-250: 				task.wait(1)
-251: 			end
-252: 		end)
+===== ReplicatedStorage.Packets (loaded) =====
+1: local v1 = require(script.Parent.Packet)
+2: return {
+3: 	["Ping"] = v1("Ping"):Response(v1.NumberF64):RateLimit(5, 1),
+4: 	["Track"] = v1("Track", v1.String, v1.String):RateLimit(8, 4),
+5: 	["TelPlace"] = v1("TelPlace", v1.String, v1.String, v1.String, v1.String):RateLimit(10, 5),
+6: 	["TelBatch"] = v1("TelBatch", v1.StringLong):RateLimit(6, 60),
+7: 	["BattleState"] = v1("BattleState", v1.StringLong),
+8: 	["BattleLaunch"] = v1("BattleLaunch", v1.NumberU16, v1.NumberF32, v1.NumberF32, v1.NumberU8):RateLimit(4, 1),
+9: 	["BattleForfeit"] = v1("BattleForfeit", v1.NumberU16):RateLimit(1, 1),
+10: 	["BattleStuck"] = v1("BattleStuck", v1.NumberU16):RateLimit(1, 5),
+11: 	["TutorialWarp"] = v1("TutorialWarp", v1.NumberU16, v1.NumberF32):RateLimit(6, 1),
+12: 	["BattlePing"] = v1("BattlePing", v1.NumberU16, v1.NumberU8):RateLimit(3, 1),
+13: 	["SpectateBattle"] = v1("SpectateBattle", v1.String):Response(v1.Boolean8, v1.String):RateLimit(2, 1),
+14: 	["SpectateStop"] = v1("SpectateStop"):RateLimit(2, 1),
+15: 	["BattlePinged"] = v1("BattlePinged", v1.NumberU8, v1.NumberU8, v1.NumberU8),
+16: 	["BattleSwap"] = v1("BattleSwap", v1.NumberU16, v1.NumberU8):RateLimit(4, 1),
+17: 	["TrainerChallenge"] = v1("TrainerChallenge", v1.String):RateLimit(2, 1),
+18: 	["TrainerResult"] = v1("TrainerResult", v1.String),
+19: 	["WorkshopEquipLauncher"] = v1("WorkshopEquipLauncher", v1.String, v1.String, v1.String, v1.String, v1.String, v1.String):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+20: 	["WorkshopEquipBey"] = v1("WorkshopEquipBey", v1.String, v1.String, v1.String):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+21: 	["WorkshopPaint"] = v1("WorkshopPaint", v1.String, v1.String):Response(v1.Boolean8, v1.String):RateLimit(6, 1),
+22: 	["WorkshopLaunchStyle"] = v1("WorkshopLaunchStyle", v1.String):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+23: 	["ShopBuy"] = v1("ShopBuy", v1.String, v1.String, v1.String):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+24: 	["TrainingStart"] = v1("TrainingStart", v1.String, v1.String):Response(v1.Boolean8, v1.String):RateLimit(2, 2),
+25: 	["TrainingResult"] = v1("TrainingResult", v1.String),
+26: 	["PartyLead"] = v1("PartyLead", v1.NumberU8):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+27: 	["PartyNew"] = v1("PartyNew"):Response(v1.Boolean8, v1.String):RateLimit(2, 2),
+28: 	["BoxMove"] = v1("BoxMove", v1.Boolean8, v1.NumberU8):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+29: 	["PartyRepair"] = v1("PartyRepair"):Response(v1.Boolean8, v1.String):RateLimit(2, 2),
+30: 	["SettingsSet"] = v1("SettingsSet", v1.String, v1.NumberF32):RateLimit(10, 1),
+31: 	["PvpChallenge"] = v1("PvpChallenge", v1.NumberF64):RateLimit(2, 1),
+32: 	["PvpOffer"] = v1("PvpOffer", v1.NumberF64),
+33: 	["PvpAnswer"] = v1("PvpAnswer", v1.NumberF64, v1.Boolean8):RateLimit(2, 1),
+34: 	["PvpNotice"] = v1("PvpNotice", v1.String),
+35: 	["PvpBusy"] = v1("PvpBusy", v1.Boolean8):RateLimit(6, 1),
+36: 	["StoryReady"] = v1("StoryReady"):RateLimit(1, 2),
+37: 	["StoryTrigger"] = v1("StoryTrigger", v1.String):RateLimit(4, 1),
+38: 	["CutscenePlay"] = v1("CutscenePlay", v1.String, v1.NumberU16, v1.Boolean8),
+39: 	["CutsceneBattle"] = v1("CutsceneBattle", v1.NumberU16):RateLimit(2, 1),
+40: 	["CutsceneChoice"] = v1("CutsceneChoice", v1.NumberU16, v1.NumberU8):RateLimit(2, 1),
+41: 	["SaveGame"] = v1("SaveGame"):Response(v1.Boolean8, v1.String):RateLimit(2, 10),
+42: 	["CutsceneDone"] = v1("CutsceneDone", v1.NumberU16):RateLimit(2, 1),
+43: 	["CutsceneAbort"] = v1("CutsceneAbort", v1.NumberU16):RateLimit(2, 1),
+44: 	["RivalsPull"] = v1("RivalsPull", v1.String, v1.NumberU8, v1.Boolean8):Response(v1.Boolean8, v1.String, v1.StringLong):RateLimit(3, 1),
+45: 	["RivalsMerge"] = v1("RivalsMerge", v1.String, v1.StringLong):Response(v1.Boolean8, v1.String, v1.String):RateLimit(3, 1),
+46: 	["RivalsTrait"] = v1("RivalsTrait", v1.String, v1.NumberU8, v1.Boolean8):Response(v1.Boolean8, v1.String, v1.String):RateLimit(4, 1),
+47: 	["RivalsStar"] = v1("RivalsStar", v1.String):Response(v1.Boolean8, v1.String, v1.String):RateLimit(4, 1),
+48: 	["RivalsEvolve"] = v1("RivalsEvolve", v1.String):Response(v1.Boolean8, v1.String, v1.String):RateLimit(2, 1),
+49: 	["GymStart"] = v1("GymStart", v1.String):Response(v1.Boolean8, v1.String, v1.String):RateLimit(2, 1),
+50: 	["GymEnd"] = v1("GymEnd", v1.NumberU8, v1.NumberU16):Response(v1.Boolean8, v1.String, v1.String):RateLimit(2, 1),
+51: 	["RivalsTitle"] = v1("RivalsTitle", v1.String):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+52: 	["RivalsNameRoll"] = v1("RivalsNameRoll", v1.Boolean8):Response(v1.Boolean8, v1.String, v1.String):RateLimit(3, 1),
+53: 	["RivalsNamePick"] = v1("RivalsNamePick", v1.Boolean8):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+54: 	["RivalsNameSlot"] = v1("RivalsNameSlot", v1.NumberU8):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+55: 	["TutorialBattle"] = v1("TutorialBattle"):Response(v1.Boolean8, v1.String):RateLimit(1, 1),
+56: 	["TutorialPick"] = v1("TutorialPick", v1.NumberU8):Response(v1.Boolean8, v1.String, v1.String):RateLimit(2, 1),
+57: 	["TutorialTour"] = v1("TutorialTour", v1.Boolean8):Response(v1.Boolean8, v1.String, v1.String):RateLimit(2, 5),
+58: 	["OpeningSeen"] = v1("OpeningSeen"):RateLimit(1, 5),
+59: 	["RankedQueue"] = v1("RankedQueue", v1.String):Response(v1.Boolean8, v1.String):RateLimit(2, 3),
+60: 	["RankedCancel"] = v1("RankedCancel"):Response(v1.Boolean8, v1.String):RateLimit(2, 2),
+61: 	["RankedState"] = v1("RankedState", v1.StringLong),
+62: 	["RankedReady"] = v1("RankedReady"):RateLimit(2, 5),
+63: 	["RankedOrder"] = v1("RankedOrder", v1.NumberU8):RateLimit(4, 1),
+64: 	["RankedChallenge"] = v1("RankedChallenge", v1.NumberF64):Response(v1.Boolean8, v1.String):RateLimit(2, 5),
+65: 	["RankedOffer"] = v1("RankedOffer", v1.NumberF64),
+66: 	["RankedAnswer"] = v1("RankedAnswer", v1.NumberF64, v1.Boolean8):RateLimit(3, 1),
+67: 	["HalloweenAct"] = v1("HalloweenAct", v1.String, v1.String):Response(v1.Boolean8, v1.String, v1.StringLong):RateLimit(
