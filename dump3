@@ -1,0 +1,2864 @@
+keys: BeyLaunch, LaunchRing, perfect, shrink, ring, Launch, LockedIn, BeyPark
+scripts scanned: 362
+
+===== Players.RansbloxScripts.PlayerScripts.Bootstrap =====
+1: local v_u_1 = game:GetService("ReplicatedStorage")
+2: local v2 = os.clock()
+3: local v_u_3 = "Waiting for the game"
+4: local v_u_4 = nil
+5: local v_u_5 = nil
+6: local function v_u_9(p6) -- name: tell
+7: 	-- upvalues: (ref) v_u_5
+8: 	local v_u_7 = string.sub(p6, 1, 60)
+9: 	script:SetAttribute("BootFail", v_u_7)
+10: 	local v_u_8 = v_u_5
+11: 	if v_u_8 then
+12: 		pcall(function()
+13: 			-- upvalues: (copy) v_u_8, (copy) v_u_7
+14: 			v_u_8.Track:Fire("bootfail", v_u_7)
+15: 		end)
+16: 	end
+17: 	warn("[Bootstrap] " .. v_u_7)
+18: end
+19: task.delay(45, function()
+20: 	-- upvalues: (ref) v_u_4, (ref) v_u_3, (copy) v_u_9
+   ...
+64: local v20 = os.clock()
+65: v_u_3 = "Packets"
+66: local v21 = require((v_u_1:WaitForChild("Lifecycle", 30)))
+67: local v22 = require
+68: local v23 = debug.traceback
+69: local v24 = v_u_1:WaitForChild("Packets", 30)
+70: local v25, v26 = xpcall(v22, v23, v24)
+71: local v_u_27
+72: if v25 and type(v26) == "table" then
+73: 	v_u_5 = v26
+74: 	v_u_27 = v_u_5
+75: else
+76: 	warn("[Bootstrap] Packets failed to load:\n" .. tostring(v26))
+77: 	v_u_5 = {
+78: 		["Track"] = {
+79: 			["Fire"] = function() -- name: Fire end
+80: 		}
+81: 	}
+82: 	v_u_27 = v_u_5
+83: end
+84: if not v18 then
+85: 	v_u_9("Poses.Require " .. (string.match(tostring(v19), "^[^\n]*") or ""))
+86: end
+87: local v28 = {}
+88: local v29 = {}
+89: local v30 = os.clock()
+90: v_u_3 = "Registry"
+91: for _, v31 in require(script.Parent.Registry) do
+92: 	v_u_3 = "Require " .. v31.Name
+93: 	local v32 = os.clock()
+94: 	local v33 = require
+95: 	local v34 = debug.traceback
+96: 	local v35, v36 = xpcall(v33, v34, v31)
+97: 	if v35 and type(v36) == "table" then
+98: 		table.insert(v28, v36)
+99: 	else
+100: 		warn((("[Bootstrap] %* failed to load (left out, the rest still start):\n%*"):format(v31.Name, v36)))
+101: 		v_u_9((("%*.Require %*"):format(v31.Name, string.match(tostring(v36), "^[^\n]*") or "")))
+102: 		local v37 = v31.Name .. ".Require"
+103: 		table.insert(v29, v37)
+104: 	end
+105: 	if os.clock() - v32 > 2 then
+106: 		local v38 = warn
+107: 		local v39 = v31.Name
+108: 		local v40 = (os.clock() - v32) * 10
+109: 		v38((("[Bootstrap] require %* took %* s"):format(v39, math.floor(v40) / 10)))
+110: 	end
+111: 	if os.clock() - v30 <= 0.1 then
+112: 		continue
+113: 	end
+114: 	task.wait()
+115: 	v30 = os.clock()
+116: end
+117: local v41 = os.clock()
+118: v_u_3 = "Lifecycle"
+119: v_u_4 = v21.new(v28, {
+120: 	["isolate"] = true,
+121: 	["onError"] = nil,
+122: 	["onError"] = function(p42, p43, p44) -- name: onError
+123: 		-- upvalues: (ref) v_u_27
+124: 		local v45 = string.match(p44, "^[^\n]*") or p44
+125: 		local v46 = string.match(v45, "([%w_]+:%d+:.*)$") or v45
+126: 		local v47 = v_u_27.Track
+127: 		local v48 = ("%*.%* %*"):format(p42, p43, v46)
+128: 		v47:Fire("bootfail", (string.sub(v48, 1, 60)))
+129: 	end
+130: })
+131: local v_u_49 = {}
+132: local v_u_52 = game:GetService("ScriptContext").Error:Connect(function(_, _, p50)
+133: 	-- upvalues: (copy) v_u_49, (ref) v_u_27
+134: 	local v51 = not p50 and "Unknown" or p50.Name
+135: 	if not v_u_49[v51] then
+136: 		v_u_49[v51] = true
+137: 		v_u_27.Track:Fire("error", v51)
+138: 	end
+139: end)
+140: script.Destroying:Connect(function()
+141: 	-- upvalues: (copy) v_u_52, (ref) v_u_4
+142: 	v_u_52:Disconnect()
+143: 	v_u_4:Destroy()
+144: end)
+145: v_u_4:Start()
+146: local v53, v54 = pcall(function()
+147: 	-- upvalues: (copy) v_u_1
+148: 	require((v_u_1:WaitForChild("Packet", 30))).Release()
+149: end)
+150: if not v53 then
+151: 	warn("[Bootstrap] Packet.Release failed (the server\'s held events may not have played): " .. tostring(v54))
+152: end
+153: script:SetAttribute("Ready", true)
+154: if v18 then
+155: 	task.delay(3, function()
+156: 		local v55 = require(script.Parent.Character.Poses).warmAll
+157: 		local v56, v57 = pcall(v55)
+158: 		if not v56 then
+159: 			warn("[Bootstrap] Poses.warmAll failed (each pose is still made when it\'s first asked for): " .. tostring(v57))
+160: 		end
+161: 	end)
+162: end
+163: local v58 = os.clock()
+164: for _, v59 in v_
+
+===== Players.RansbloxScripts.PlayerScripts.RbxCharacterSounds.AtomicBinding =====
+1: local function v_u_4(p1) -- name: parsePath
+2: 	local v2 = string.split(p1, "/")
+3: 	for v3 = #v2, 1, -1 do
+4: 		if v2[v3] ~= "" then
+5: 			continue
+6: 		end
+7: 		table.remove(v2, v3)
+8: 	end
+9: 	return v2
+10: end
+11: local function v_u_11(p5, p6) -- name: unbindNodeDescend
+12: 	-- upvalues: (copy) v_u_11
+13: 	if p5.instance ~= nil then
+14: 		p5.instance = nil
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.AbilityFx =====
+   ...
+134: 	end
+135: 	local v71 = v_u_6.root()
+136: 	if not (v70 and v71) then
+137: 		return nil
+138: 	end
+139: 	local v72 = v70:Clone()
+140: 	v_u_51(v72)
+141: 	v_u_6.scaleFx(v72, v_u_13 * (p68 or 1))
+142: 	if p69 then
+143: 		v_u_6.tint(v72, p69)
+144: 	end
+145: 	for _, v73 in v72:GetDescendants() do
+146: 		if not (v73:IsA("BasePart") and (string.find(v73.Name, "Hit", 1, true) and v72:IsA("Model"))) then
+147: 			continue
+148: 		end
+149: 		v73:Destroy()
+150: 	end
+151: 	for _, v74 in v72:GetDescendants() do
+152: 		if v74:IsA("BasePart") then
+153: 			v74.Anchored = true
+154: 			v74.CanCollide = false
+155: 			v74.CanQuery = false
+156: 			v74.CanTouch = false
+157: 		elseif v74:IsA("ParticleEmitter") then
+158: 			v74.Rate = v74.Rate * 0.55
+   ...
+182: 	v72.Parent = v71
+183: 	return {
+184: 		["inst"] = v72,
+185: 		["k"] = p68 or 1
+186: 	}
+187: end
+188: local function v_u_87(p77, p78) -- name: attachLayers
+189: 	-- upvalues: (copy) v_u_6, (copy) v_u_13, (copy) v_u_76
+190: 	if type(p77) == "table" then
+191: 		for _, v79 in p77 do
+192: 			local v80 = v79.path
+193: 			local v81
+194: 			if type(v80) == "string" then
+195: 				v81 = v_u_6.find(v79.path)
+196: 			else
+197: 				v81 = nil
+198: 			end
+199: 			local v82
+200: 			if v81 and v79.at ~= "bowl" then
+201: 				v82 = v79.k or 1
+202: 				local v83 = v79.cap or 1.7
+203: 				local v84 = v81:GetAttribute("Bulk")
+204: 				if type(v84) == "number" and v84 > 0 then
+205: 					local v85 = v83 / (v84 * v_u_13)
+206: 					v82 = math.min(v82, v85)
+   ...
+270: 		v100 = CFrame.identity
+271: 	end
+272: 	local v101 = CFrame.new
+273: 	local v102 = p96.y or 0
+274: 	local v103 = v101(v99 + Vector3.new(0, v102, 0)) * v100
+275: 	local v104 = p96.inst
+276: 	if v104:IsA("BasePart") then
+277: 		v104.CFrame = v103
+278: 	elseif v104:IsA("Model") then
+279: 		v104:PivotTo(v103)
+280: 	end
+281: end
+282: local function v_u_109(p106) -- name: ringPart
+283: 	-- upvalues: (copy) v_u_6
+284: 	local v107 = Instance.new("Part")
+285: 	v107.Name = "AbilityRing"
+286: 	v107.Anchored = true
+287: 	v107.CanCollide = false
+288: 	v107.CanQuery = false
+289: 	v107.CanTouch = false
+290: 	v107.Transparency = 1
+291: 	v107.Size = Vector3.new(1, 0.02, 1)
+292: 	local v108 = Instance.new("Decal")
+293: 	v108.Face = Enum.NormalId.Top
+294: 	v108.Texture = "rbxassetid://13172482223"
+   ...
+460: 	if v162 then
+461: 		v_u_6.calmWind(v162.inst)
+462: 		local v163 = p149.phAuras
+463: 		table.insert(v163, v162)
+464: 	end
+465: 	if p149.field then
+466: 		p149.field:Destroy()
+467: 		p149.field = nil
+468: 	end
+469: 	if v161 and (v161.field and not p149.fx.clean) then
+470: 		p149.field = v_u_109(p149.fx.tint or v_u_4.SLOT_COLORS[p149.ab])
+471: 		local v164 = p149.fx.fieldFx
+472: 		local v165 = type(v164) == "string" and v_u_76(v164, p149.fx.auraScale, v158)
+473: 		if v165 then
+474: 			local v166 = p149.phAuras
+475: 			table.insert(v166, v165)
+476: 		end
+477: 	end
+478: 	local v167 = p149.hum
+479: 	if v167 then
+480: 		v167:Destroy()
+481: 	end
+482: 	p149.hum = nil
+483: 	if v161 and (v161.path or v161.field) then
+484: 		local _ = v161.path
+   ...
+514: 		["move"] = v171,
+515: 		["fx"] = v172,
+516: 		["auras"] = {},
+517: 		["phAuras"] = {}
+518: 	}
+519: 	for _, v174 in {
+520: 		"aura",
+521: 		"aura2",
+522: 		"trail",
+523: 		"head",
+524: 		"orbit",
+525: 		"dome",
+526: 		"ringModel"
+527: 	} do
+528: 		local v175 = v172[v174]
+529: 		if type(v175) ~= "string" or v174 == "aura" and v172.noAura == true then
+530: 			continue
+531: 		end
+532: 		local v176
+533: 		if v174 == "aura" or v174 == "aura2" then
+534: 			v176 = (v172.auraScale or 1) * 0.58
+535: 		else
+536: 			v176 = v172.auraScale
+537: 		end
+538: 		local v177 = v_u_76
+539: 		local v178 = v172.auraTint
+540: 		local v179
+541: 		if typeof(v178) == "Color3" then
+   ...
+547: 		end
+548: 		local v180 = v177(v175, v176, v179)
+549: 		if not v180 then
+550: 			continue
+551: 		end
+552: 		local v181 = v173.auras
+553: 		table.insert(v181, v180)
+554: 	end
+555: 	if v172.clean then
+556: 		v_u_87(v172.layers, v173.auras)
+557: 	end
+558: 	l
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.BattleCamera =====
+   ...
+495: 	v_u_180.Name = "BeyYouMarker"
+496: 	v_u_180.AlwaysOnTop = true
+497: 	v_u_180.LightInfluence = 0
+498: 	v_u_7.billboardFit(v_u_180, Vector2.new(68, 68))
+499: 	v_u_180.SizeOffset = Vector2.new(0, 0.5)
+500: 	local v181 = v_u_5:FindFirstChild("Assets")
+501: 	if v181 then
+502: 		v181 = v181:FindFirstChild("Tutorial")
+503: 	end
+504: 	if v181 then
+505: 		v181 = v181:FindFirstChild("UiArrowImage")
+506: 	end
+507: 	local v_u_182 = not (v181 and v181:IsA("StringValue")) and "" or v181.Value
+508: 	local function v188(p183, p184, p185, p186) -- name: arrow
+509: 		-- upvalues: (copy) v_u_182, (copy) v_u_180
+510: 		local v187 = Instance.new("ImageLabel")
+511: 		v187.Name = p183
+512: 		v187.BackgroundTransparency = 1
+513: 		v187.Image = v_u_182
+514: 		v187.ImageColor3 = p184
+515: 		v187.AnchorPoint = Vector2.new(0.5, 0.5)
+516: 		v187.Position = UDim2.fromScale(0.5, 0.5)
+517: 		v187.Size = UDim2.fromScale(p185, p185)
+518: 		v187.ZIndex = p186
+519: 		v187.Parent = v_u_180
+   ...
+1436: 			v_u_30 = nil
+1437: 		end
+1438: 		if v_u_31 then
+1439: 			v_u_31:Destroy()
+1440: 			v_u_31 = nil
+1441: 		end
+1442: 		if v_u_29 then
+1443: 			v_u_29:Destroy()
+1444: 			v_u_29 = nil
+1445: 		end
+1446: 	end
+1447: end
+1448: function v_u_13.preLaunch(p480) -- name: preLaunch
+1449: 	-- upvalues: (ref) v_u_73, (ref) v_u_21, (ref) v_u_71, (ref) v_u_32, (ref) v_u_35, (ref) v_u_36, (ref) v_u_30, (copy) v_u_11, (copy) v_u_4
+1450: 	if p480 then
+1451: 		p480 = p480:FindFirstChild("Head")
+1452: 	end
+1453: 	v_u_73 = nil
+1454: 	if v_u_21 and (p480 and p480:IsA("BasePart")) then
+1455: 		v_u_71 = {
+1456: 			["head"] = nil,
+1457: 			["t"] = 0,
+1458: 			["mode"] = "aim",
+1459: 			["head"] = p480
+1460: 		}
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.BattleFx =====
+   ...
+34: local v_u_29 = 0
+35: local v_u_30 = nil
+36: local v_u_31 = {}
+37: local v_u_32 = 1
+38: local v_u_33 = 0
+39: local v_u_34 = Color3.new(1, 1, 1)
+40: local function v_u_38(p35) -- name: find
+41: 	-- upvalues: (ref) v_u_17
+42: 	if p35 == "" then
+43: 		return nil
+44: 	end
+45: 	local v36 = v_u_17
+46: 	for v37 in string.gmatch(p35, "[^/]+") do
+47: 		if not v36 then
+48: 			continue
+49: 		end
+50: 		v36 = v36:FindFirstChild(v37)
+51: 	end
+52: 	return v36
+53: end
+54: local function v46(p39, p40, p41) -- name: world
+55: 	-- upvalues: (ref) v_u_18, (copy) v_u_7, (ref) v_u_19
+56: 	local v42 = v_u_18
+57: 	local v43 = p39 * p39 + p40 * p40
+58: 	local v44 = math.sqrt(v43)
+   ...
+81: 	end
+82: end
+83: local function v_u_77(p58, p59, p60, p61, p62) -- name: emit
+84: 	-- upvalues: (ref) v_u_15, (copy) v_u_1, (copy) v_u_8, (copy) v_u_54, (ref) v_u_16, (copy) v_u_3
+85: 	local v63 = v_u_15
+86: 	if p58 and v63 then
+87: 		local v64 = p58:Clone()
+88: 		if v64:IsA("Part") then
+89: 			v64.Transparency = 1
+90: 		end
+91: 		if p61 and v64:IsA("Model") then
+92: 			for _, v65 in v64:GetChildren() do
+93: 				if not v65:IsA("BasePart") or string.find(v65.Name, p61) then
+94: 					continue
+95: 				end
+96: 				v65:Destroy()
+97: 			end
+98: 		end
+99: 		local v66 = p58.Name == "Wind"
+100: 		if v66 and v_u_1.LocalPlayer:GetAttribute("NoWind") == true then
+101: 			v64:Destroy()
+102: 		else
+103: 			if v64:IsA("BasePart") then
+104: 				v64.CFrame = p59
+105: 			elseif v64:IsA("Model") then
+106: 				v64:PivotTo(p59)
+107: 			end
+108: 			v64.Parent = v63
+109: 			local v67 = (p60 or 1) * (v66 and 0.5 or 1)
+110: 			local v68 = 0.5
+111: 			for _, v_u_69 in v64:GetDescendants() do
+112: 				if p62 and (v_u_69:IsA("ParticleEmitter") and string.find(v_u_69.Name, p62, 1, true)) then
+113: 					v_u_69:Destroy()
+114: 				elseif v_u_69:IsA("ParticleEmitter") then
+115: 					local v70 = v_u_69:GetAttribute("EmitCount")
+116: 					local v71 = v_u_69:GetAttribute("EmitDelay")
+117: 					if type(v70) ~= "number" or v70 <= 0 then
+118: 						local v72 = v_u_69.Rate * 0.08
+119: 						local v73 = math.floor(v72)
+120: 						v70 = math.max(1, v73)
+121: 					end
+122: 					local v_u_74 = v_u_8.n(v70 * v67)
+123: 					if v66 then
+124: 						v_u_54(v_u_69)
+   ...
+335: 	["HallowReaper"] = Color3.fromRGB(255, 150, 50)
+336: }
+337: local v_u_144 = {
+338: 	["XenoXcalibur"] = { Color3.fromRGB(255, 140, 111), v142(255, 140, 111) },
+339: 	["VictoryValkyrie"] = { Color3.fromRGB(105, 138, 255), v142(110, 191, 255) },
+340: 	["GenesisValkyrie"] = { Color3.fromRGB(95, 125, 255), v142(255, 214, 110) }
+341: }
+342: local function v_u_150(p145, p146) -- name: tint
+343: 	local v147 = ColorSequence.new(p146)
+344: 	for _, v148 in p145:GetDescendants() do
+345: 		if v148:IsA("ParticleEmitter") or (v148:IsA("Beam") or v148:IsA("Trail")) then
+346: 			local v149 = v148.Name
+347: 			if string.sub(v149, -3) == "Ink" then
+348: 				if not v148:IsA("BasePart") or v148.Material ~= Enum.Material.ForceField then
+349: 					continue
+350: 				end
+351: 				v148.Color = p146
+352: 			else
+353: 				v148.Color = v147
+354: 			end
+355: 		else
+356: 			if not v148:IsA("BasePart") or v148.Material ~= Enum.Material.ForceField then
+357: 				continue
+358: 			end
+359: 			v148.Color = p146
+360: 		end
+361: 	end
+362: end
+363: local function v_u_154(p151, p152) -- name: partColor
+364: 	if p151 then
+365: 		for _, v153 in p151:GetDescendants() do
+366: 			if not v153:IsA("BasePart") or p152 and not string.find(v153.Name, p152, 1, true) then
+367: 				continue
+368: 			end
+369: 			return v153.Color
+370: 		end
+371: 		if p151.PrimaryPart then
+372: 			return p151.PrimaryPart.Color
+373: 		end
+374: 	end
+375: 	return Color3.new(1, 1, 1)
+376: end
+377: local function v_u_165(p155, p156) -- name: vividColor
+378: 	local v157 = 0
+   ...
+427: function v_u_10.burstFlare(p173, p174) -- name: burstFlare
+428: 	-- upvalues: (copy) v_u_172, (copy) v_u_129, (ref) v_u_17
+429: 	local v175 = v_u_172
+430: 	local v176
+431: 	if p174 then
+432: 		v176 = p174:Lerp(Color3.new(1, 1, 
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.BattleHud =====
+1: local v_u_1 = game:GetService("Players")
+2: local v_u_2 = game:GetService("UserInputService")
+3: local v_u_3 = game:GetService("ContextActionService")
+4: local v_u_4 = game:GetService("GuiService")
+5: local v5 = game:GetService("ReplicatedStorage")
+6: local v_u_6 = require(v5.Bey.Sim)
+7: local v_u_7 = require(v5.Bey.PartCatalog)
+8: local v_u_8 = require(v5.Bey.Abilities)
+9: local v_u_9 = require(v5.Bey.TipSkills)
+10: local v_u_10 = require(v5.Bey.MoveText)
+11: local v_u_11 = require(script.Parent.Parent.UI.Tip)
+12: local v_u_12 = require(script.Parent.Parent.UI.Locale)
+13: local v_u_13 = require(v5.Bey.Launch)
+14: local v_u_14 = game:GetService("TweenService")
+15: local v_u_15 = require(script.Parent.BattleInput)
+16: local v_u_16 = require(script.Parent.TouchPad)
+17: local v_u_17 = require(script.Parent.BeyView)
+18: local v_u_18 = require(script.Parent.Parent.UI.PearlUI)
+19: local v_u_19 = require(script.Parent.HudSkin)
+20: local v_u_20 = require(script.Parent.Parent.UI.RivalsKit)
+21: local v21 = require(script.Parent.Parent.UI.MoveEmblem)
+22: local v_u_22 = require(script.Parent.Parent.UI.HudKit)
+23: local v_u_23 = {}
+24: local v_u_24 = v_u_18.NAVY
+25: local v_u_25 = v_u_18.WHITE
+   ...
+173: 	p90.Text = p91
+174: 	p90.TextWrapped = false
+175: 	p90.TextTruncate = Enum.TextTruncate.None
+176: 	p90.TextSize = p92
+177: 	local v94 = p90.TextBounds.X
+178: 	local v95 = p90.AbsoluteSize.X
+179: 	if v95 < v94 and v95 > 0 then
+180: 		local v96 = p92 * v95 / v94
+181: 		local v97 = math.floor(v96)
+182: 		p90.TextSize = math.max(p93, v97)
+183: 	end
+184: 	p90.TextTruncate = Enum.TextTruncate.AtEnd
+185: 	local v98 = string.match(p91, "^%s*(%S+)")
+186: 	if v98 and (string.upper(v98) == "THE" or (string.upper(v98) == "A" or string.upper(v98) == "AN")) then
+187: 		v98 = string.match(p91, "(%S+)%s*$")
+188: 	end
+189: 	local v99 = p90.Size.X.Offset
+190: 	if v98 and (v98 ~= p91 and v99 > 0) then
+191: 		local v100 = game:GetService("TextService")
+192: 		local v101 = p90.TextSize
+193: 		local v102
+194: 		if p90.Font == Enum.Font.Unknown then
+195: 			v102 = Enum.Font.FredokaOne
+196: 		else
+197: 			v102 = p90.Font
+198: 		end
+199: 		if v100:GetTextSize(p91, v101, v102, Vector2.new(4000, 200)).X > v99 + 0.5 then
+   ...
+656: 	local v168 = v_u_46("Frame", {
+657: 		["Name"] = "RipRing",
+658: 		["BackgroundTransparency"] = 1,
+659: 		["AnchorPoint"] = nil,
+660: 		["Position"] = nil,
+661: 		["Size"] = nil,
+662: 		["Visible"] = false,
+663: 		["ZIndex"] = 30,
+664: 		["AnchorPoint"] = Vector2.new(0.5, 0.5),
+665: 		["Position"] = UDim2.fromOffset(0, 24),
+666: 		["Size"] = UDim2.fromOffset(236, 236)
+667: 	}, v167)
+668: 	v_u_37.ringPop = v_u_46("UIScale", {
+669: 		["Scale"] = 1
+670: 	}, v168)
+671: 	local v169 = v_u_46("Frame", {
+672: 		["Name"] = "Target",
+673: 		["AnchorPoint"] = nil,
+674: 		["BorderSizePixel"] = 0,
+675: 		["Position"] = nil,
+676: 		["Size"] = nil,
+677: 		["ZIndex"] = 31,
+678: 		["AnchorPoint"] = Vector2.new(0.5, 0.5),
+679: 		["Position"] = UDim2.fromScale(0.5, 0.5),
+680: 		["Size"] = UDim2.fromOffset(236, 236)
+   ...
+751: 		["AnchorPoint"] = Vector2.new(0.5, 0),
+752: 		["Position"] = UDim2.fromScale(0.5, 0.04),
+753: 		["Size"] = UDim2.fromScale(0.78, 0.4)
+754: 	}, v170.face)
+755: 	v_u_46("UICorner", {
+756: 		["CornerRadius"] = UDim.new(1, 0)
+757: 	}, v181)
+758: 	v_u_46("UIGradient", {
+759: 		["Rotation"] = 90,
+760: 		["Transparency"] = nil,
+761: 		["Transparency"] = NumberSequence.new(0.2, 1)
+762: 	}, v181)
+763: 	v_u_37.ringFace = v169
+764: 	v_u_37.ringFacePop = v_u_46("UIScale", {
+765: 		["Scale"] = 1
+766: 	}, v169)
+767: 	local v182 = v_u_46("Frame", {
+768: 		["Name"] = "Line",
+769: 		["BackgroundTransparency"] = 1,
+770: 		["AnchorPoint"] = nil,
+771: 		["Position"] = nil,
+772: 		["Size"] = nil,
+773: 		["ZIndex"] = 36,
+774: 		["AnchorPoint"] = Vector2.new(0.5, 0.5),
+775: 		["Position"] = UDim2.fromScale(0.5, 0.5),
+776: 		["Size"] = UDim2.fromOffset(246, 246)
+777: 	}, v168)
+778: 	v_u_46("UICorner", {
+779: 		["CornerRadius"] = UDim.new(1, 0)
+780: 	
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.BattleInput =====
+   ...
+128: 		["label"] = "Awaken",
+129: 		["key"] = nil,
+130: 		["pad"] = nil,
+131: 		["about"] = "Once a match, with a full meter: your bey gets faster and stronger for a while.",
+132: 		["key"] = Enum.KeyCode.E,
+133: 		["pad"] = Enum.KeyCode.DPadUp
+134: 	},
+135: 	{
+136: 		["id"] = "Rip",
+137: 		["label"] = "Rip",
+138: 		["key"] = nil,
+139: 		["pad"] = nil,
+140: 		["about"] = "Locks in your launch, then press it on each ring to rip.",
+141: 		["key"] = Enum.KeyCode.Q,
+142: 		["pad"] = Enum.KeyCode.ButtonR2
+143: 	},
+144: 	{
+145: 		["id"] = "Aim",
+146: 		["label"] = "Aim (hold)",
+147: 		["key"] = nil,
+148: 		["pad"] = nil,
+149: 		["about"] = "Hold it and point: your moves go that way instead of at the nearest rival.",
+150: 		["key"] = Enum.KeyCode.LeftShift,
+151: 		["pad"] = Enum.KeyCode.ButtonL2
+152: 	},
+   ...
+243: 	["Five"] = "5",
+244: 	["Six"] = "6",
+245: 	["Seven"] = "7",
+246: 	["Eight"] = "8",
+247: 	["Nine"] = "9",
+248: 	["Zero"] = "0",
+249: 	["MouseLeftButton"] = "LMB",
+250: 	["MouseRightButton"] = "RMB"
+251: }
+252: v_u_11.padName = v_u_10.padName
+253: function v_u_11.keyName(p41) -- name: keyName
+254: 	-- upvalues: (copy) v_u_40
+255: 	return v_u_40[p41.Name] or string.upper(p41.Name)
+256: end
+257: function v_u_11.say(p42) -- name: say
+258: 	-- upvalues: (copy) v_u_4, (copy) v_u_10, (copy) v_u_11
+259: 	local v43 = v_u_4.PreferredInput
+260: 	local v44, v45
+261: 	if v43 == Enum.PreferredInput.Touch then
+262: 		v44 = "the BRACE button"
+263: 		v45 = "tap AWAKEN"
+264: 	elseif v43 == Enum.PreferredInput.Gamepad then
+265: 		v44 = v_u_10.padName(v_u_11.padFor("Brace"))
+266: 		v45 = ("press %*"):format((v_u_10.padName(v_u_11.padFor("Awaken"))))
+267: 	else
+268: 		v44 = v_u_11.keyName(v_u_11.keyFor("Brace"))
+269: 		v45 = ("press %*"):format((v_u_11.keyName(v_u_11.keyFor("Awaken"))))
+270: 	end
+271: 	local v46 = string.gsub(p42, "%(F%)", (("(%*)"):format(v44)))
+272: 	local v47 = string.gsub(v46, "press E([%s%.,!])", v45 .. "%1")
+273: 	return string.gsub(v47, "press E$", v45)
+274: end
+275: local v_u_48 = {}
+276: local v_u_49 = nil
+277: local v_u_50 = nil
+278: local v_u_51 = nil
+279: local function v_u_58(p52) -- name: hold
+280: 	-- upvalues: (ref) v_u_50, (copy) v_u_7, (copy) v_u_48, (ref) v_u_49
+281: 	local v53 = p52:FindFirstChild("HumanoidRootPart")
+282: 	local v54 = v_u_50
+283: 	local v55 = v54 and (v53 and v53:IsA("BasePart")) and v_u_7.standPivot(v54.frame, v54.slot, p52, v54.count)
+284: 	if v55 then
+285: 		v53.Anchored = false
+   ...
+338: 					local v73 = v_u_19
+339: 					v_u_19 = bit32.bor(v73, v71)
+340: 				elseif p70 == Enum.UserInputState.End or p70 == Enum.UserInputState.Cancel then
+341: 					local v74 = v_u_18
+342: 					local v75 = bit32.bnot(v71)
+343: 					v_u_18 = bit32.band(v74, v75)
+344: 				end
+345: 				return Enum.ContextActionResult.Sink
+346: 			end, v68, Enum.ContextActionPriority.High.Value, table.unpack(v69))
+347: 			if not v68 then
+348: 				continue
+349: 			end
+350: 			v_u_2:SetTitle("Bey" .. v_u_67, string.upper(v_u_67))
+351: 			v_u_8.style("Bey" .. v_u_67)
+352: 		end
+353: 		local v76 = v_u_1.LocalPlayer.Character
+354: 		if v76 then
+355: 			v_u_58(v76)
+356: 		end
+357: 		v_u_51 = v_u_1.LocalPlayer.CharacterAdded:Connect(function(p77)
+358: 			-- upvalues: (ref) v_u_21, (ref) v_u_58
+359: 			p77:WaitForChild("HumanoidRootPart", 5)
+360: 			p77:WaitForChild("Humanoid", 5)
+361: 			if v_u_21 and p77.Parent then
+362: 				v_u_58(p77)
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.BeyView =====
+   ...
+296: 		["rims"] = v95,
+297: 		["home"] = p89,
+298: 		["kick"] = Vector3.new(0, 0, 0),
+299: 		["kickV"] = Vector3.new(0, 0, 0),
+300: 		["hopState"] = nil,
+301: 		["airLast"] = nil,
+302: 		["airT"] = 0,
+303: 		["dead"] = nil,
+304: 		["ghostAlpha"] = 1,
+305: 		["layerBase"] = v91:GetPivot():ToObjectSpace(v92[1]:GetPivot()),
+306: 		["clicks"] = 0,
+307: 		["tipAt"] = nil,
+308: 		["springN"] = p88.springN,
+309: 		["springAt"] = -10,
+310: 		["springPh"] = 0,
+311: 		["cutT"] = nil,
+312: 		["cutRel"] = 1,
+313: 		["calmK"] = 1,
+314: 		["notch"] = 0,
+315: 		["notchFrom"] = 0,
+316: 		["ratchetT"] = 1,
+317: 		["popT"] = 1,
+318: 		["bank"] = 0,
+319: 		["ghosted"] = false,
+320: 		["acc"] = Vector3.new(0, 0, 0),
+321: 		["lastV"] = nil,
+322: 		["leanV"] = Vector3.new(0, 0, 0),
+   ...
+632: end
+633: local function v_u_290(p242, p243) -- name: gimmicks
+634: 	local v244 = p243.canReboot and 0.02 or 0
+635: 	if p243.reboot > 0 then
+636: 		local v245 = p242.tipAt or p242.clock
+637: 		p242.tipAt = v245
+638: 		local v246 = (p242.clock - v245) / 0.16
+639: 		local v247 = math.clamp(v246, 0, 1)
+640: 		v244 = (1 - v247 * v247) * 0.02
+641: 	elseif p242.tipAt then
+642: 		p242.tipAt = nil
+643: 	end
+644: 	if p243.springN ~= p242.springN then
+645: 		if p243.springN > p242.springN and not p242.cutT then
+646: 			p242.springAt = p242.clock
+647: 		end
+648: 		p242.springN = p243.springN
+649: 	end
+650: 	local v248 = (not p243.spring or p243.ab == 0) and 0 or p243.ab * 16 + p243.abPh
+651: 	if v248 ~= p242.springPh then
+652: 		p242.springPh = v248
+653: 		local v249
+654: 		if v248 == 0 then
+655: 			v249 = nil
+656: 		else
+657: 			v249 = p243.kit[p243.ab]
+658: 		end
+659: 		local v250
+660: 		if v249 then
+661: 			v250 = v249.phases[p243.abPh]
+662: 		else
+663: 			v250 = nil
+664: 		end
+665: 		local v251
+666: 		if v250 then
+667: 			v251 = v250.lunge
+668: 		else
+669: 			v251 = nil
+670: 		end
+671: 		if v251 and (v251.aim == "away" and not p242.cutT) then
+672: 			p242.springAt = p242.clock
+673: 		end
+674: 	end
+675: 	local v252 = p242.cutT
+676: 	if not v252 then
+677: 		local v253 = p242.clock - p242.springAt
+678: 		if v253 >= 0.42 or v253 < 0 then
+679: 			return v244, nil
+680: 		end
+681: 		if v253 < 0.06 then
+682: 			local v254 = (v253 / 0.06) ^ 2
+683: 			return v244, CFrame.new(0, v254 * -0.05, 0) * CFrame.Angles(0, v254 * 0.3490658503988659 * p243.spinDir, 0)
+684: 		end
+685: 		local v255 = (v253 - 0.06) / 0.36
+686: 		local v256 = 9.42477796076938 * v255
+687: 		local v257 = math.cos(v256)
+688: 		local v258 = v255 * -3.2
+689: 		local v259 = v257 * math.exp(v258) * (1 - v255 ^ 4)
+   ...
+1266: 			["flip"] = nil,
+1267: 			["axis"] = nil,
+1268: 			["power"] = 0,
+1269: 			["legs"] = p524,
+1270: 			["flip"] = p525 or 0,
+1271: 			["axis"] = p526 or Vector3.new(1, 0, 0)
+1272: 		}
+1273: 	end
+1274: end
+1275: function v_u_8.rebootIn(p527, p528) -- name: rebootIn
+1276: 	p527.tipAt = p527.clock + p528
+1277: end
+1278: function v_u_8.springCut(p529, p530, p531) -- name: springCut
+1279: 	if p529.cutT and not p530 then
+1280: 		p529.springAt = -10
+1281: 	end
+1282: 	p529.cutT = p530
+1283: 	p529.cutRel = math.max(p531, 0.05)
+1284: end
+1285: function v_u_8.calm(p532, p533) -- name: calm
+1286: 	p532.calmK = math.clamp(p533, 0, 1)
+1287: 	if p533 < 0.5 then
+1288: 		p532.hopState = nil
+1289: 		p532.kick = Vector3.new(0, 0, 0)
+1290: 		p532.kickV = Vector3.new(0, 0, 0)
+1291: 	end
+1292: end
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.HitMarkers =====
+1: local v1 = game:GetService("ReplicatedStorage")
+2: local v_u_2 = require(script.Parent.Parent.UI.Kit)
+3: local v3 = require(v1.Config.UiImages)
+4: local v_u_4 = {}
+5: local v_u_5 = Enum.Font.FredokaOne
+6: local v_u_6 = Color3.new(1, 1, 1)
+7: local v7 = v3.nt_glow
+8: local v_u_8 = "rbxassetid://" .. tostring(v7)
+9: local v_u_9 = {
+10: 	{
+11: 		["text"] = 0.3,
+12: 		["edge"] = 0.6,
+13: 		["width"] = 0.11
+14: 	},
+15: 	{
+16: 		["text"] = 0.8,
+17: 		["edge"] = 0.92,
+18: 		["width"] = 0.22
+19: 	}
+20: }
+   ...
+167: 	["TOO EARLY!"] = true,
+168: 	["TOO LATE!"] = true
+169: }
+170: local v_u_34 = { "^READ:", "^CLICK %d", "^%d+ HIT!$" }
+171: local v_u_35 = 0
+172: local v_u_36 = 0
+173: local function v_u_42(p37, p38) -- name: wanted
+174: 	-- upvalues: (copy) v_u_33, (copy) v_u_34, (ref) v_u_36, (ref) v_u_35
+175: 	if v_u_33[p37] then
+176: 		return false
+177: 	end
+178: 	for _, v39 in v_u_34 do
+179: 		if not string.find(p37, v39) then
+180: 			continue
+181: 		end
+182: 		return false
+183: 	end
+184: 	local v40 = string.match(p37, "^%-(%d+%.?%d*)%%$")
+185: 	if v40 and (tonumber(v40) or 0) < 4 then
+186: 		return false
+187: 	end
+188: 	local v41 = os.clock()
+189: 	if p38 then
+190: 		if v41 - v_u_36 < 0.35 then
+191: 			return false
+192: 		end
+193: 		v_u_36 = v41
+194: 	elseif v41 - v_u_35 < 0.7 or v41 - v_u_36 < 0.35 then
+195: 		return false
+196: 	end
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.Launcher =====
+1: local v_u_1 = game:GetService("ReplicatedStorage")
+2: local v_u_2 = require(v_u_1.Bey.LauncherCatalog)
+3: local v_u_3 = require(v_u_1.Bey.Cosmetics)
+4: local v_u_4 = CFrame.new((Vector3.new(-1, -1, -1)).Unit * 0.008)
+5: local v_u_5 = CFrame.new(-0.008, 0, 0)
+6: local v_u_6 = {
+7: 	["CarabinerGrip"] = CFrame.new(0.008, 0, 0)
+8: }
+9: local v_u_7 = {
+10: 	["SpeedLauncherR"] = {
+11: 		["L"] = true,
+12: 		["R"] = true
+13: 	},
+14: 	["HeavyLauncherR"] = {
+15: 		["L"] = true,
+16: 		["R"] = true
+17: 	}
+18: }
+19: local v_u_8 = CFrame.new(0, -1, 0) * CFrame.Angles(-1.5707963267948966, 0, 0)
+20: local v_u_9 = {}
+21: v_u_9.__index = v_u_9
+22: local function v_u_15(p10, p11) -- name: piece
+23: 	-- upvalues: (copy) v_u_1
+24: 	local v12 = v_u_1:FindFirstChild("Assets")
+25: 	if v12 then
+26: 		v12 = v12:FindFirstChild("Launchers")
+27: 	end
+28: 	if v12 then
+29: 		v12 = v12:FindFirstChild(p10)
+30: 	end
+31: 	if v12 then
+32: 		v12 = v12:FindFirstChild(p11)
+33: 	end
+34: 	if not (v12 and v12:IsA("Model")) then
+35: 		return nil
+36: 	end
+37: 	local v13 = v12:Clone()
+38: 	v13:ScaleTo(v13:GetScale() * 1.4)
+   ...
+61: 	local v26 = Instance.new("Weld")
+62: 	v26.Part0 = v24
+63: 	v26.Part1 = v25
+64: 	v26.C0 = v22
+65: 	v26.C1 = v23
+66: 	v26.Parent = p19
+67: 	return v26
+68: end
+69: function v_u_9.build(p28, p29) -- name: build
+70: 	-- upvalues: (copy) v_u_2, (copy) v_u_15, (copy) v_u_27, (copy) v_u_4, (copy) v_u_6, (copy) v_u_5, (copy) v_u_7
+71: 	local _, v30 = v_u_2.launcherFor(p28, p29)
+72: 	local v31 = v_u_2.model(p28, p29)
+73: 	local v32 = v_u_15("Launchers", v31)
+74: 	if not v32 then
+75: 		return nil
+76: 	end
+77: 	local v33 = v32:FindFirstChild("BeyAttachment", true)
+78: 	if not (v33 and v33:IsA("Attachment")) then
+79: 		v32:Destroy()
+80: 		return nil
+81: 	end
+82: 	local v34 = v33.Parent
+83: 	local v35 = Instance.new("Model")
+84: 	v35.Name = "BeyLauncher"
+85: 	v32.Name = "Launcher"
+86: 	v32.Parent = v35
+87: 	local v36 = CFrame.identity
+88: 	local v37 = false
+89: 	local v38
+90: 	if #v30.mounts > 0 then
+91: 		local v39 = v_u_15("Grips", p28.grip)
+92: 		local v40
+93: 		if v39 then
+94: 			v40 = v39:FindFirstChild("launcherInsertion", true)
+95: 		else
+96: 			v40 = v39
+97: 		end
+   ...
+138: 			end
+139: 		elseif v39 then
+140: 			v39:Destroy()
+141: 			v38 = v34
+142: 		else
+143: 			v38 = v34
+144: 		end
+145: 	else
+146: 		local v49 = v34.Size
+147: 		v36 = CFrame.new(0, 0, -v49.Z * 0.42)
+148: 		v38 = v34
+149: 	end
+150: 	v32:SetAttribute("Piece", "Launcher")
+151: 	local v50 = v_u_7[v31]
+152: 	local v51
+153: 	if v37 and (v50 and v50[p28.mount]) then
+154: 		v51 = nil
+155: 	else
+156: 		v51 = v_u_15("BeyLoggers", "BeyLogger")
+157: 	end
+158: 	local v52
+159: 	if v51 then
+160: 		v52 = v51:FindFirstChild("launcherPort", true)
+161: 	else
+162: 		v52 = v51
+   ...
+171: 	end
+172: 	v35.PrimaryPart = v38
+173: 	return v35, v38, v36, v34, v33
+174: end
+175: local function v_u_60(p54, p55) -- name: findPull
+176: 	local v56 = nil
+177: 	local v57 = nil
+178: 	for _, v58 in p54:GetDescendants() do
+179: 		if not v58:IsA("BasePart") then
+180: 			continue
+181: 		end
+182: 		local v59 = v58.Name
+183: 		if string.find(v59, "_Ripcord", 1, true) then
+184: 			v57 = v58
+185: 		else
+186: 			if not string.find(v59, "Pull", 1, true) and string.sub(v59, -6) ~= "Handle" then
+187: 				continue
+188: 			end
+189: 			v56 = v58
+190: 		end
+191: 	end
+192: 	if p55 == "ripcord" then
+193: 		return v56 or v57
+194: 	else
+195: 		return v56
+196: 	end
+197: end
+198: function v_u_9.attach(p61, p62, p63, p64) -- name: attach
+199: 	-- upvalues: (copy) v_u_9, (copy) v_u_3, (copy) v_u_2, (copy) v_u_60, (copy) v_u_8
+200: 	local v65 = p61:FindFirstChild("LeftHand") ~= nil
+201: 	local v66 = v65 and 0.85 or 0
+202: 	local v67 = p61:FindFirstChild(v65 and "LeftHand" or "Left Arm")
+203: 	if not (v67 and v67:IsA("BasePart")) then
+204: 		return nil
+205: 	end
+206: 	local v68, v69, v70, v71, v72 = v_u_9.build(p62, p63)
+207: 	if not (v68 and (v69 and (v70 and (v71 and v72)))) then
+208: 		return nil
+209: 	end
+210: 	v_u_3.paintLauncher(v
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.SwapScreen =====
+   ...
+268: 			["Size"] = nil,
+269: 			["ZIndex"] = 6,
+270: 			["AnchorPoint"] = Vector2.new(0.5, 0),
+271: 			["Position"] = UDim2.new(0.5, 0, 0, 270),
+272: 			["AutomaticSize"] = Enum.AutomaticSize.X,
+273: 			["Size"] = UDim2.fromOffset(0, 30)
+274: 		}, v_u_50)
+275: 		v_u_16("UIListLayout", {
+276: 			["FillDirection"] = Enum.FillDirection.Horizontal,
+277: 			["Padding"] = UDim.new(0, 8),
+278: 			["SortOrder"] = Enum.SortOrder.LayoutOrder
+279: 		}, v64)
+280: 		v_u_23(v64, string.upper(v46.type), v_u_14[v46.type] or v_u_8.Hues.violet, 7)
+281: 		v_u_23(v64, ("LV %*"):format(v44.level), v_u_8.Hues.deep, 7)
+282: 		if v45 then
+283: 			local v65 = v_u_16("Frame", {
+284: 				["AnchorPoint"] = nil,
+285: 				["Position"] = nil,
+286: 				["Size"] = nil,
+287: 				["ZIndex"] = 8,
+288: 				["AnchorPoint"] = Vector2.new(0.5, 0.5),
+289: 				["Position"] = UDim2.new(0.5, 0, 0, 0),
+290: 				["Size"] = UDim2.fromOffset(130, 34)
+291: 			}, v_u_50)
+292: 			v_u_8.dress(v65, v_u_8.Hues.lime, 17, 3)
+293: 			v_u_8.text(v65, {
+294: 				["text"] = "IN PLAY",
+295: 				["size"] = 20,
+296: 				["strokeColor"] = nil,
+297: 				["z"] = 9,
+298: 				["strokeColor"] = v_u_8.Hues.lime.ink
+299: 			}, {
+300: 				["Size"] = UDim2.fromScale(1, 1)
+301: 			})
+302: 		end
+303: 		if v41 then
+304: 			v_u_8.keycap(v_u_50, tostring(v_u_43), 34, 8).Position = UDim2.fromOffset(12, 12)
+305: 		end
+306: 		local v66 = v_u_16("Frame", {
+307: 			["BackgroundColor3"] = nil,
+308: 			["BackgroundTransparency"] = 1,
+309: 			["BorderSizePixel"] = 0,
+310: 			["Size"] = nil,
+311: 			["ZIndex"] = 10,
+312: 			["BackgroundColor3"] = v_u_8.NAVY,
+313: 			["Size"] = UDim2.fromScale(1, 1)
+314: 		}, v_u_50)
+315: 		v_u_8.corner(v66, 22)
+316: 		local v67 = v_u_38.shades
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.TouchPad =====
+1: local v_u_1 = game:GetService("ContextActionService")
+2: local v_u_2 = require(script.Parent.Parent.UI.RivalsKit)
+3: local v_u_3 = {}
+4: local v_u_4 = Enum.Font.FredokaOne
+5: local v_u_5 = Color3.new(1, 1, 1)
+6: local v_u_6 = Color3.fromRGB(12, 10, 16)
+7: local v_u_7 = {
+8: 	["BeyLaunch"] = {
+9: 		["size"] = 70,
+10: 		["at"] = nil,
+11: 		["color"] = nil,
+12: 		["lit"] = true,
+13: 		["at"] = Vector2.new(-58, -58),
+14: 		["color"] = Color3.fromRGB(255, 210, 60)
+15: 	},
+16: 	["BeyDash"] = {
+17: 		["size"] = 68,
+18: 		["at"] = nil,
+19: 		["color"] = nil,
+20: 		["at"] = Vector2.new(-58, -58),
+   ...
+122: 			p21.InputBegan:Connect(function(p34)
+123: 				-- upvalues: (copy) v_u_33
+124: 				if p34.UserInputType == Enum.UserInputType.Touch then
+125: 					v_u_33.Scale = 0.88
+126: 				end
+127: 			end)
+128: 			p21.InputEnded:Connect(function(p35)
+129: 				-- upvalues: (copy) v_u_33
+130: 				if p35.UserInputType == Enum.UserInputType.Touch then
+131: 					v_u_33.Scale = 1
+132: 				end
+133: 			end)
+134: 			if p_u_19 ~= "BeyLaunch" then
+135: 				p21.Visible = v_u_9 == true
+136: 			end
+137: 		end)
+138: 	end
+139: end
+140: function v_u_3.button(p36) -- name: button
+141: 	-- upvalues: (copy) v_u_11
+142: 	local v37 = v_u_11[p36]
+143: 	if v37 and v37.Parent then
+144: 		return v37
+145: 	else
+146: 		return nil
+   ...
+194: 		v_u_9 = v_u_48
+195: 		v_u_10 = p46
+196: 		for _, v49 in v_u_8 do
+197: 			if next(v_u_1:GetBoundActionInfo(v49)) == nil then
+198: 				continue
+199: 			end
+200: 			v_u_18("show " .. v49, v49, function(p50)
+201: 				-- upvalues: (copy) v_u_48
+202: 				p50.Visible = v_u_48
+203: 			end)
+204: 		end
+205: 		local v_u_51 = not p46
+206: 		v_u_18("show BeyLaunch", "BeyLaunch", function(p52)
+207: 			-- upvalues: (copy) v_u_51
+208: 			p52.Visible = v_u_51
+209: 		end)
+210: 	end
+211: end
+212: return v_u_3
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.VsIntro =====
+   ...
+154: 		v62 = UDim2.new(0, v61, 0, 0)
+155: 	else
+156: 		v62 = UDim2.new(0, 70, 0, 0)
+157: 	end
+158: 	local v63 = UDim2.new(1, -70 - v61, 0, 0)
+159: 	if p52.title then
+160: 		local v64 = v_u_4.text(v_u_57, {
+161: 			["text"] = nil,
+162: 			["size"] = 30,
+163: 			["color"] = nil,
+164: 			["x"] = nil,
+165: 			["z"] = 5,
+166: 			["text"] = string.upper(p52.title),
+167: 			["color"] = p52.hue.light,
+168: 			["x"] = v58
+169: 		}, {
+170: 			["Position"] = v62 + UDim2.fromOffset(0, 10),
+171: 			["Size"] = v63 + UDim2.fromOffset(0, 34)
+172: 		})
+173: 		v64.Font = Enum.Font.FredokaOne
+174: 		local v65 = v64:FindFirstChildOfClass("UIStroke")
+175: 		if v65 then
+176: 			v65.Color = v_u_13
+177: 		end
+178: 	end
+179: 	local v66 = v_u_4.text(v_u_57, {
+180: 		["text"] = nil,
+181: 		["size"] = 78,
+182: 		["x"] = nil,
+183: 		["z"] = 5,
+184: 		["text"] = string.upper(p52.name),
+185: 		["x"] = v58
+186: 	}, {
+187: 		["Position"] = v62 + UDim2.fromOffset(0, p52.title and 38 or 22),
+188: 		["Size"] = v63 + UDim2.fromOffset(0, 84)
+189: 	})
+190: 	v66.Font = Enum.Font.FredokaOne
+191: 	local v67 = v66:FindFirstChildOfClass("UIStroke")
+192: 	if v67 then
+193: 		v67.Color = v_u_13
+194: 	end
+195: 	v66.TextScaled = true
+196: 	v_u_4.make("UITextSizeConstraint", {
+   ...
+234: 			["Color"] = v_u_13
+235: 		}
+236: 		v_u_4.make("UIStroke", v73, v_u_72)
+237: 		v_u_4.make("UIGradient", {
+238: 			["Rotation"] = 90,
+239: 			["Color"] = nil,
+240: 			["Color"] = ColorSequence.new(Color3.new(1, 1, 1), Color3.fromRGB(196, 196, 206))
+241: 		}, v_u_72)
+242: 		local v74 = v_u_4.text(v_u_72, {
+243: 			["text"] = nil,
+244: 			["size"] = 24,
+245: 			["z"] = 6,
+246: 			["text"] = string.upper(p52.kind)
+247: 		}, {
+248: 			["Size"] = UDim2.fromScale(1, 1)
+249: 		})
+250: 		v74.Font = Enum.Font.FredokaOne
+251: 		local v75 = v74:FindFirstChildOfClass("UIStroke")
+252: 		if v75 then
+253: 			v75.Color = v_u_13
+254: 		end
+255: 		local function v80() -- name: place
+256: 			-- upvalues: (copy) v_u_57, (ref) v_u_9, (copy) v_u_69, (copy) v_u_72, (copy) p_u_53, (copy) v_u_68
+257: 			local v76 = v_u_57.AbsoluteSize.X / v_u_9.X
+258: 			local v77 = (v76 <= 0 and 0 or v_u_69.TextBounds.X / v76) + 18
+   ...
+465: 	elseif v124 and (v125 and v_u_10[v125] == v124) then
+466: 		v126 = ("%* HAS THE TYPE EDGE"):format(v125)
+467: 	else
+468: 		v126 = nil
+469: 	end
+470: 	local v_u_127
+471: 	if v126 then
+472: 		v_u_127 = v_u_4.text(v104, {
+473: 			["text"] = nil,
+474: 			["size"] = 40,
+475: 			["stroke"] = 4,
+476: 			["z"] = 7,
+477: 			["text"] = string.upper(v126)
+478: 		}, {
+479: 			["AnchorPoint"] = nil,
+480: 			["Position"] = nil,
+481: 			["Size"] = nil,
+482: 			["Rotation"] = -6,
+483: 			["TextTransparency"] = 1,
+484: 			["AnchorPoint"] = Vector2.new(0.5, 0.5),
+485: 			["Position"] = UDim2.new(0.5, 0, 0.5, 378),
+486: 			["Size"] = UDim2.fromOffset(760, 56)
+487: 		})
+488: 		v_u_127.Font = Enum.Font.FredokaOne
+489: 		local v128 = v_u_127:FindFirstChildOfClass("UIStroke")
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.FinishFx =====
+   ...
+408: 		v197.Shadows = false
+409: 		v197.Parent = v196
+410: 		v_u_4:Create(v197, TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+411: 			["Brightness"] = 0
+412: 		}):Play()
+413: 		v_u_1:AddItem(v196, 0.7)
+414: 	end
+415: end
+416: v_u_9 = function(p200, p201, p202) -- name: sfx
+417: 	-- upvalues: (copy) v_u_3, (ref) v_u_10, (copy) v_u_1
+418: 	local v203 = v_u_3:FindFirstChild("Assets")
+419: 	local v204 = {}
+420: 	local v205 = string.split
+421: 	__set_list(v204, 1, {"Fx", "Sounds", table.unpack(v205(p200, "/"))})
+422: 	for _, v206 in v204 do
+423: 		if not v203 then
+424: 			continue
+425: 		end
+426: 		v203 = v203:FindFirstChild(v206)
+427: 	end
+428: 	local v207 = v_u_10
+429: 	if v203 and (v203:IsA("Sound") and v207) then
+430: 		local v208 = v203:Clone()
+431: 		local v209 = v203:GetAttribute("Gain")
+432: 		local v210 = v203:GetAttribute("Start")
+   ...
+519: 	end
+520: 	local v227 = p225:GetPivot()
+521: 	local v228 = { Instance.new("Model"), Instance.new("Model") }
+522: 	local v229 = nil
+523: 	local v230 = nil
+524: 	local v231 = {}
+525: 	for _, v232 in v226:GetChildren() do
+526: 		local v233 = v232:GetAttribute("Sub")
+527: 		local v234 = v232:GetAttribute("Piece")
+528: 		local v235 = v232:GetAttribute("Center")
+529: 		local v236 = v232:GetAttribute("Frac")
+530: 		local v237 = v232:GetAttribute("MeshSize")
+531: 		if not v232:IsA("MeshPart") or (type(v233) ~= "string" or (type(v234) ~= "string" or (typeof(v235) ~= "Vector3" or (typeof(v236) ~= "Vector3" or typeof(v237) ~= "Vector3")))) then
+532: 			continue
+533: 		end
+534: 		local v238 = v232.Size
+535: 		if v234 ~= "A" and v234 ~= "B" then
+536: 			local v239 = v238.X
+537: 			local v240 = v238.Y
+538: 			local v241 = v238.Z
+539: 			local v242 = math.min(v239, v240, v241)
+540: 			local v243 = v238.X
+541: 			local v244 = v238.Y
+542: 			local v245 = v238.Z
+543: 			if v242 < math.max(v243, v244, v245) * 0.08 then
+   ...
+892: 	end
+893: 	local v371 = v369 / v368
+894: 	local v372 = 0
+895: 	for _, v373 in v_u_14 do
+896: 		if not v373.model.Parent then
+897: 			continue
+898: 		end
+899: 		local v374 = (v373.pos - v371).Magnitude
+900: 		v372 = math.max(v372, v374)
+901: 	end
+902: 	return v372
+903: end
+904: function v_u_7.ringOut(p375, p376, p377, p378, p379) -- name: ringOut
+905: 	-- upvalues: (ref) v_u_10, (ref) v_u_12, (copy) v_u_220, (ref) v_u_11, (copy) v_u_5, (copy) v_u_13, (ref) v_u_9
+906: 	local v380 = v_u_12
+907: 	if not (v_u_10 and v380) then
+908: 		return function()
+909: 			return nil
+910: 		end
+911: 	end
+912: 	p375.detached = true
+913: 	for _, v381 in p375.ghosts or {} do
+914: 		v381.Parent = nil
+915: 	end
+916: 	local v_u_382 = v_u_220(p375.model, "bey")
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.LaunchFx =====
+   ...
+60: local v_u_5 = Color3.new(1, 1, 1)
+61: local v_u_6 = {}
+62: local v_u_7 = 0
+63: function v2.palette(p8, p9) -- name: palette
+64: 	-- upvalues: (copy) v_u_3
+65: 	local v10 = p8 and p8[1]
+66: 	if v10 then
+67: 		v10 = p8[1].fx
+68: 	end
+69: 	local v11
+70: 	if v10 then
+71: 		local v12 = v10.aura
+72: 		if type(v12) == "string" then
+73: 			local v13 = v10.aura
+74: 			v11 = string.sub(v13, 1, 8) ~= "Lib/Aura" and "Lib/AuraWhite" or v10.aura
+75: 		else
+76: 			v11 = "Lib/AuraWhite"
+77: 		end
+78: 	else
+79: 		v11 = "Lib/AuraWhite"
+80: 	end
+81: 	if v10 then
+82: 		local v14 = v10.light
+83: 		if typeof(v14) == "Color3" then
+84: 			p9 = v10.light
+85: 		end
+86: 	end
+87: 	local v15 = v_u_3[string.sub(v11, 9)] or v_u_3.White
+88: 	local v16 = {
+89: 		["aura"] = v11,
+90: 		["light"] = p9,
+91: 		["hit"] = v15.hit,
+92: 		["fin"] = v15.fin
+93: 	}
+94: 	if not v15.tinted then
+95: 		p9 = nil
+96: 	end
+97: 	v16.finTint = p9
+98: 	return v16
+99: end
+   ...
+202: 			local v40 = v34.inst
+203: 			local v41 = CFrame.new(p32 - Vector3.new(0, 0.3, 0))
+204: 			if v40:IsA("BasePart") then
+205: 				v40.CFrame = v41
+206: 				return
+207: 			end
+208: 			if v40:IsA("Model") then
+209: 				v40:PivotTo(v41)
+210: 			end
+211: 		end
+212: 	end
+213: end
+214: function v2.perfectCount(p42, p43, p44) -- name: perfectCount
+215: 	-- upvalues: (copy) v_u_1, (copy) v_u_5, (copy) v_u_6
+216: 	v_u_1.libBurst("ChargeRays", CFrame.new(p43), 1.1, p44.light)
+217: 	v_u_1.impactLight(p43, v_u_5:Lerp(p44.light, 0.4), 4)
+218: 	local v45 = v_u_6[p42]
+219: 	if v45 and v45.inst then
+220: 		local v46 = v45.k * 1.08
+221: 		local v47 = v45.inst
+222: 		if v47 then
+223: 			local v48 = v46 - v45.k
+224: 			if math.abs(v48) > 0.001 then
+225: 				v_u_1.scaleFx(v47, v46 / v45.k)
+226: 			end
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.AwakenCinematic =====
+   ...
+273: 		for _, v53 in v_u_22 do
+274: 			local v54 = v46[v53.name]
+275: 			if not v54 or v54 > v47 + 12 then
+276: 				continue
+277: 			end
+278: 			local v55 = v53.name
+279: 			table.insert(v43, v55)
+280: 		end
+281: 	end
+282: 	local v56 = p37.beyName
+283: 	local v57 = 7
+284: 	for v58 = 1, #v56 do
+285: 		v57 = (v57 * 31 + string.byte(v56, v58)) % 1000003
+286: 	end
+287: 	return v43[v57 % #v43 + 1]
+288: end
+289: local function v_u_66(p60, p61) -- name: retint
+290: 	local _, v62, v63 = p60:ToHSV()
+291: 	if v62 <= 0.12 then
+292: 		return p60
+293: 	end
+294: 	local v64, v65 = p61:ToHSV()
+295: 	return Color3.fromHSV(v64, v65, v63)
+296: end
+297: local function v_u_75(p67, p68) -- name: retintSeq
+   ...
+855: 	local v238 = {
+856: 		["BackgroundTransparency"] = 1,
+857: 		["Size"] = nil,
+858: 		["AutomaticSize"] = nil,
+859: 		["Font"] = nil,
+860: 		["Text"] = nil,
+861: 		["TextSize"] = 22,
+862: 		["TextColor3"] = nil,
+863: 		["ZIndex"] = 5,
+864: 		["Size"] = UDim2.fromScale(0, 1),
+865: 		["AutomaticSize"] = Enum.AutomaticSize.X,
+866: 		["Font"] = v_u_16,
+867: 		["Text"] = string.upper(p196),
+868: 		["TextColor3"] = v_u_17
+869: 	}
+870: 	local v239 = Instance.new("TextLabel")
+871: 	for v240, v241 in v238 do
+872: 		v239[v240] = v241
+873: 	end
+874: 	if v219 then
+875: 		v239.Parent = v219
+876: 	end
+877: 	local v242 = {
+878: 		["Thickness"] = 2.5,
+879: 		["Color"] = nil,
+   ...
+1527: 	if v409 and v368 >= 3.05 then
+1528: 		local v410 = v_u_107
+1529: 		local v411 = (v368 - 3.05) / 0.45
+1530: 		v410(v409, 1 - (1 - math.clamp(v411, 0, 1)) ^ 3)
+1531: 	end
+1532: end
+1533: function v_u_15.begin(p413) -- name: begin
+1534: 	-- upvalues: (ref) v_u_287, (copy) v_u_365, (copy) v_u_21, (copy) v_u_20, (copy) v_u_29, (copy) v_u_59, (copy) v_u_6, (copy) v_u_2, (copy) v_u_146, (copy) v_u_19, (copy) v_u_286, (copy) v_u_9, (copy) v_u_8, (copy) v_u_10, (copy) v_u_7, (copy) v_u_344
+1535: 	local v414 = v_u_287
+1536: 	if v414 then
+1537: 		v_u_365(v414, false)
+1538: 	end
+1539: 	local v415 = string.match(p413.beyName, "(%S+)%s*$") or p413.beyName
+1540: 	local v416
+1541: 	if p413.clutch then
+1542: 		v416 = v_u_21
+1543: 	else
+1544: 		v416 = v_u_20[p413.beyType] or v_u_20.Balance
+1545: 	end
+1546: 	local v417 = v416[p413.seed % #v416 + 1]
+1547: 	local v418 = v_u_29(p413)
+1548: 	local v419 = v_u_59(p413)
+1549: 	local v_u_420 = {
+1550: 		["ctx"] = nil,
+1551: 		["t"] = 0,
+   ...
+1556: 		["auraName"] = nil,
+1557: 		["pal"] = nil,
+1558: 		["player"] = nil,
+1559: 		["bey"] = nil,
+1560: 		["glow"] = nil,
+1561: 		["screen"] = nil,
+1562: 		["shake"] = 0,
+1563: 		["ctx"] = p413,
+1564: 		["done"] = {},
+1565: 		["side"] = p413.seed % 2 == 0 and 1 or -1
+1566: 	}
+1567: 	local v421 = v417[1]
+1568: 	v_u_420.line = string.gsub(string.gsub(v421, "{bey}", v415), "{BEY}", string.upper(v415))
+1569: 	local v422 = v417[2]
+1570: 	v_u_420.shout = string.gsub(string.gsub(v422, "{bey}", v415), "{BEY}", string.upper(v415))
+1571: 	v_u_420.auraName = v419
+1572: 	v_u_420.pal = v418
+1573: 	v_u_287 = v_u_420
+1574: 	v_u_6.preload(p413.layer)
+1575: 	local v423 = p413.beyName
+1576: 	local v424 = p413.blader
+1577: 	if v424 then
+1578: 		local v425 = v_u_2:GetPlayerFromCharacter(v424)
+1579: 		if v425 then
+1580: 			v423 = v425.DisplayName
+1581: 		else
+1582: 			v423 = v424.Name
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.FinishDirector =====
+   ...
+264: 	local v106 = {
+265: 		["BackgroundTransparency"] = 1,
+266: 		["Size"] = nil,
+267: 		["AutomaticSize"] = nil,
+268: 		["Font"] = nil,
+269: 		["Text"] = nil,
+270: 		["TextSize"] = 20,
+271: 		["TextColor3"] = nil,
+272: 		["ZIndex"] = 5,
+273: 		["Size"] = UDim2.fromScale(0, 1),
+274: 		["AutomaticSize"] = Enum.AutomaticSize.X,
+275: 		["Font"] = v_u_10,
+276: 		["Text"] = string.upper(p63),
+277: 		["TextColor3"] = v_u_11
+278: 	}
+279: 	local v107 = Instance.new("TextLabel")
+280: 	for v108, v109 in v106 do
+281: 		v107[v108] = v109
+282: 	end
+283: 	if v87 then
+284: 		v107.Parent = v87
+285: 	end
+286: 	local v110 = {
+287: 		["Thickness"] = 2.5,
+288: 		["Color"] = nil,
+   ...
+597: 				v_u_3.emit(v_u_3.find("Spec/Wind"), CFrame.new(v235), 1.6)
+598: 				v_u_3.impactLight(v235, v236, 6)
+599: 			end
+600: 		end
+601: 		if v234.name == "loser" or v234.name == "winner" then
+602: 			v_u_5.titleOut()
+603: 			v_u_5.faces = true
+604: 		end
+605: 		if v234.name == "loser" and v_u_232.loserBlader then
+606: 			local v237 = v_u_232.kind == "Burst"
+607: 			v_u_232.pose(v_u_232.loserBlader, v237 and "battle_kneel" or "battle_dismay", v237)
+608: 			local v238 = v_u_12
+609: 			local v239 = string.gsub(v238[v_u_232.seed % #v238 + 1], "{bey}", v_u_232.loserName)
+610: 			local v240 = v_u_132
+611: 			local v241 = v_u_232.loserBlader
+612: 			local v242 = v_u_1:GetPlayerFromCharacter(v241)
+613: 			local v243
+614: 			if v242 then
+615: 				v243 = v242.DisplayName
+616: 			else
+617: 				v243 = v241.Name
+618: 			end
+619: 			v240(p_u_231, v243, v239, Color3.fromRGB(150, 160, 190), v234.dur - 0.1)
+620: 		else
+621: 			if v234.name ~= "winner" or not v_u_232.winnerBlader then
+622: 				continue
+623: 			end
+624: 			v_u_232.pose(v_u_232.winnerBlader, "battle_cheer_hold", true)
+625: 			local v244 = v_u_13
+626: 			local v245 = string.gsub(v244[(v_u_232.seed + 1) % #v244 + 1], "{bey}", v_u_232.winnerName)
+627: 			local v246 = v_u_132
+628: 			local v247 = v_u_232.winnerBlader
+629: 			local v248 = v_u_1:GetPlayerFromCharacter(v247)
+630: 			local v249
+631: 			if v248 then
+632: 				v249 = v248.DisplayName
+633: 			else
+634: 				v249 = v247.Name
+635: 			end
+636: 			v246(p_u_231, v249, v245, v_u_232.winnerColor, v234.dur - 0.05)
+637: 		end
+638: 	end
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.AvatarFlip =====
+   ...
+30: v_u_6.ENABLED = false
+31: function v_u_6.preload(p_u_18) -- name: preload
+32: 	-- upvalues: (copy) v_u_6, (copy) v_u_4, (copy) v_u_1
+33: 	if v_u_6.ENABLED then
+34: 		if p_u_18 then
+35: 			p_u_18 = v_u_4[p_u_18]
+36: 		end
+37: 		if p_u_18 then
+38: 			task.spawn(function()
+39: 				-- upvalues: (copy) p_u_18, (ref) v_u_1
+40: 				local v19 = Instance.new("ImageLabel")
+41: 				local v20 = p_u_18
+42: 				if tostring(v20) == "0" then
+43: 					v20 = ""
+44: 				elseif not string.find(v20, "^rbxasset") then
+45: 					v20 = "rbxassetid://" .. v20
+46: 				end
+47: 				v19.Image = v20
+48: 				local v21 = v_u_1.PreloadAsync
+49: 				local v22 = v_u_1
+50: 				pcall(v21, v22, { v19 })
+51: 				v19:Destroy()
+52: 			end)
+53: 		end
+54: 	else
+55: 		return
+56: 	end
+   ...
+113: 	local v39 = "ImageLabel"
+114: 	local v40 = {
+115: 		["BackgroundTransparency"] = 1,
+116: 		["Image"] = nil,
+117: 		["ImageColor3"] = nil,
+118: 		["ImageTransparency"] = 1,
+119: 		["AnchorPoint"] = nil,
+120: 		["Position"] = nil,
+121: 		["Size"] = nil,
+122: 		["ZIndex"] = 1
+123: 	}
+124: 	local v41 = v_u_10
+125: 	if tostring(v41) == "0" then
+126: 		v41 = ""
+127: 	elseif not string.find(v41, "^rbxasset") then
+128: 		v41 = "rbxassetid://" .. v41
+129: 	end
+130: 	v40.Image = v41
+131: 	v40.ImageColor3 = p_u_25
+132: 	v40.AnchorPoint = Vector2.new(0.5, 0.5)
+133: 	v40.Position = UDim2.fromScale(0.5, 0.55)
+134: 	v40.Size = UDim2.fromScale(1.55, 1.55)
+135: 	local v_u_42 = v38(v39, v40, v_u_36)
+136: 	local v43 = v_u_7
+137: 	local v44 = "ImageLabel"
+138: 	local v45 = {
+139: 		["BackgroundTransparency"] = 1,
+140: 		["Image"] = nil,
+141: 		["ImageColor3"] = nil,
+142: 		["ImageTransparency"] = 1,
+143: 		["AnchorPoint"] = nil,
+144: 		["Position"] = nil,
+145: 		["Size"] = nil,
+146: 		["ZIndex"] = 2
+147: 	}
+148: 	local v46 = v_u_9
+149: 	if tostring(v46) == "0" then
+150: 		v46 = ""
+151: 	elseif not string.find(v46, "^rbxasset") then
+152: 		v46 = "rbxassetid://" .. v46
+153: 	end
+154: 	v45.Image = v46
+155: 	v45.ImageColor3 = p_u_25:Lerp(p_u_26, 0.3)
+156: 	v45.AnchorPoint = Vector2.new(0.5, 0.5)
+157: 	v45.Position = UDim2.fromScale(0.5, 0.5)
+158: 	v45.Size = UDim2.fromScale(1.35, 1.35)
+159: 	local v_u_47 = v43(v44, v45, v_u_36)
+160: 	local function v53(p48) -- name: frameLabel
+161: 		-- upvalues: (ref) v_u_7, (copy) p_u_23, (copy) v_u_36
+162: 		local v49 = v_u_7
+163: 		local v50 = "ImageLabel"
+164: 		local v51 = {
+165: 			["BackgroundTransparency"] = 1,
+166: 			["Image"] = nil,
+167: 			["ImageRectSize"] = nil,
+168: 			["ImageRectOffset"] = nil,
+169: 			["ImageTransparency"] = 1,
+170: 			["ScaleType"] = nil,
+171: 			["Size"] = nil,
+172: 			["ZIndex"] = nil
+173: 		}
+174: 		local v52 = p_u_23
+175: 		if tostring(v52) == "0" then
+176: 			v52 = ""
+177: 		elseif not string.find(v52, "^rbxasset") then
+178: 			v52 = "rbxassetid://" .. v52
+179: 		end
+180: 		v51.Image = v52
+181: 		v51.ImageRectSize = Vector2.new(512, 512)
+182: 		v51.ImageRectOffset = Vector2.zero
+183: 		v51.ScaleType = Enum.ScaleType.Fit
+184: 		v51.Size = UDim2.fromScale(1, 1)
+185: 		v51.ZIndex = p48
+186: 		return v49(v50, v51, v_u_36)
+187: 	end
+188: 	local v_u_54 = v53(2)
+189: 	v_u_54.ImageColor3 = p_u_25
+   ...
+337: 						v_u_64 = v_u_64 - 0.07
+338: 						local v110 = v_u_7
+339: 						local v111 = "ImageLabel"
+340: 						local v112 = {
+341: 							["BackgroundTransparency"] = 1,
+342: 							["Image"] = nil,
+343: 							["ImageColor3"] = nil,
+344: 							["AnchorPoint"] = nil,
+345: 							["Size"] = nil,
+346: 							["ZIndex"] = 6
+347: 						}
+348: 						local v113 = v_u_11
+349: 						if tostring(v113) == "0" then
+350: 							v113 = ""
+351: 						elseif not string.find(v113, "^rbxasset") then
+352: 							v113 = "rbxassetid://" .. v113
+353: 						end
+354: 						v112.Image = v113
+355: 						local v114
+356: 						if math.random() < 0.5 then
+357: 							v114 = p_u_25:Lerp(v_u_8, 0.4)
+358: 						else
+359: 							v114 = p_u_26:Lerp(v_u_8, 0.4)
+360: 						end
+361: 						v112.ImageColor3 = v114
+362: 						v112.AnchorPoint = Vector2.new(0.5, 0
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.CombatFeel =====
+   ...
+782: 						v112 = p66.beys[v71.slot]
+783: 						v113 = nil
+784: 						if v112 then
+785: 							for v152, v153 in v112.pas do
+786: 								if v153[v71.field] == nil then
+787: 									continue
+788: 								end
+789: 								v113 = v153.name
+790: 							end
+791: 						end
+792: 						if v113 then
+793: 							v114 = v71.slot
+794: 							v115 = string.upper(v113)
+795: 							v116 = v71.slot
+796: 							v117 = p66.beys[v116]
+797: 							if v116 == p67 then
+798: 								v118 = true
+799: 							elseif v117 == nil or v70 == nil then
+800: 								v118 = false
+801: 							else
+802: 								v118 = v117.team == v70.team
+803: 							end
+804: 							if v118 then
+805: 								v119 = Color3.fromRGB(150, 210, 255)
+806: 							else
+   ...
+844: 						if v130 then
+845: 							v131 = Color3.fromRGB(70, 170, 255)
+846: 						else
+847: 							v131 = Color3.fromRGB(255, 70, 80)
+848: 						end
+849: 						v126(v127, v131, 0.42, 0.7)
+850: 					elseif v72 == "RidgeFull" and v73 then
+851: 						v_u_9.sound("Sounds/Rivals/PerfectChime", 0.12, 1.8)
+852: 						v132 = p68[v71.slot]
+853: 						if v132 then
+854: 							v132:flash(0.55, Color3.fromRGB(120, 220, 255))
+855: 						end
+856: 					elseif v72 == "Rush" and v71.perfect then
+857: 						v133 = v71.slot
+858: 						v134 = Color3.fromRGB(120, 220, 255)
+859: 						v135 = p68[v133]
+860: 						if v135 then
+861: 							v_u_8.show(v135.position + Vector3.new(0, 1.7, 0), "RAIL RUSH!", v134, true)
+862: 						end
+863: 						v_u_13.impact(0.6)
+864: 					elseif v72 == "Land" and v71.bank then
+865: 						v136 = v71.slot
+866: 						v137 = Color3.fromRGB(120, 200, 255)
+867: 						v138 = p68[v136]
+868: 						if v138 then
+   ...
+933: 					v112 = p66.beys[v71.slot]
+934: 					v113 = nil
+935: 					if v112 then
+936: 						for v152, v153 in v112.pas do
+937: 							if v153[v71.field] == nil then
+938: 								continue
+939: 							end
+940: 							v113 = v153.name
+941: 						end
+942: 					end
+943: 					if v113 then
+944: 						v114 = v71.slot
+945: 						v115 = string.upper(v113)
+946: 						v116 = v71.slot
+947: 						v117 = p66.beys[v116]
+948: 						if v116 == p67 then
+949: 							v118 = true
+950: 						elseif v117 == nil or v70 == nil then
+951: 							v118 = false
+952: 						else
+953: 							v118 = v117.team == v70.team
+954: 						end
+955: 						if v118 then
+956: 							v119 = Color3.fromRGB(150, 210, 255)
+957: 						else
+   ...
+995: 					if v130 then
+996: 						v131 = Color3.fromRGB(70, 170, 255)
+997: 					else
+998: 						v131 = Color3.fromRGB(255, 70, 80)
+999: 					end
+1000: 					v126(v127, v131, 0.42, 0.7)
+1001: 				elseif v72 == "RidgeFull" and v73 then
+1002: 					v_u_9.sound("Sounds/Rivals/PerfectChime", 0.12, 1.8)
+1003: 					v132 = p68[v71.slot]
+1004: 					if v132 then
+1005: 						v132:flash(0.55, Color3.fromRGB(120, 220, 255))
+1006: 					end
+1007: 				elseif v72 == "Rush" and v71.perfect then
+1008: 					v133 = v71.slot
+1009: 					v134 = Color3.fromRGB(120, 220, 255)
+1010: 					v135 = p68[v133]
+1011: 					if v135 then
+1012: 						v_u_8.show(v135.position + Vector3.new(0, 1.7, 0), "RAIL RUSH!", v134, true)
+1013: 					end
+1014: 					v_u_13.impact(0.6)
+1015: 				elseif v72 == "Land" and v71.bank then
+1016: 					v136 = v71.slot
+1017: 					v137 = Color3.fromRGB(120, 200, 255)
+1018: 					v138 = p68[v136]
+1019: 					if v138 then
+   ...
+1174: 		if p179 then
+1175: 			v183 = Color3.fromRGB(70, 170, 255)
+1176: 		else
+1177: 			v183 = Color3.fromRGB(255, 70, 80)
+1178: 		end
+1179: 		v181(v182, v183, 0.36, 1.2)
+1180: 	end
+1181: 	v_u_9.sound("Sounds/Rivals/Stinger", 0.22, 1)
+1182: 	v_u_1.LocalPlayer:SetAttribute("MatchPoint", p179 and p180 and 2 or 1)
+1183: end
+1184: function v_u_13.title(p184) -- name: title
+1185: 	-- upvalues: (copy) v_u_47, (copy) v_u_14, (copy) v_u_9
+1186: 	v_u_47(string.upper(p184), v_u_14, 0.3, 1.6)
+1187: 	v_u_9.sound("Sounds/Rivals/Stinger", 0.18, 1.1)
+1188: end
+1189: function v_u_13.awakenKind(p185) -- name: awakenKind
+1190: 	-- upvalues: (copy) v_u_7
+1191: 	return v_u_7.AWAKEN_KINDS[p185]
+1192: end
+1193: function
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.FinishReplay =====
+   ...
+16: }
+17: local v_u_14 = Enum.Font.FredokaOne
+18: local v_u_15 = {}
+19: local v_u_16 = {}
+20: local v_u_17 = 0
+21: local v_u_18 = nil
+22: local v_u_19 = ""
+23: local v_u_20 = {}
+24: local v_u_21 = {}
+25: local v_u_22 = nil
+26: local v_u_23 = false
+27: local v_u_24 = 0
+28: function v_u_13.sharing() -- name: sharing
+29: 	-- upvalues: (ref) v_u_23
+30: 	return v_u_23
+31: end
+32: function v_u_13.record(p25, p26, p27) -- name: record
+33: 	-- upvalues: (ref) v_u_18, (ref) v_u_17, (ref) v_u_19, (copy) v_u_20, (copy) v_u_21, (copy) v_u_15, (copy) v_u_16
+34: 	if p27 and not v_u_18 then
+35: 		v_u_18 = v_u_17
+36: 		v_u_19 = p27
+37: 	end
+38: 	local v28 = v_u_18
+39: 	if not v28 or v_u_17 - v28 < 1.5 then
+40: 		v_u_17 = v_u_17 + p26
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.SpringCinematic =====
+   ...
+454: 		v_u_105(v139)
+455: 	end
+456: 	local v_u_140 = nil
+457: 	local function v141()
+458: 		-- upvalues: (ref) v_u_17, (ref) v_u_140, (ref) v_u_66
+459: 		if v_u_17 == v_u_140 then
+460: 			return v_u_66(v_u_140)
+461: 		else
+462: 			return nil, nil
+463: 		end
+464: 	end
+465: 	local v142 = Instance.new("ColorCorrectionEffect")
+466: 	v142.Name = "SpringGrade"
+467: 	v142.Parent = v_u_1
+468: 	v_u_140 = {
+469: 		["ctx"] = nil,
+470: 		["t"] = 0,
+471: 		["done"] = nil,
+472: 		["side"] = nil,
+473: 		["grade"] = nil,
+474: 		["fn"] = nil,
+475: 		["worn"] = nil,
+476: 		["ctx"] = p138,
+477: 		["done"] = {},
+478: 		["side"] = p138.seed % 2 == 0 and 1 or -1,
+
+===== Players.RansbloxScripts.PlayerScripts.Character.Motion =====
+   ...
+813: 		["tracks"] = nil,
+814: 		["offsets"] = nil,
+815: 		["reachW"] = 0,
+816: 		["out"] = nil,
+817: 		["model"] = p260,
+818: 		["joints"] = v266,
+819: 		["tracks"] = {},
+820: 		["offsets"] = {},
+821: 		["out"] = {}
+822: 	}, v270)
+823: end
+824: function v_u_253.Reach(p271, p272, p273) -- name: Reach
+825: 	if p271.r15 and string.find(p272, "Left") then
+826: 		if p273 then
+827: 			p271.reachL = {
+828: 				["part"] = p272,
+829: 				["target"] = p273
+830: 			}
+831: 			p271.reachLW = p271.reachLW or 0
+832: 		elseif p271.reachL then
+833: 			p271.reachL.off = true
+834: 		end
+835: 	elseif p273 then
+836: 		local v274 = {
+837: 			["part"] = p272,
+   ...
+994: 		return p315
+995: 	end
+996: 	local v321 = v318:Dot(v319)
+997: 	local v322 = math.clamp(v321, -1, 1)
+998: 	local v323 = math.acos(v322)
+999: 	return CFrame.new(p315.Position) * CFrame.fromAxisAngle(v320.Unit, v323) * p315.Rotation
+1000: end
+1001: local function v_u_404(p325, p326, p327, p328) -- name: reach15
+1002: 	-- upvalues: (copy) v_u_4, (copy) v_u_324
+1003: 	local v329 = p327 or p325.reach
+1004: 	local v330 = p328 or p325.reachW
+1005: 	if v329 and v330 > 0 then
+1006: 		local v331 = string.find(v329.part, "Left") and "Left" or "Right"
+1007: 		local v332 = p325.joints
+1008: 		local v333 = v332.LowerTorso
+1009: 		local v334 = v332.UpperTorso
+1010: 		local v335 = v331 .. "UpperArm"
+1011: 		local v336 = v331 .. "LowerArm"
+1012: 		local v337 = v331 .. "Hand"
+1013: 		local v338 = v332[v335]
+1014: 		local v339 = v332[v336]
+1015: 		local v340 = v332[v337]
+1016: 		local v341
+1017: 		if v333 then
+1018: 			if v333:IsA("Motor6D") then
+   ...
+1524: 	if v525 > 0 and (v526 and (v526.boxes and #v526.boxes > 0)) then
+1525: 		local v_u_527 = v_u_517
+1526: 		if v_u_490(p_u_521, p_u_522, v_u_527) then
+1527: 			local v528 = v_u_527.UpperTorso
+1528: 			local v529 = v_u_527.LeftHand
+1529: 			if v528 and v529 then
+1530: 				local v530 = v529 * Vector3.new(0, -0.13, 0)
+1531: 				local v_u_531 = v526.boxes
+1532: 				local v532 = p_u_521.reach
+1533: 				local v533 = v532 and not v532.off
+1534: 				if v533 then
+1535: 					if p_u_521.reachW > 0 then
+1536: 						v533 = string.find(v532.part, "Right") ~= nil
+1537: 					else
+1538: 						v533 = false
+1539: 					end
+1540: 				end
+1541: 				local v534
+1542: 				if v533 then
+1543: 					v534 = v_u_406
+1544: 				else
+1545: 					v534 = v_u_407
+1546: 				end
+1547: 				local v535 = Vector3.new(0, 0, 0)
+1548: 				if v_u_516(p_u_521, v_u_527, v534, v_u_531, v530) then
+
+===== Players.RansbloxScripts.PlayerScripts.Character.Presence =====
+   ...
+170: 			2.2,
+171: 			{
+172: 				["Head"] = CFrame.identity
+173: 			}
+174: 		}
+175: 	}
+176: }
+177: v13("idle_neck", v14)
+178: function v3.new(p15) -- name: new
+179: 	local v16 = 0
+180: 	for v17 = 1, #p15.Name do
+181: 		local v18 = p15.Name
+182: 		v16 = v16 + string.byte(v18, v17) * v17
+183: 	end
+184: 	return {
+185: 		["breath"] = nil,
+186: 		["weight"] = nil,
+187: 		["exert"] = 0,
+188: 		["yaw"] = 0,
+189: 		["pitch"] = 0,
+190: 		["wantYaw"] = 0,
+191: 		["wantPitch"] = 0,
+192: 		["glanceAt"] = nil,
+193: 		["seekAt"] = 0,
+194: 		["target"] = nil,
+
+===== Players.RansbloxScripts.PlayerScripts.Controllers.BattleController =====
+   ...
+3: local v_u_3 = game:GetService("RunService")
+4: local v_u_4 = game:GetService("ReplicatedStorage")
+5: local v_u_5 = game:GetService("HttpService")
+6: local v_u_6 = game:GetService("CollectionService")
+7: local v_u_7 = game:GetService("ContextActionService")
+8: local v_u_8 = game:GetService("UserInputService")
+9: local v_u_9 = game:GetService("StarterGui")
+10: local v_u_10 = game:GetService("HapticService")
+11: local v_u_11 = require(v_u_4.Packets)
+12: local v12 = require(v_u_4.Packages.Signal)
+13: local v_u_13 = require(v_u_4.Bey.Sim)
+14: local v_u_14 = require(v_u_4.Bey.Net)
+15: local v_u_15 = require(v_u_4.Bey.Launch)
+16: local v_u_16 = require(v_u_4.Bey.LauncherCatalog)
+17: local v_u_17 = require(v_u_4.Bey.Stadiums)
+18: local v_u_18 = require(script.Parent.Parent.Battle.AvatarFlip)
+19: local v_u_19 = require(v_u_4.Bey.PartCatalog)
+20: local v_u_20 = require(v_u_4.Bey.Passives)
+21: local v_u_21 = require(v_u_4.Rivals.Catalog)
+22: local v_u_22 = require(v_u_4.Rivals.Shop)
+23: local v_u_23 = require(v_u_4.Bey.Cosmetics)
+24: local v_u_24 = require(v_u_4.Bey.TipSkills)
+25: local v_u_25 = require(v_u_4.Registries.Trainers)
+26: local v_u_26 = require(script.Parent.Parent.Cutscene.Actors)
+27: local v_u_27 = require(v_u_4.Registries.Drills)
+28: local v_u_28 = require(script.Parent.Parent.Battle.BeyView)
+29: local v_u_29 = require(script.Parent.Parent.Battle.BattleInput)
+30: local v_u_30 = require(script.Parent.Parent.Battle.BattleCamera)
+31: local v_u_31 = require(script.Parent.Parent.Battle.BattleHud)
+32: local v_u_32 = require(script.Parent.Parent.Battle.BattleFx)
+33: local v_u_33 = require(script.Parent.Parent.Battle.AbilityFx)
+34: local v_u_34 = require(script.Parent.Parent.Battle.CombatFeel)
+35: local v_u_35 = require(script.Parent.Parent.Battle.LaunchFx)
+36: local v_u_36 = require(script.Parent.Parent.Battle.HitMarkers)
+37: local v_u_37 = require(script.Parent.Parent.Battle.Launcher)
+38: local v_u_38 = require(script.Parent.Parent.Battle.AimPointer)
+39: local v_u_39 = require(script.Parent.Parent.Battle.TouchPad)
+40: local v_u_40 = require(script.Parent.Parent.Battle.FinishCinematic)
+41: local v_u_41 = require(script.Parent.Parent.Battle.AwakenCinematic)
+42: local v_u_42 = require(script.Parent.Parent.Battle.RebootCinematic)
+43: local v_u_43 = require(script.Parent.Parent.Battle.SpringCinematic)
+44: local v_u_44 = require(script.Parent.Parent.Battle.FinishDirector)
+45: local v_u_45 = require(script.Parent.Parent.Battle.LaunchDirector)
+46: local v_u_46 = require(script.Parent.Parent.Battle.FinishFx)
+47: local v_u_47 = require(script.Parent.Parent.Battle.FinishReplay)
+48: local v_u_48 = require(script.Parent.Parent.Battle.KillFx)
+49: local v_u_49 = require(script.Parent.Parent.Battle.VsIntro)
+50: local v_u_50 = require(script.Parent.Parent.Battle.SwapScreen)
+51: local v_u_51 = require(script.Parent.Parent.UI.Kit)
+52: local v_u_52 = require(script.Parent.Parent.UI.Transition)
+53: local v_u_53 = require(script.Parent.Parent.UI.Night)
+54: local v_u_54 = require(script.Parent.Parent.Battle.FxBudget)
+55: local v_u_55 = require(script.Parent.Parent.Battle.Crowd)
+56: local v_u_56 = require(script.Parent.CharacterController)
+57: local v_u_57 = require(script.Parent.DataController)
+   ...
+195: local function v_u_124(p109, p_u_110) -- name: makePointer
+196: 	-- upvalues: (copy) v_u_104, (copy) v_u_101, (copy) v_u_102, (copy) v_u_103
+197: 	local v111 = Instance.new("Frame")
+198: 	v111.Name = "Pointer"
+199: 	v111.BackgroundTransparency = 1
+200: 	v111.AnchorPoint = Vector2.new(0.5, 1)
+201: 	v111.Size = UDim2.fromOffset(150, 64)
+202: 	v111.Visible = false
+203: 	v111.Parent = p109
+204: 	local v_u_112 = Instance.new("TextLabel")
+205: 	v_u_112.BackgroundTransparency = 1
+206: 	v_u_112.Font = Enum.Font.FredokaOne
+207: 	v_u_112.Text = string.upper(p_u_110)
+208: 	v_u_112.TextSize = 18
+209: 	v_u_112.TextColor3 = Color3.new(1, 1, 1)
+210: 	v_u_112.Size = UDim2.new(1, 0, 0, 22)
+211: 	v_u_112.Parent = v111
+212: 	local v113 = Instance.new("UIStro
+
+===== Players.RansbloxScripts.PlayerScripts.Controllers.CharacterController =====
+   ...
+176: 			if v67.RigType == Enum.HumanoidRigType.R15 then
+177: 				local v69 = p_u_66:FindFirstChild("LowerTorso") or p_u_66:WaitForChild("LowerTorso", 10)
+178: 				if v69 then
+179: 					v69:WaitForChild("Root", 10)
+180: 				end
+181: 			elseif not p_u_66:FindFirstChild("Torso") then
+182: 				p_u_66:WaitForChild("Torso", 10)
+183: 			end
+184: 			if p_u_66.Parent and not v_u_15[p_u_66] then
+185: 				local v70 = p_u_66.Name
+186: 				local v71 = 0
+187: 				for v72 = 1, #v70 do
+188: 					v71 = v71 + string.byte(v70, v72) * v72
+189: 				end
+190: 				local v_u_73 = {
+191: 					["model"] = nil,
+192: 					["root"] = nil,
+193: 					["humanoid"] = nil,
+194: 					["mo"] = nil,
+195: 					["gait"] = nil,
+196: 					["walkKey"] = nil,
+197: 					["runKey"] = nil,
+198: 					["idleSet"] = nil,
+199: 					["lodPhase"] = nil,
+200: 					["isPlayer"] = nil,
+
+===== Players.RansbloxScripts.PlayerScripts.Controllers.CutsceneController =====
+   ...
+96: 	v_u_46[p61] = v63
+97: 	v_u_47[p61] = nil
+98: 	return v63
+99: end
+100: local function v_u_75(p65, p66) -- name: frameOf
+101: 	-- upvalues: (copy) v_u_64, (copy) v_u_14, (copy) v_u_75
+102: 	if typeof(p66) == "CFrame" then
+103: 		return p66, true, true
+104: 	end
+105: 	if typeof(p66) == "Vector3" then
+106: 		return CFrame.new(p66), false, false
+107: 	end
+108: 	if type(p66) ~= "string" then
+109: 		if type(p66) == "table" then
+110: 			local v67 = p66[2]
+111: 			if typeof(v67) == "Vector3" then
+112: 				local v68, _, v69 = v_u_75(p65, p66[1])
+113: 				local v70
+114: 				if v68 then
+115: 					v70 = v68 * CFrame.new(p66[2])
+116: 				else
+117: 					v70 = nil
+118: 				end
+119: 				return v70, false, v69
+120: 			end
+   ...
+134: 	local v73 = v_u_64(p66)
+135: 	if v73 then
+136: 		return v73.CFrame, false, true
+137: 	end
+138: 	local v74 = v_u_14.Marks[p66]
+139: 	if not v74 then
+140: 		warn((("[Cutscene] %*: no marker %* in the world or Cutscenes.Marks"):format(p65.id, p66)))
+141: 	end
+142: 	return v74, false, true
+143: end
+144: local function v_u_80(p76, p77) -- name: point
+145: 	-- upvalues: (copy) v_u_17, (copy) v_u_75
+146: 	if type(p77) == "string" and p77:sub(1, 1) == "@" then
+147: 		local v78 = p76.actors[p77:sub(2)]
+148: 		if v78 then
+149: 			v78 = v_u_17.head(v78)
+150: 		end
+151: 		return v78
+152: 	else
+153: 		local v79 = v_u_75(p76, p77)
+154: 		if v79 then
+155: 			v79 = v79.Position
+156: 		end
+157: 		return v79
+158: 	end
+159: end
+160: local function v_u_85(p81, p82) -- name: target
+161: 	-- upvalues: (copy) v_u_17, (copy) v_u_80
+162: 	local v_u_83 = type(p82) == "string" and p82:sub(1, 1) == "@" and p81.actors[p82:sub(2)]
+163: 	if v_u_83 then
+164: 		return function()
+165: 			-- upvalues: (ref) v_u_17, (copy) v_u_83
+166: 			return v_u_17.head(v_u_83)
+167: 		end
+168: 	end
+169: 	local v_u_84 = v_u_80(p81, p82) or workspace.CurrentCamera.CFrame.Position + workspace.CurrentCamera.CFrame.LookVector * 10
+170: 	return function()
+171: 		-- upvalues: (copy) v_u_84
+172: 		return v_u_84
+173: 	end
+174: end
+   ...
+375: 			v_u_142[v148] = v_u_142[v148]:Lerp(v_u_142[v148 + 1], p144)
+376: 		end
+377: 	end
+378: 	return v_u_142[1]
+379: end
+380: local v_u_150 = nil
+381: local function v_u_156(p151) -- name: spotList
+382: 	local v152
+383: 	if type(p151) == "table" and #p151 == 2 then
+384: 		local v153 = p151[2]
+385: 		if typeof(v153) == "Vector3" then
+386: 			local v154 = p151[1]
+387: 			if type(v154) == "string" then
+388: 				v152 = true
+389: 			else
+390: 				local v155 = p151[1]
+391: 				v152 = typeof(v155) == "CFrame"
+392: 			end
+393: 		else
+394: 			v152 = false
+395: 		end
+396: 	else
+397: 		v152 = false
+398: 	end
+399: 	return (type(p151) ~= "table" or v152) and { p151 } or p151
+   ...
+494: 				local v200
+495: 				if (v195 - v199).Magnitude < 0.01 then
+496: 					v200 = CFrame.new(v199)
+497: 				else
+498: 					v200 = CFrame.lookAt(v199, v195)
+499: 				end
+500: 				return v200, v_u_162 + (v_u_163 - v_u_162) * p192
+501: 			end, v161, v_u_18.settle, v166)
+502: 			v167 = v166 or v_u_187
+503: 		elseif v159 == "follow" then
+504: 			local v201 = p_u_158.actor
+505: 			local v_u_202
+506: 			if type(v201) == "string" then
+507: 				v_u_202 = p157.actors[v201]
+508: 			else
+509: 				v_u_202 = nil
+510: 			end
+511: 			if not v_u_202 then
+512: 				warn((("[Cutscene] %*: no actor %*"):format(p157.id, (tostring(v201)))))
+513: 			end
+514: 			if not v_u_202 then
+515: 				return
+516: 			end
+517: 			v167 = v166 or function()
+518: 				-- upvalues: (ref) v_u_17, (copy) v_u_202
+519: 				return v_u_17.head(v_u_202)
+520: 			end
+521: 			local v203 = p_u_158.off
+522: 			local v_u_204 = typeof(v203) ~= "Vector3" and Vector3.new(0, 3, 8) or p_u_158.off
+523: 			local v_u_205 = nil
+524: 			local v_u_206 = os.clock()
+   ...
+702: 		local v262 = p250.branches
+703: 		if v262 then
+704: 			v262 = p250.branches[v261 or 1]
+705: 		end
+706: 		if v262 then
+707: 			v_u_150(p249, v262)
+708: 		end
+709: 	end,
+710: 	["show"] = function(p263, p264) -- name: showStep
+711: 		-- upvalues: (copy)
+
+===== Players.RansbloxScripts.PlayerScripts.Controllers.InteractController =====
+   ...
+83: 		local v35 = v_u_6.layer(v34.layer)
+84: 		local v36 = v_u_6.disc(v34.disc)
+85: 		local v37 = v_u_6.driver(v34.driver)
+86: 		local v38 = v33.Level
+87: 		local v39 = type(v38) ~= "number" and 1 or v33.Level
+88: 		local v40 = ("Partner: %* %* %*, level %*."):format(v35.display, v36.display, v37.display, v39)
+89: 		table.insert(v31, v40)
+90: 	end
+91: 	local v41 = #v_u_11
+92: 	local v42 = v24.Coins
+93: 	local v43 = type(v42) ~= "number" and 0 or v24.Coins
+94: 	local v44 = math.floor(v43)
+95: 	local v45 = ("Badges: %* of %*. Bladers beaten: %*. Coins: %*."):format(v27, v41, v29, (tostring(v44):reverse():gsub("(%d%d%d)", "%1,"):reverse():gsub("^,", "")))
+96: 	table.insert(v31, v45)
+97: 	return v31
+98: end
+99: local function v_u_56(p47) -- name: read
+100: 	-- upvalues: (copy) v_u_23, (ref) v_u_16, (copy) v_u_10, (copy) v_u_2, (copy) v_u_4, (copy) v_u_46, (copy) v_u_7, (ref) v_u_19
+101: 	if v_u_23() then
+102: 		v_u_16 = true
+103: 		local v48 = v_u_10:Get({ "Story" })
+104: 		local v49 = type(v48) ~= "table" and {} or v48
+105: 		local v_u_50 = v_u_2.LocalPlayer.DisplayName
+106: 		local v51 = {}
+107: 		for v52, v53 in v_u_4.linesOf(p47, v49) do
+   ...
+124: 				v55 = false
+125: 			end
+126: 		end
+127: 		v_u_16 = false
+128: 		if v55 and v_u_19 then
+129: 			v_u_19:Open("box")
+130: 		end
+131: 	end
+132: end
+133: local function v_u_63(p57) -- name: add
+134: 	-- upvalues: (copy) v_u_14, (copy) v_u_5, (copy) v_u_4, (ref) v_u_15, (copy) v_u_56
+135: 	if p57:IsA("BasePart") and not v_u_14[p57] then
+136: 		local v58 = tostring(p57:GetAttribute("InteractId"))
+137: 		if v_u_5.station(v58) then
+138: 			return
+139: 		else
+140: 			local v59 = p57:GetAttribute("Location")
+141: 			local v60 = v_u_4.find
+142: 			if type(v59) ~= "string" then
+143: 				v59 = nil
+144: 			end
+145: 			local v_u_61 = v60(v58, v59)
+146: 			if v_u_61 then
+147: 				local v62 = Instance.new("ProximityPrompt")
+148: 				v62.Name = "Interact"
+149: 				v62.ActionText = v_u_61.prompt
+150: 				v62.ObjectText = v_u_61.name or ""
+151: 				v62.KeyboardKeyCode = Enum.KeyCode.E
+152: 				v62.GamepadKeyCode = Enum.KeyCode.ButtonX
+153: 				v62.MaxActivationDistance = 7
+154: 				v62.RequiresLineOfSight = false
+
+===== Players.RansbloxScripts.PlayerScripts.Controllers.MenuController =====
+   ...
+239: 	local v65 = v_u_26
+240: 	if v65 then
+241: 		local v66 = v_u_16:Get()
+242: 		local v67
+243: 		if type(v66) == "table" then
+244: 			local v68 = v66.Coins
+245: 			v67 = type(v68) ~= "number" and 0 or v66.Coins
+246: 		else
+247: 			v67 = 0
+248: 		end
+249: 		local v69 = v65.coins
+250: 		local v70 = math.floor(v67)
+251: 		v69.Text = tostring(v70):reverse():gsub("(%d%d%d)", "%1,"):reverse():gsub("^,", "")
+252: 		local v71
+253: 		if type(v66) == "table" then
+254: 			local v72 = v66.Story
+255: 			v71 = type(v72) ~= "table" and {} or v66.Story
+256: 		else
+257: 			v71 = {}
+258: 		end
+259: 		local v73
+260: 		if v_u_9.Playground then
+261: 			v73 = nil
+262: 		else
+263: 			v73 = v_u_8.current(v71)
+
+===== Players.RansbloxScripts.PlayerScripts.Controllers.MusicController =====
+   ...
+280: 		-- upvalues: (copy) v_u_63, (copy) v_u_67, (ref) v_u_5
+281: 		if v_u_63.token == v_u_67 then
+282: 			v_u_5:Create(v_u_63.plate, TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+283: 				["Position"] = UDim2.new(0.5, 0, 0, -90)
+284: 			}):Play()
+285: 		end
+286: 	end)
+287: end
+288: local function v_u_76(p73) -- name: locationOf
+289: 	-- upvalues: (copy) v_u_6
+290: 	while p73 and p73 ~= v_u_6 do
+291: 		local v74 = p73:GetAttribute("Location")
+292: 		if type(v74) == "string" then
+293: 			local v75 = p73:GetAttribute("Display")
+294: 			if type(v75) == "string" then
+295: 				return v74, v75
+296: 			else
+297: 				return v74, v74
+298: 			end
+299: 		end
+300: 		p73 = p73.Parent
+301: 	end
+302: 	return nil, nil
+303: end
+304: local function v_u_79(p77) -- name: interiorOf
+305: 	-- upvalues: (copy) v_u_6
+306: 	while p77 and p77 ~= v_u_6 do
+307: 		local v78 = p77:GetAttribute("Interior")
+308: 		if type(v78) == "string" and v78 ~= "" then
+309: 			return v78
+310: 		end
+311: 		p77 = p77.Parent
+312: 	end
+313: 	return nil
+314: end
+315: local function v_u_83(p80, p81) -- name: trackFor
+316: 	-- upvalues: (copy) v_u_18, (copy) v_u_17
+317: 	if not p81 then
+318: 		return not (p80 and v_u_17[p80]) and (p80 and p80:sub(1, 5) == "Route" and "road" or "day") or v_u_17[p80]
+319: 	end
+320: 	for _, v82 in v_u_18 do
+
+===== Players.RansbloxScripts.PlayerScripts.Controllers.SettingsController =====
+   ...
+119: 		local v46 = v38.Gfx
+120: 		local v47
+121: 		if type(v46) == "number" then
+122: 			v47 = v38.Gfx
+123: 		else
+124: 			v47 = v38.Perf == true and 1 or 0
+125: 		end
+126: 		v45.Gfx = v47
+127: 		table.clear(v_u_30)
+128: 		local v48 = v38.Quality
+129: 		if type(v48) == "table" then
+130: 			for v49, v50 in v38.Quality do
+131: 				if type(v49) ~= "string" or type(v50) ~= "number" then
+132: 					continue
+133: 				end
+134: 				v_u_30[v49] = v50
+135: 			end
+136: 		end
+137: 		v_u_31.Wind = v38.Wind == false and 0 or 1
+138: 		v_u_31.MyArrow = v38.MyArrow == true and 1 or 0
+139: 		local v51 = v_u_31
+140: 		local v52 = v38.Vfx
+141: 		v51.Vfx = type(v52) ~= "number" and 0 or v38.Vfx
+142: 		local v53 = v_u_31
+143: 		local v54 = v38.Fov
+   ...
+174: 		for _, v63 in v_u_29 do
+175: 			v63.set(v_u_31[v63.key])
+176: 		end
+177: 	end
+178: end
+179: local function v_u_71(p65, p66) -- name: send
+180: 	-- upvalues: (copy) v_u_31, (copy) v_u_5, (copy) v_u_30, (copy) v_u_37, (copy) v_u_4, (copy) v_u_6
+181: 	v_u_31[p65] = p66
+182: 	v_u_5.SettingsSet:Fire(p65, p66)
+183: 	if p65 == "Gfx" then
+184: 		table.clear(v_u_30)
+185: 		v_u_37()
+186: 	elseif string.sub(p65, 1, 2) == "Q:" then
+187: 		v_u_30[string.sub(p65, 3)] = p66
+188: 		v_u_37()
+189: 	end
+190: 	if p65 == "Shake" or (p65 == "Impact" or (p65 == "Vfx" or (p65 == "AimAssist" or (p65 == "Fov" or (p65 == "CamView" or (p65 == "UiSize" or (p65 == "Perf" or (p65 == "Wind" or p65 == "MyArrow")))))))) then
+191: 		v_u_37()
+192: 	end
+193: 	if p65 == "Sfx" or p65 == "Music" then
+194: 		local v67 = v_u_4:FindFirstChild("Sfx")
+195: 		if not (v67 and v67:IsA("SoundGroup")) then
+196: 			v67 = Instance.new("SoundGroup")
+197: 			v67.Name = "Sfx"
+198: 			v67.Volume = 1
+199: 			v67.Parent = v_u_4
+   ...
+573: 		["key"] = "Q:" .. p_u_188,
+574: 		["set"] = v195
+575: 	}
+576: 	table.insert(v203, v204)
+577: 	return v190
+578: end
+579: local function v_u_215(p206, p207) -- name: fovRow
+580: 	-- upvalues: (copy) v_u_78, (copy) v_u_8, (copy) v_u_20, (copy) v_u_32, (copy) v_u_31, (copy) v_u_5, (copy) v_u_37, (copy) v_u_29
+581: 	local v208 = v_u_78(p206, p207, "Field of View", "How wide the battle camera sees.")
+582: 	local v_u_209 = nil
+583: 	local function v211(p210) -- name: set
+584: 		-- upvalues: (ref) v_u_209
+585: 		v_u_209.set(p210 == 60 and "60 (DEFAULT)" or tostring(p210))
+586: 	end
+587: 	v_u_209 = v_u_8.button(v208, "60", Rect.new(856, 6, 1116, 58), "theme", v_u_20, 14, function()
+588: 		-- upvalues: (ref) v_u_32, (ref) v_u_31, (ref) v_u_209, (ref) v_u_5, (ref) v_u_37
+589: 		local v212 = v_u_32[(table.find(v_u_32, v_u_31.Fov or 60) or 2) % #v_u_32 + 1]
+590: 		v_u_209.set(v212 == 60 and "60 (DEFAULT)" or tostring(v212))
+591: 		v_u_31.Fov = v212
+592: 		v_u_5.SettingsSet:Fire("Fov", v212)
+593: 		v_u_37()
+594: 	end)
+595: 	local v213 = v_u_31.Fov or 60
+596: 	v_u_209.set(v213 == 60 and "60 (DEFAULT)" or tostring(v213))
+597: 	local v214 = v_u_29
+598: 	table.insert(v214, {
+599: 		["key"] = "Fov",
+600: 		["set"] = nil,
+601: 		["set"] = v211
+602: 	})
+603: 	return v208
+604: end
+605: local function v_u_249(p216, p217) -- name: uiSizeRow
+606: 	-- upvalues: (copy) v_u_78, (copy) v_u_33, (copy) v_u_8, (copy) v_u_20, (copy) v_u_31, (copy) v_u_5, (copy) v_u_37, (copy) v_u_29
+607: 	local v218 = v_u_78(p216, p217, "UI Size", "How big the HUD and the battle screen are.")
+608: 	local v_u_219 = nil
+
+===== Players.RansbloxScripts.PlayerScripts.Controllers.TrainerController =====
+   ...
+285: 	local v124 = v107.intro
+286: 	local v125 = ("%* %*"):format(v107.class, v107.name)
+287: 	local v126
+288: 	if v107.leader then
+289: 		v126 = v_u_17
+290: 	else
+291: 		v126 = nil
+292: 	end
+293: 	v123(v124, v125, v126)
+294: 	v_u_24[p_u_103.id] = nil
+295: 	local v127 = v_u_8.TrainerChallenge
+296: 	local v128 = p_u_103.spot
+297: 	v127:Fire((tostring(v128:GetAttribute("TrainerId"))))
+298: 	local v129
+299: 	if v_u_47(v_u_14.Started, 6) then
+300: 		v_u_47(v_u_14.Ended, 1800)
+301: 		if not v_u_24[p_u_103.id] then
+302: 			local v130, v131 = v_u_47(v_u_8.TrainerResult.OnClientEvent, 3)
+303: 			local v132 = v_u_2.JSONDecode
+304: 			local v133 = v_u_2
+305: 			local v134 = (not v130 or type(v131) ~= "string") and "" or v131
+306: 			local v135, v136 = pcall(v132, v133, v134)
+307: 			if v135 and (type(v136) == "table" and v136.id == p_u_103.id) then
+308: 				v_u_24[p_u_103.id] = v136
+309: 			end
+310: 		end
+311: 		local v137 = v_u_24[p_u_103.id]
+312: 		if v137 then
+313: 			v129 = v137.won == true
+314: 		else
+315: 			v129 = v137
+316: 		end
+317: 		if v129 then
+   ...
+406: 		end
+407: 		v160(v161, v163, v164)
+408: 		v_u_22 = false
+409: 	else
+410: 		task.spawn(v_u_150, p151, false)
+411: 	end
+412: end
+413: local function v_u_178(p166) -- name: spawnNpc
+414: 	-- upvalues: (copy) v_u_19, (copy) v_u_10, (copy) v_u_4, (ref) v_u_21, (copy) v_u_15, (copy) v_u_27, (copy) v_u_58, (copy) v_u_65, (ref) v_u_28, (copy) v_u_1, (copy) v_u_165
+415: 	if p166:IsA("BasePart") and not v_u_19[p166] then
+416: 		local v167 = p166:GetAttribute("TrainerId")
+417: 		local v168
+418: 		if type(v167) == "string" then
+419: 			v168 = v_u_10[v167]
+420: 		else
+421: 			v168 = nil
+422: 		end
+423: 		local v169 = v_u_4:FindFirstChild("Assets")
+424: 		if v169 then
+425: 			v169 = v169:FindFirstChild("Rigs")
+426: 		end
+427: 		local v170
+428: 		if v168 and (v168.rig and v169) then
+429: 			v170 = v169:FindFirstChild(v168.rig)
+430: 		else
+   ...
+491: 					["humanoid"] = v172,
+492: 					["home"] = v174,
+493: 					["prompt"] = v175
+494: 				}
+495: 				v_u_19[p166] = v_u_177
+496: 				v_u_177.talked = v175.Triggered:Connect(function()
+497: 					-- upvalues: (ref) v_u_165, (copy) v_u_177
+498: 					v_u_165(v_u_177)
+499: 				end)
+500: 			end
+501: 		else
+502: 			if not v168 then
+503: 				warn((("[TrainerController] spot %* names no trainer (%*)"):format(p166:GetFullName(), (tostring(v167)))))
+504: 			end
+505: 			return
+506: 		end
+507: 	else
+508: 		return
+509: 	end
+510: end
+511: local function v_u_181(p179) -- name: removeNpc
+512: 	-- upvalues: (copy) v_u_27, (copy) v_u_19
+513: 	v_u_27[p179] = nil
+514: 	local v180 = v_u_19[p179]
+515: 	if v180 then
+   ...
+639: 		v_u_23 = false
+640: 	end
+641: 	table.insert(v211, v212:Connect(v213))
+642: 	local v214 = v_u_20
+643: 	local v215 = v_u_8.TrainerResult.OnClientEvent
+644: 	local function v222(p216)
+645: 		-- upvalues: (ref) v_u_2, (ref) v_u_24
+646: 		local v217 = v_u_2.JSONDecode
+647: 		local v218 = v_u_2
+648: 		local v219, v220 = pcall(v217, v218, p216)
+649: 		if v219 and type(v220) == "table" then
+650: 			local v221 = v220.id
+651: 			if type(v221) == "string" then
+652: 				v_u_24[v220.id] = v220
+653: 			end
+654: 		end
+655: 	end
+656: 	table.insert(v214, v215:Connect(v222))
+657: 	for _, v223 in v_u_1:GetTagged("TrainerSpot") do
+658: 		v_u_178(v223)
+659: 	end
+660: 	local v224 = v_u_20
+661: 	local v225 = v_u_1:GetInstanceAddedSignal("TrainerSpot")
+662: 	local v226 = v_u_178
+663: 	table.insert(v224, v225:Connect(v226))
+
+===== Players.RansbloxScripts.PlayerScripts.Controllers.TrainingController =====
+   ...
+77: 	end)
+78: 	return coroutine.yield()
+79: end
+80: local function v_u_37() -- name: flags
+81: 	-- upvalues: (copy) v_u_13
+82: 	local v36 = v_u_13:Get({ "Story" })
+83: 	return type(v36) ~= "table" and {} or v36
+84: end
+85: local function v_u_50(p38, p39, p40, p41) -- name: boardLines
+86: 	-- upvalues: (copy) v_u_8, (copy) v_u_3
+87: 	local v42 = p38:GetAttribute("Location")
+88: 	local v43 = v_u_8.find
+89: 	if type(v42) ~= "string" then
+90: 		v42 = nil
+91: 	end
+92: 	local v44 = v43(p39, v42)
+93: 	local v45
+94: 	if v44 then
+95: 		v45 = v_u_8.linesOf(v44, p41)
+96: 	else
+97: 		v45 = p40.intro
+98: 	end
+99: 	local v_u_46 = v_u_3.LocalPlayer.DisplayName
+100: 	local v47 = {}
+101: 	for v48, v49 in v45 do
+   ...
+109: local function v_u_67(p51, p52) -- name: run
+110: 	-- upvalues: (ref) v_u_21, (copy) v_u_5, (copy) v_u_9, (ref) v_u_19, (copy) v_u_35, (copy) v_u_12, (copy) v_u_2, (copy) v_u_13, (copy) v_u_10
+111: 	v_u_21 = nil
+112: 	local v53, v54 = v_u_5.TrainingStart:Fire(p51, p52.id)
+113: 	if v53 == true then
+114: 		if v_u_19 or v_u_35(v_u_12.Started, 6) then
+115: 			v_u_35(v_u_12.Ended, 600)
+116: 			local v55 = v_u_21
+117: 			if type(v55) ~= "table" or v_u_21.drill ~= p52.id then
+118: 				local v56, v57 = v_u_35(v_u_5.TrainingResult.OnClientEvent, 3)
+119: 				local v58 = v_u_2.JSONDecode
+120: 				local v59 = v_u_2
+121: 				local v60 = (not v56 or type(v57) ~= "string") and "" or v57
+122: 				local v61, v62 = pcall(v58, v59, v60)
+123: 				if v61 and type(v62) == "table" then
+124: 					v_u_21 = v62
+125: 				end
+126: 			end
+127: 			local v63 = v_u_21
+128: 			v_u_21 = nil
+129: 			if type(v63) == "table" and v63.drill == p52.id then
+130: 				local v64 = v_u_13:Get({ "Party", 1 })
+131: 				if type(v64) ~= "table" then
+132: 					v64 = nil
+133: 				end
+134: 				local v65 = v_u_10.training
+135: 				local v66
+136: 				if v64 then
+137: 					v66 = v64.Combo
+138: 				else
+139: 					v66 = nil
+140: 				end
+141: 				v65(v63, v66)
+142: 			end
+143: 		end
+144: 	else
+145: 		v_u_9.say({ v53 == nil and "No answer from the server. Try again." or ((type(v54) ~= "string" or v54 == "") and "Not right now!" or v54) })
+146: 		return
+147: 	end
+148: end
+149: local function v_u_86(p68, p69) -- name: use
+150: 	-- upvalues: (copy) v_u_7, (copy) v_u_29, (ref) v_u_20, (copy) v_u_37, (copy) v_u_6, (copy) v_u_18, (copy) v_u_50, (copy) v_u_9, (copy) v_u_13, (copy) v_u_14, (copy) v_u_67
+151: 	local v70 = v_u_7.station(p69)
+152: 	if v70 and v_u_29() then
+153: 		v_u_20 = true
+154: 		local v71 = v_u_37()
+155: 		local v72 = v_u_6.get(v70.area)
+156: 		local v73 = v72 ~= nil and v_u_6.isOpen(v72, v71)
+157: 		if v73 then
+   ...
+224: 			v92 = v94 and "Train" or "Read"
+225: 		else
+226: 			v92 = "Read"
+227: 		end
+228: 		v91.ActionText = v92
+229: 	end
+230: end
+231: local function v_u_103(p_u_96) -- name: add
+232: 	-- upvalues: (copy) v_u_17, (copy) v_u_7, (copy) v_u_37, (copy) v_u_6, (ref) v_u_19, (copy) v_u_86
+233: 	if p_u_96:IsA("BasePart") and not v_u_17[p_u_96] then
+234: 		local v_u_97 = p_u_96:GetAttribute("InteractId")
+235: 		local v98
+236: 		if type(v_u_97) == "string" then
+237: 			v98 = v_u_7.station(v_u_97)
+238: 		else
+239: 			v98 = nil
+240: 		end
+241: 		if v98 then
+242: 			local v99 = Instance.new("ProximityPrompt")
+243: 			v99.Name = "Train"
+244: 			local v100 = v_u_37()
+245: 			local v101 = v_u_6.get(v98.area)
+246: 			local v102 = v101 ~= nil and v_u_6.isOpen(v101, v100)
+247: 			if v102 then
+248: 				v102 = v98.requires == nil and true or v100[v98.requires] == true
+
+===== Players.RansbloxScripts.PlayerScripts.Controllers.TrapController =====
+   ...
+25: 	for _, v19 in p17:GetDescendants() do
+26: 		if not v19:IsA("BasePart") then
+27: 			continue
+28: 		end
+29: 		table.insert(v18, v19)
+30: 	end
+31: 	return v18
+32: end
+33: local function v_u_35(p21) -- name: applyTile
+34: 	-- upvalues: (copy) v_u_5, (copy) v_u_4
+35: 	local v22 = p21.part:GetAttribute("TrapState")
+36: 	local v23 = p21.part:GetAttribute("TrapAt")
+37: 	p21.state = type(v22) ~= "string" and "up" or v22
+38: 	if type(v23) ~= "number" then
+39: 		v23 = v_u_5:GetServerTimeNow()
+40: 	end
+41: 	p21.at = v23
+42: 	if p21.tween then
+43: 		p21.tween:Cancel()
+44: 		p21.tween = nil
+45: 	end
+46: 	if p21.state == "down" then
+47: 		p21.part.CanCollide = false
+48: 		local v24 = v_u_4
+49: 		local v25 = p21.part
+
+===== Players.RansbloxScripts.PlayerScripts.Controllers.WorkshopController =====
+1: local v_u_1 = game:GetService("CollectionService")
+2: local v_u_2 = game:GetService("ContentProvider")
+3: local v_u_3 = game:GetService("ContextActionService")
+4: local v_u_4 = game:GetService("GuiService")
+5: local v_u_5 = game:GetService("Players")
+6: local v_u_6 = game:GetService("ReplicatedStorage")
+7: local v_u_7 = game:GetService("RunService")
+8: local v_u_8 = require(v_u_6.Packets)
+9: local v_u_9 = require(v_u_6.Bey.LauncherCatalog)
+10: local v_u_10 = require(v_u_6.Bey.Cosmetics)
+11: local v_u_11 = require(v_u_6.Bey.Loadout)
+12: local v_u_12 = require(v_u_6.Bey.PartCatalog)
+13: local v_u_13 = require(v_u_6.Rivals.Catalog)
+14: local v_u_14 = require(v_u_6.Registries.Shops)
+15: local v_u_15 = require(v_u_6.Config.GameConfig)
+16: local v_u_16 = require(script.Parent.Parent.UI.Kit)
+17: local v_u_17 = require(script.Parent.Parent.UI.Workshop)
+18: local v_u_18 = require(script.Parent.Parent.UI.Dialogue)
+19: local v_u_19 = require(script.Parent.BattleController)
+20: local v_u_20 = require(script.Parent.DataController)
+21: local v21 = {
+   ...
+108: 		for _, v55 in p_u_50.Items do
+109: 			if v55.kind ~= p51 or (v55.id ~= p52 or v54 ~= nil and ((v55.star or 1) <= (v54.star or 1) and ((v55.star or 1) ~= (v54.star or 1) or (v55.lvl or 1) <= (v54.lvl or 1)))) then
+110: 				continue
+111: 			end
+112: 			v54 = v55
+113: 		end
+114: 		return v54
+115: 	end
+116: 	local v57 = p_u_50.Name
+117: 	local v_u_58
+118: 	if type(v57) == "table" then
+119: 		local v59 = p_u_50.Name.id
+120: 		if type(v59) == "string" then
+121: 			v_u_58 = p_u_50.Name.id
+122: 		else
+123: 			v_u_58 = nil
+124: 		end
+125: 	else
+126: 		v_u_58 = nil
+127: 	end
+128: 	local v60 = p_u_50.Level
+129: 	local v_u_61 = type(v60) ~= "number" and 1 or p_u_50.Level
+130: 	local v62 = {}
+131: 	local v63 = p_u_50.Saves
+132: 	if type(v63) == "table" then
+   ...
+271: 						["layer"] = v100.id,
+272: 						["disc"] = v101.id,
+273: 						["driver"] = v102.id
+274: 					}
+275: 				end
+276: 			end
+277: 		end
+278: 	end
+279: 	if not v_u_12.isValidCombo(v93) then
+280: 		return nil
+281: 	end
+282: 	local v103 = {
+283: 		["launcher"] = v_u_9.sanitize(v90.Launcher),
+284: 		["combo"] = {
+285: 			["layer"] = v93.layer,
+286: 			["disc"] = v93.disc,
+287: 			["driver"] = v93.driver
+288: 		},
+289: 		["owned"] = v95
+290: 	}
+291: 	local v104 = v90.Coins
+292: 	v103.coins = type(v104) ~= "number" and 0 or v90.Coins
+293: 	v103.shop = v_u_42(v_u_28, v90.Story)
+294: 	v103.style = {
+295: 		["launch"] = v_u_10.sanitize(v90.Style).launch,
+   ...
+339: 			v_u_25 = false
+340: 			local v112 = v_u_34()
+341: 			if v112 then
+342: 				v112:Enable()
+343: 			end
+344: 		end
+345: 		if v_u_26 ~= nil then
+346: 			v_u_4.TouchControlsEnabled = v_u_26
+347: 			v_u_26 = nil
+348: 		end
+349: 	end
+350: end
+351: local function v_u_122(p114) -- name: equipLauncher
+352: 	-- upvalues: (copy) v_u_9, (copy) v_u_8
+353: 	local v115 = v_u_9.Grips[p114.grip]
+354: 	local v116 = { "", "", "" }
+355: 	if v115 then
+356: 		for v117, v118 in v115.ports do
+357: 			if v117 > 3 then
+358: 				continue
+359: 			end
+360: 			v116[v117] = p114.accessories[v118] or ""
+361: 		end
+362: 	end
+363: 	local v119, v120 = v_u_8.WorkshopEquipLauncher:Fire(p114.launcher, p114.grip, p114.mount, v116[1], v116[2], v116[3])
+364: 	if v119 == nil then
+365: 		return false, "No answer from the server. Try again."
+366: 	else
+367: 		local v121 = v119 == true
+368: 		if v120 == "" then
+369: 			return v121, nil
+370: 		else
+371: 			return v121, v120
+372: 		end
+373: 	end
+374: end
+375: local function v_u_127(p123) -- name: equipBey
+   ...
+393: 		return false, "No answer from the server. Try again."
+394: 	else
+395: 		local v132 = v130 == true
+396: 		if v131 == "" then
+397: 			return v132, nil
+398: 		else
+399: 			return v132, v131
+400: 		end
+401: 	end
+402: end
+403: local function v_u_138(p134) -- name: launchStyle
+404: 	-- upvalues: (copy) v_u_8
+405: 	local v135, v136 = v_u_8.WorkshopLaunchStyle:Fire(p134)
+406: 	if v135 == nil then
+407: 		return false, "No answer from the server. Try again."
+40
+
+===== Players.RansbloxScripts.PlayerScripts.Controllers.InteriorController =====
+   ...
+300: 				continue
+301: 			end
+302: 			local v85 = v82.CFrame:PointToObjectSpace(v84:GetPivot().Position)
+303: 			local v86 = v85.X
+304: 			if math.abs(v86) >= v82.Size.X / 2 then
+305: 				continue
+306: 			end
+307: 			local v87 = v85.Z
+308: 			if math.abs(v87) >= v82.Size.Z / 2 then
+309: 				continue
+310: 			end
+311: 			local v88 = v84:GetAttribute("Kit")
+312: 			if type(v88) ~= "string" then
+313: 				v88 = v84.Name
+314: 			end
+315: 			v83[v88] = true
+316: 		end
+317: 		local v89 = "living"
+318: 		for _, v90 in v_u_7 do
+319: 			for v91 in v90.pieces do
+320: 				if not v83[v91] then
+321: 					continue
+322: 				end
+323: 				v89 = v90.kind
+324: 			end
+   ...
+344: 			local v107 = math.min(v106, 5)
+345: 			local v108 = v82.Size.Z / (v98 ~= Vector3.new(0, 0, 1) and 1 or v97) * 0.4
+346: 			local v109 = math.min(v108, 5)
+347: 			v77(v105, Vector3.new(v107, 0.2, v109), { Enum.NormalId.Bottom }, v93 + 6, 120, true, "ceiling", v92.k / v97 ^ 0.5, v92.day, v92.night)
+348: 		end
+349: 	end
+350: 	v_u_14.floors = #v80
+351: 	for _, v110 in v79 do
+352: 		local v111
+353: 		if v110:IsA("Model") then
+354: 			local v112 = v_u_10
+355: 			local v113 = v110:GetAttribute("Kit")
+356: 			if type(v113) ~= "string" then
+357: 				v113 = v110.Name
+358: 			end
+359: 			v111 = v112[v113]
+360: 		else
+361: 			v111 = nil
+362: 		end
+363: 		if not v111 then
+364: 			continue
+365: 		end
+366: 		local v114 = (-1 / 0)
+367: 		local v115 = nil
+368: 		for _, v116 in v110:GetDescendants() do
