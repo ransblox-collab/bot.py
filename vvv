@@ -1,0 +1,657 @@
+=== TARGETED MODULE DECOMP ===
+
+===== ReplicatedStorage.Bey.Launch =====
+1: local v1 = require(script.Parent.Sim)
+2: local v_u_2 = require(script.Parent.Cosmetics)
+3: local v_u_3 = require(script.Parent.PartCatalog)
+4: local v_u_25 = {
+5: 	["STYLES"] = v1.STYLES,
+6: 	["PERFECT"] = 1.05,
+7: 	["AIM_MIN"] = 0.1,
+8: 	["AIM_MAX"] = 0.85,
+9: 	["STANCE"] = table.freeze({
+10: 		["BeyLauncher"] = "Power",
+11: 		["SpeedLauncher"] = "Rush",
+12: 		["HeavyLauncher"] = "Upper",
+13: 		["SwordLauncher"] = "Bank",
+14: 		["LightLauncher"] = "Stamina"
+15: 	}),
+16: 	["SIGNATURE"] = table.freeze({
+17: 		["rantaro"] = "Leap",
+18: 		["shu"] = "Spin",
+19: 		["lui"] = "Slam",
+20: 		["wakiya"] = "Bank",
+21: 		["daigo"] = "Upper"
+22: 	}),
+23: 	["TYPE_STANCE"] = table.freeze({
+24: 		["Attack"] = "Rush",
+25: 		["Defense"] = "Upper",
+26: 		["Stamina"] = "Stamina",
+27: 		["Balance"] = "Power"
+28: 	}),
+29: 	["STANCE_STATS"] = table.freeze({
+30: 		["Power"] = table.freeze({
+31: 			["fly"] = "Power",
+32: 			["power"] = 2,
+33: 			["speed"] = 1,
+34: 			["control"] = 0,
+   ...
+245: 	["GEAR_CAP"] = 10,
+246: 	["withStance"] = function(p5, p6) -- name: withStance
+247: 		-- upvalues: (copy) v_u_25
+248: 		local v7 = p5 or {}
+249: 		local v8 = v_u_25.statsOf(p6)
+250: 		local v9 = v_u_25.GEAR_CAP
+251: 		local v10 = {}
+252: 		local v11 = (v7.power or 0) + v8.power
+253: 		v10.power = math.min(v11, v9)
+254: 		local v12 = (v7.speed or 0) + v8.speed
+255: 		v10.speed = math.min(v12, v9)
+256: 		local v13 = (v7.control or 0) + v8.control
+257: 		v10.control = math.min(v13, v9)
+258: 		local v14 = (v7.stability or 0) + v8.stability
+259: 		v10.stability = math.min(v14, v9)
+260: 		return v10
+261: 	end,
+262: 	["stanceFor"] = function(p15, p16) -- name: stanceFor
+263: 		-- upvalues: (copy) v_u_25, (copy) v_u_2, (copy) v_u_3
+264: 		if p16 then
+265: 			local v17 = v_u_25.SIGNATURE[string.match(p16, "^[^_]+") or p16]
+266: 			if v17 then
+267: 				return v17
+268: 			end
+269: 			local v18 = 0
+270: 			for v19 = 1, #p16 do
+271: 				v18 = (v18 * 31 + string.byte(p16, v19)) % 1000003
+272: 			end
+273: 			local v20 = v_u_2.LAUNCH_STYLES
+274: 			return v20[v18 % #v20 + 1].id
+275: 		end
+276: 		if p15 and (p15.ai ~= nil and p15.combo) then
+277: 			return v_u_25.TYPE_STANCE[v_u_3.layer(p15.combo.layer).type] or "Power"
+278: 		end
+279: 		local v21 = v_u_2.launchStance
+280: 		local v22
+281: 		if p15 then
+282: 			v22 = p15.style
+283: 		else
+284: 			v22 = p15
+285: 		end
+286: 		local v23 = v21(v22)
+287: 		if v23 then
+288: 			return v23
+289: 		end
+290: 		if p15 then
+291: 			local v24 = p15.launcher
+292: 			if type(v24) == "table" then
+293: 				p15 = p15.launcher.launcher
+294: 			else
+295: 				p15 = false
+296: 			end
+297: 		end
+298: 		return (type(p15) ~= "string" or not v_u_25.STANCE[p15]) and "Power" or v_u_25.STANCE[p15]
+299: 	end,
+300: 	["GRADE_TEXT"] = table.freeze({
+301: 		["Perfect"] = "PERFECT RIP!",
+302: 		["Great"] = "GREAT RIP!",
+303: 		["Good"] = "GOOD RIP",
+304: 		["Late"] = "LATE..."
+305: 	})
+306: }
+307: return table.freeze(v_u_25)
+
+===== ReplicatedStorage.Bey.Net =====
+1: local v_u_1 = require(script.Parent.Sim)
+2: local v_u_63 = {
+3: 	["MAX_INPUTS"] = 8,
+4: 	["encodeInputs"] = function(p2, p3, p4) -- name: encodeInputs
+5: 		-- upvalues: (copy) v_u_63
+6: 		local v5 = #p4
+7: 		local v6 = v_u_63.MAX_INPUTS
+8: 		local v7 = math.min(v5, v6)
+9: 		local v8 = buffer.create(v7 * 4 + 7)
+10: 		buffer.writeu16(v8, 0, p2)
+11: 		buffer.writeu32(v8, 2, p3)
+12: 		buffer.writeu8(v8, 6, v7)
+13: 		local v9 = #p4 - v7
+14: 		for v10 = 1, v7 do
+15: 			local v11 = p4[v9 + v10]
+16: 			local v12 = (v10 - 1) * 4 + 7
+17: 			local v13 = v11.sx * 127
+18: 			local v14 = math.round(v13)
+19: 			local v15 = math.clamp(v14, -127, 127)
+20: 			buffer.writei8(v8, v12, v15)
+21: 			local v16 = v12 + 1
+   ...
+109: 		end
+110: 	end
+111: }
+112: local v_u_64 = {
+113: 	"x",
+114: 	"z",
+115: 	"vx",
+116: 	"vz",
+117: 	"spin",
+118: 	"burst",
+119: 	"special",
+120: 	"dashCd",
+121: 	"drift",
+122: 	"ridge",
+123: 	"ridgeCd",
+124: 	"rideTime",
+125: 	"rush",
+126: 	"guard",
+127: 	"absorb",
+128: 	"upper",
+129: 	"counter",
+130: 	"stun",
+131: 	"prevB",
+132: 	"outTick",
+133: 	"wobble",
+134: 	"lip",
+135: 	"down",
+136: 	"aimA",
+137: 	"aimD",
+138: 	"aimS",
+139: 	"press",
+140: 	"ripTick",
+141: 	"ripQ",
+142: 	"landTick",
+143: 	"clashS",
+144: 	"clashC",
+145: 	"clashG",
+146: 	"ab",
+147: 	"abPh",
+148: 	"abT",
+149: 	"abHits",
+150: 	"abHitCd",
+151: 	"abBanks",
+152: 	"abAx",
+153: 	"abAz",
+154: 	"abA",
+155: 	"abA0",
+156: 	"abDx",
+157: 	"abDz",
+158: 	"abRx",
+159: 	"abRz",
+160: 	"abSeed",
+161: 	"cd1",
+   ...
+216: 	"hitTk",
+217: 	"hx",
+218: 	"hz",
+219: 	"pilot",
+220: 	"tireT",
+221: 	"smashC",
+222: 	"shoveT",
+223: 	"gbT",
+224: 	"holdT",
+225: 	"mvKey",
+226: 	"mvTook",
+227: 	"caT",
+228: 	"caHit",
+229: 	"noStealT",
+230: 	"railT",
+231: 	"rimT",
+232: 	"rimL",
+233: 	"rimB",
+234: 	"diveK",
+235: 	"won",
+236: 	"springT",
+237: 	"springN",
+238: 	"reboot",
+239: 	"sweptBy",
+240: 	"abSweeps",
+241: 	"springCut"
+242: }
+243: local v_u_65 = {
+244: 	"clash",
+245: 	"clashT",
+246: 	"clashAt",
+247: 	"clashA",
+248: 	"clashB",
+249: 	"clashX",
+250: 	"clashE",
+251: 	"clashNx",
+252: 	"clashNz",
+253: 	"clashCx",
+254: 	"clashCz",
+255: 	"clashUlt",
+256: 	"clashCd",
+257: 	"clashN0",
+258: 	"awaken",
+259: 	"awakenAt",
+260: 	"lastOut",
+261: 	"first",
+262: 	"ot",
+263: 	"clashAsA",
+264: 	"clashAsB",
+265: 	"winner",
+266: 	"live",
+267: 	"landLive",
+268: 	"awakenClutch"
+269: }
+270: local v_u_66 = {
+271: 	"driftHeld",
+272: 	"brace",
+273: 	"onRidge",
+274: 	"prevIn",
+275: 	"launched",
+276: 	"tired",
+277: 	"rimUsed"
+278: }
+279: local v_u_67 = {
+280: 	"think",
+281: 	"sx",
+282: 	"sz",
+283: 	"b",
+284: 	"mashT",
+285: 	"beat"
+286: }
+287: local v_u_68 = {
+288: 	"Burst",
+289: 	"Over",
+290: 	"Spin",
+291: 	"Draw"
+292: }
+293: local v_u_69 = {
+294: 	["Burst"] = 1,
+295: 	["Over"] = 2,
+
+===== ReplicatedStorage.Packets =====
+1: local v1 = require(script.Parent.Packet)
+2: return {
+3: 	["Ping"] = v1("Ping"):Response(v1.NumberF64):RateLimit(5, 1),
+4: 	["Track"] = v1("Track", v1.String, v1.String):RateLimit(8, 4),
+5: 	["TelPlace"] = v1("TelPlace", v1.String, v1.String, v1.String, v1.String):RateLimit(10, 5),
+6: 	["TelBatch"] = v1("TelBatch", v1.StringLong):RateLimit(6, 60),
+7: 	["BattleState"] = v1("BattleState", v1.StringLong),
+8: 	["BattleLaunch"] = v1("BattleLaunch", v1.NumberU16, v1.NumberF32, v1.NumberF32, v1.NumberU8):RateLimit(4, 1),
+9: 	["BattleForfeit"] = v1("BattleForfeit", v1.NumberU16):RateLimit(1, 1),
+10: 	["BattleStuck"] = v1("BattleStuck", v1.NumberU16):RateLimit(1, 5),
+11: 	["TutorialWarp"] = v1("TutorialWarp", v1.NumberU16, v1.NumberF32):RateLimit(6, 1),
+12: 	["BattlePing"] = v1("BattlePing", v1.NumberU16, v1.NumberU8):RateLimit(3, 1),
+13: 	["SpectateBattle"] = v1("SpectateBattle", v1.String):Response(v1.Boolean8, v1.String):RateLimit(2, 1),
+14: 	["SpectateStop"] = v1("SpectateStop"):RateLimit(2, 1),
+15: 	["BattlePinged"] = v1("BattlePinged", v1.NumberU8, v1.NumberU8, v1.NumberU8),
+16: 	["BattleSwap"] = v1("BattleSwap", v1.NumberU16, v1.NumberU8):RateLimit(4, 1),
+17: 	["TrainerChallenge"] = v1("TrainerChallenge", v1.String):RateLimit(2, 1),
+18: 	["TrainerResult"] = v1("TrainerResult", v1.String),
+19: 	["WorkshopEquipLauncher"] = v1("WorkshopEquipLauncher", v1.String, v1.String, v1.String, v1.String, v1.String, v1.String):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+20: 	["WorkshopEquipBey"] = v1("WorkshopEquipBey", v1.String, v1.String, v1.String):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+21: 	["WorkshopPaint"] = v1("WorkshopPaint", v1.String, v1.String):Response(v1.Boolean8, v1.String):RateLimit(6, 1),
+22: 	["WorkshopLaunchStyle"] = v1("WorkshopLaunchStyle", v1.String):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+23: 	["ShopBuy"] = v1("ShopBuy", v1.String, v1.String, v1.String):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+24: 	["TrainingStart"] = v1("TrainingStart", v1.String, v1.String):Response(v1.Boolean8, v1.String):RateLimit(2, 2),
+25: 	["TrainingResult"] = v1("TrainingResult", v1.String),
+26: 	["PartyLead"] = v1("PartyLead", v1.NumberU8):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+27: 	["PartyNew"] = v1("PartyNew"):Response(v1.Boolean8, v1.String):RateLimit(2, 2),
+28: 	["BoxMove"] = v1("BoxMove", v1.Boolean8, v1.NumberU8):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+29: 	["PartyRepair"] = v1("PartyRepair"):Response(v1.Boolean8, v1.String):RateLimit(2, 2),
+30: 	["SettingsSet"] = v1("SettingsSet", v1.String, v1.NumberF32):RateLimit(10, 1),
+31: 	["PvpChallenge"] = v1("PvpChallenge", v1.NumberF64):RateLimit(2, 1),
+32: 	["PvpOffer"] = v1("PvpOffer", v1.NumberF64),
+33: 	["PvpAnswer"] = v1("PvpAnswer", v1.NumberF64, v1.Boolean8):RateLimit(2, 1),
+34: 	["PvpNotice"] = v1("PvpNotice", v1.String),
+35: 	["PvpBusy"] = v1("PvpBusy", v1.Boolean8):RateLimit(6, 1),
+36: 	["StoryReady"] = v1("StoryReady"):RateLimit(1, 2),
+37: 	["StoryTrigger"] = v1("StoryTrigger", v1.String):RateLimit(4, 1),
+38: 	["CutscenePlay"] = v1("CutscenePlay", v1.String, v1.NumberU16, v1.Boolean8),
+39: 	["CutsceneBattle"] = v1("CutsceneBattle", v1.NumberU16):RateLimit(2, 1),
+40: 	["CutsceneChoice"] = v1("CutsceneChoice", v1.NumberU16, v1.NumberU8):RateLimit(2, 1),
+41: 	["SaveGame"] = v1("SaveGame"):Response(v1.Boolean8, v1.String):RateLimit(2, 10),
+42: 	["CutsceneDone"] = v1("CutsceneDone", v1.NumberU16):RateLimit(2, 1),
+43: 	["CutsceneAbort"] = v1("CutsceneAbort", v1.NumberU16):RateLimit(2, 1),
+44: 	["RivalsPull"] = v1("RivalsPull", v1.String, v1.NumberU8, v1.Boolean8):Response(v1.Boolean8, v1.String, v1.StringLong):RateLimit(3, 1),
+45: 	["RivalsMerge"] = v1("RivalsMerge", v1.String, v1.StringLong):Response(v1.Boolean8, v1.String, v1.String):RateLimit(3, 1),
+46: 	["RivalsTrait"] = v1("RivalsTrait", v1.String, v1.NumberU8, v1.Boolean8):Response(v1.Boolean8, v1.String, v1.String):RateLimit(4, 1),
+47: 	["RivalsStar"] = v1("RivalsStar", v1.String):Response(v1.Boolean8, v1.String, v1.String):RateLimit(4, 1),
+48: 	["RivalsEvolve"] = v1("RivalsEvolve", v1.String):Response(v1.Boolean8, v1.String, v1.String):RateLimit(2, 1),
+49: 	["GymStart"] = v1("GymStart", v1.String):Response(v1.Boolean8, v1.String, v1.String):RateLimit(2, 1),
+50: 	["GymEnd"] = v1("GymEnd", v1.NumberU8, v1.NumberU16):Response(v1.Boolean8, v1.String, v1.String):RateLimit(2, 1),
+51: 	["RivalsTitle"] = v1("RivalsTitle", v1.String):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+52: 	["RivalsNameRoll"] = v1("RivalsNameRoll", v1.Boolean8):Response(v1.Boolean8, v1.String, v1.String):RateLimit(3, 1),
+53: 	["RivalsNamePick"] = v1("RivalsNamePick", v1.Boolean8):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+54: 	["RivalsNameSlot"] = v1("RivalsNameSlot", v1.NumberU8):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+55: 	["TutorialBattle"] = v1("TutorialBattle"):Response(v1.Boolean8, v1.String):RateLimit(1, 1),
+56: 	["TutorialPick"] = v1("TutorialPick", v1.NumberU8):Response(v1.Boolean8, v1.String, v1.String):RateLimit(2, 1),
+57: 	["TutorialTour"] = v1("TutorialTour", v1.Boolean8):Response(v1.Boolean8, v1.String, v1.String):RateLimit(2, 5),
+58: 	["OpeningSeen"] = v1("OpeningSeen"):RateLimit(1, 5),
+59: 	["RankedQueue"] = v1("RankedQueue", v1.String):Response(v1.Boolean8, v1.String):RateLimit(2, 3),
+60: 	["RankedCancel"] = v1("RankedCancel"):Response(v1.Boolean8, v1.String):RateLimit(2, 2),
+61: 	["RankedState"] = v1("RankedState", v1.StringLong),
+62: 	["RankedReady"] = v1("RankedReady"):RateLimit(2, 5),
+63: 	["RankedOrder"] = v1("RankedOrder", v1.NumberU8):RateLimit(4, 1),
+64: 	["RankedChallenge"] = v1("RankedChallenge", v1.NumberF64):Response(v1.Boolean8, v1.String):RateLimit(2, 5),
+65: 	["RankedOffer"] = v1("RankedOffer", v1.NumberF64),
+66: 	["RankedAnswer"] = v1("RankedAnswer", v1.NumberF64, v1.Boolean8):RateLimit(3, 1),
+67: 	["HalloweenAct"] = v1("HalloweenAct", v1.String, v1.String):Response(v1.Boolean8, v1.String, v1.StringLong):RateLimit(
+
+=== LOADED MODULES ===
+
+===== ReplicatedStorage.Bey.Net (loaded) =====
+1: local v_u_1 = require(script.Parent.Sim)
+2: local v_u_63 = {
+3: 	["MAX_INPUTS"] = 8,
+4: 	["encodeInputs"] = function(p2, p3, p4) -- name: encodeInputs
+5: 		-- upvalues: (copy) v_u_63
+6: 		local v5 = #p4
+7: 		local v6 = v_u_63.MAX_INPUTS
+8: 		local v7 = math.min(v5, v6)
+9: 		local v8 = buffer.create(v7 * 4 + 7)
+10: 		buffer.writeu16(v8, 0, p2)
+11: 		buffer.writeu32(v8, 2, p3)
+12: 		buffer.writeu8(v8, 6, v7)
+13: 		local v9 = #p4 - v7
+14: 		for v10 = 1, v7 do
+15: 			local v11 = p4[v9 + v10]
+16: 			local v12 = (v10 - 1) * 4 + 7
+17: 			local v13 = v11.sx * 127
+18: 			local v14 = math.round(v13)
+19: 			local v15 = math.clamp(v14, -127, 127)
+20: 			buffer.writei8(v8, v12, v15)
+21: 			local v16 = v12 + 1
+   ...
+109: 		end
+110: 	end
+111: }
+112: local v_u_64 = {
+113: 	"x",
+114: 	"z",
+115: 	"vx",
+116: 	"vz",
+117: 	"spin",
+118: 	"burst",
+119: 	"special",
+120: 	"dashCd",
+121: 	"drift",
+122: 	"ridge",
+123: 	"ridgeCd",
+124: 	"rideTime",
+125: 	"rush",
+126: 	"guard",
+127: 	"absorb",
+128: 	"upper",
+129: 	"counter",
+130: 	"stun",
+131: 	"prevB",
+132: 	"outTick",
+133: 	"wobble",
+134: 	"lip",
+135: 	"down",
+136: 	"aimA",
+137: 	"aimD",
+138: 	"aimS",
+139: 	"press",
+140: 	"ripTick",
+141: 	"ripQ",
+142: 	"landTick",
+143: 	"clashS",
+144: 	"clashC",
+145: 	"clashG",
+146: 	"ab",
+147: 	"abPh",
+148: 	"abT",
+149: 	"abHits",
+150: 	"abHitCd",
+151: 	"abBanks",
+152: 	"abAx",
+153: 	"abAz",
+154: 	"abA",
+155: 	"abA0",
+156: 	"abDx",
+157: 	"abDz",
+158: 	"abRx",
+159: 	"abRz",
+160: 	"abSeed",
+161: 	"cd1",
+   ...
+216: 	"hitTk",
+217: 	"hx",
+218: 	"hz",
+219: 	"pilot",
+220: 	"tireT",
+221: 	"smashC",
+222: 	"shoveT",
+223: 	"gbT",
+224: 	"holdT",
+225: 	"mvKey",
+226: 	"mvTook",
+227: 	"caT",
+228: 	"caHit",
+229: 	"noStealT",
+230: 	"railT",
+231: 	"rimT",
+232: 	"rimL",
+233: 	"rimB",
+234: 	"diveK",
+235: 	"won",
+236: 	"springT",
+237: 	"springN",
+238: 	"reboot",
+239: 	"sweptBy",
+240: 	"abSweeps",
+241: 	"springCut"
+242: }
+243: local v_u_65 = {
+244: 	"clash",
+245: 	"clashT",
+246: 	"clashAt",
+247: 	"clashA",
+248: 	"clashB",
+249: 	"clashX",
+250: 	"clashE",
+251: 	"clashNx",
+252: 	"clashNz",
+253: 	"clashCx",
+254: 	"clashCz",
+255: 	"clashUlt",
+256: 	"clashCd",
+257: 	"clashN0",
+258: 	"awaken",
+259: 	"awakenAt",
+260: 	"lastOut",
+261: 	"first",
+262: 	"ot",
+263: 	"clashAsA",
+264: 	"clashAsB",
+265: 	"winner",
+266: 	"live",
+267: 	"landLive",
+268: 	"awakenClutch"
+269: }
+270: local v_u_66 = {
+271: 	"driftHeld",
+272: 	"brace",
+273: 	"onRidge",
+274: 	"prevIn",
+275: 	"launched",
+276: 	"tired",
+277: 	"rimUsed"
+278: }
+279: local v_u_67 = {
+280: 	"think",
+281: 	"sx",
+282: 	"sz",
+283: 	"b",
+284: 	"mashT",
+285: 	"beat"
+286: }
+287: local v_u_68 = {
+288: 	"Burst",
+289: 	"Over",
+290: 	"Spin",
+291: 	"Draw"
+292: }
+293: local v_u_69 = {
+294: 	["Burst"] = 1,
+295: 	["Over"] = 2,
+
+===== ReplicatedStorage.Bey.Launch (loaded) =====
+1: local v1 = require(script.Parent.Sim)
+2: local v_u_2 = require(script.Parent.Cosmetics)
+3: local v_u_3 = require(script.Parent.PartCatalog)
+4: local v_u_25 = {
+5: 	["STYLES"] = v1.STYLES,
+6: 	["PERFECT"] = 1.05,
+7: 	["AIM_MIN"] = 0.1,
+8: 	["AIM_MAX"] = 0.85,
+9: 	["STANCE"] = table.freeze({
+10: 		["BeyLauncher"] = "Power",
+11: 		["SpeedLauncher"] = "Rush",
+12: 		["HeavyLauncher"] = "Upper",
+13: 		["SwordLauncher"] = "Bank",
+14: 		["LightLauncher"] = "Stamina"
+15: 	}),
+16: 	["SIGNATURE"] = table.freeze({
+17: 		["rantaro"] = "Leap",
+18: 		["shu"] = "Spin",
+19: 		["lui"] = "Slam",
+20: 		["wakiya"] = "Bank",
+21: 		["daigo"] = "Upper"
+22: 	}),
+23: 	["TYPE_STANCE"] = table.freeze({
+24: 		["Attack"] = "Rush",
+25: 		["Defense"] = "Upper",
+26: 		["Stamina"] = "Stamina",
+27: 		["Balance"] = "Power"
+28: 	}),
+29: 	["STANCE_STATS"] = table.freeze({
+30: 		["Power"] = table.freeze({
+31: 			["fly"] = "Power",
+32: 			["power"] = 2,
+33: 			["speed"] = 1,
+34: 			["control"] = 0,
+   ...
+245: 	["GEAR_CAP"] = 10,
+246: 	["withStance"] = function(p5, p6) -- name: withStance
+247: 		-- upvalues: (copy) v_u_25
+248: 		local v7 = p5 or {}
+249: 		local v8 = v_u_25.statsOf(p6)
+250: 		local v9 = v_u_25.GEAR_CAP
+251: 		local v10 = {}
+252: 		local v11 = (v7.power or 0) + v8.power
+253: 		v10.power = math.min(v11, v9)
+254: 		local v12 = (v7.speed or 0) + v8.speed
+255: 		v10.speed = math.min(v12, v9)
+256: 		local v13 = (v7.control or 0) + v8.control
+257: 		v10.control = math.min(v13, v9)
+258: 		local v14 = (v7.stability or 0) + v8.stability
+259: 		v10.stability = math.min(v14, v9)
+260: 		return v10
+261: 	end,
+262: 	["stanceFor"] = function(p15, p16) -- name: stanceFor
+263: 		-- upvalues: (copy) v_u_25, (copy) v_u_2, (copy) v_u_3
+264: 		if p16 then
+265: 			local v17 = v_u_25.SIGNATURE[string.match(p16, "^[^_]+") or p16]
+266: 			if v17 then
+267: 				return v17
+268: 			end
+269: 			local v18 = 0
+270: 			for v19 = 1, #p16 do
+271: 				v18 = (v18 * 31 + string.byte(p16, v19)) % 1000003
+272: 			end
+273: 			local v20 = v_u_2.LAUNCH_STYLES
+274: 			return v20[v18 % #v20 + 1].id
+275: 		end
+276: 		if p15 and (p15.ai ~= nil and p15.combo) then
+277: 			return v_u_25.TYPE_STANCE[v_u_3.layer(p15.combo.layer).type] or "Power"
+278: 		end
+279: 		local v21 = v_u_2.launchStance
+280: 		local v22
+281: 		if p15 then
+282: 			v22 = p15.style
+283: 		else
+284: 			v22 = p15
+285: 		end
+286: 		local v23 = v21(v22)
+287: 		if v23 then
+288: 			return v23
+289: 		end
+290: 		if p15 then
+291: 			local v24 = p15.launcher
+292: 			if type(v24) == "table" then
+293: 				p15 = p15.launcher.launcher
+294: 			else
+295: 				p15 = false
+296: 			end
+297: 		end
+298: 		return (type(p15) ~= "string" or not v_u_25.STANCE[p15]) and "Power" or v_u_25.STANCE[p15]
+299: 	end,
+300: 	["GRADE_TEXT"] = table.freeze({
+301: 		["Perfect"] = "PERFECT RIP!",
+302: 		["Great"] = "GREAT RIP!",
+303: 		["Good"] = "GOOD RIP",
+304: 		["Late"] = "LATE..."
+305: 	})
+306: }
+307: return table.freeze(v_u_25)
+
+===== ReplicatedStorage.Packets (loaded) =====
+1: local v1 = require(script.Parent.Packet)
+2: return {
+3: 	["Ping"] = v1("Ping"):Response(v1.NumberF64):RateLimit(5, 1),
+4: 	["Track"] = v1("Track", v1.String, v1.String):RateLimit(8, 4),
+5: 	["TelPlace"] = v1("TelPlace", v1.String, v1.String, v1.String, v1.String):RateLimit(10, 5),
+6: 	["TelBatch"] = v1("TelBatch", v1.StringLong):RateLimit(6, 60),
+7: 	["BattleState"] = v1("BattleState", v1.StringLong),
+8: 	["BattleLaunch"] = v1("BattleLaunch", v1.NumberU16, v1.NumberF32, v1.NumberF32, v1.NumberU8):RateLimit(4, 1),
+9: 	["BattleForfeit"] = v1("BattleForfeit", v1.NumberU16):RateLimit(1, 1),
+10: 	["BattleStuck"] = v1("BattleStuck", v1.NumberU16):RateLimit(1, 5),
+11: 	["TutorialWarp"] = v1("TutorialWarp", v1.NumberU16, v1.NumberF32):RateLimit(6, 1),
+12: 	["BattlePing"] = v1("BattlePing", v1.NumberU16, v1.NumberU8):RateLimit(3, 1),
+13: 	["SpectateBattle"] = v1("SpectateBattle", v1.String):Response(v1.Boolean8, v1.String):RateLimit(2, 1),
+14: 	["SpectateStop"] = v1("SpectateStop"):RateLimit(2, 1),
+15: 	["BattlePinged"] = v1("BattlePinged", v1.NumberU8, v1.NumberU8, v1.NumberU8),
+16: 	["BattleSwap"] = v1("BattleSwap", v1.NumberU16, v1.NumberU8):RateLimit(4, 1),
+17: 	["TrainerChallenge"] = v1("TrainerChallenge", v1.String):RateLimit(2, 1),
+18: 	["TrainerResult"] = v1("TrainerResult", v1.String),
+19: 	["WorkshopEquipLauncher"] = v1("WorkshopEquipLauncher", v1.String, v1.String, v1.String, v1.String, v1.String, v1.String):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+20: 	["WorkshopEquipBey"] = v1("WorkshopEquipBey", v1.String, v1.String, v1.String):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+21: 	["WorkshopPaint"] = v1("WorkshopPaint", v1.String, v1.String):Response(v1.Boolean8, v1.String):RateLimit(6, 1),
+22: 	["WorkshopLaunchStyle"] = v1("WorkshopLaunchStyle", v1.String):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+23: 	["ShopBuy"] = v1("ShopBuy", v1.String, v1.String, v1.String):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+24: 	["TrainingStart"] = v1("TrainingStart", v1.String, v1.String):Response(v1.Boolean8, v1.String):RateLimit(2, 2),
+25: 	["TrainingResult"] = v1("TrainingResult", v1.String),
+26: 	["PartyLead"] = v1("PartyLead", v1.NumberU8):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+27: 	["PartyNew"] = v1("PartyNew"):Response(v1.Boolean8, v1.String):RateLimit(2, 2),
+28: 	["BoxMove"] = v1("BoxMove", v1.Boolean8, v1.NumberU8):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+29: 	["PartyRepair"] = v1("PartyRepair"):Response(v1.Boolean8, v1.String):RateLimit(2, 2),
+30: 	["SettingsSet"] = v1("SettingsSet", v1.String, v1.NumberF32):RateLimit(10, 1),
+31: 	["PvpChallenge"] = v1("PvpChallenge", v1.NumberF64):RateLimit(2, 1),
+32: 	["PvpOffer"] = v1("PvpOffer", v1.NumberF64),
+33: 	["PvpAnswer"] = v1("PvpAnswer", v1.NumberF64, v1.Boolean8):RateLimit(2, 1),
+34: 	["PvpNotice"] = v1("PvpNotice", v1.String),
+35: 	["PvpBusy"] = v1("PvpBusy", v1.Boolean8):RateLimit(6, 1),
+36: 	["StoryReady"] = v1("StoryReady"):RateLimit(1, 2),
+37: 	["StoryTrigger"] = v1("StoryTrigger", v1.String):RateLimit(4, 1),
+38: 	["CutscenePlay"] = v1("CutscenePlay", v1.String, v1.NumberU16, v1.Boolean8),
+39: 	["CutsceneBattle"] = v1("CutsceneBattle", v1.NumberU16):RateLimit(2, 1),
+40: 	["CutsceneChoice"] = v1("CutsceneChoice", v1.NumberU16, v1.NumberU8):RateLimit(2, 1),
+41: 	["SaveGame"] = v1("SaveGame"):Response(v1.Boolean8, v1.String):RateLimit(2, 10),
+42: 	["CutsceneDone"] = v1("CutsceneDone", v1.NumberU16):RateLimit(2, 1),
+43: 	["CutsceneAbort"] = v1("CutsceneAbort", v1.NumberU16):RateLimit(2, 1),
+44: 	["RivalsPull"] = v1("RivalsPull", v1.String, v1.NumberU8, v1.Boolean8):Response(v1.Boolean8, v1.String, v1.StringLong):RateLimit(3, 1),
+45: 	["RivalsMerge"] = v1("RivalsMerge", v1.String, v1.StringLong):Response(v1.Boolean8, v1.String, v1.String):RateLimit(3, 1),
+46: 	["RivalsTrait"] = v1("RivalsTrait", v1.String, v1.NumberU8, v1.Boolean8):Response(v1.Boolean8, v1.String, v1.String):RateLimit(4, 1),
+47: 	["RivalsStar"] = v1("RivalsStar", v1.String):Response(v1.Boolean8, v1.String, v1.String):RateLimit(4, 1),
+48: 	["RivalsEvolve"] = v1("RivalsEvolve", v1.String):Response(v1.Boolean8, v1.String, v1.String):RateLimit(2, 1),
+49: 	["GymStart"] = v1("GymStart", v1.String):Response(v1.Boolean8, v1.String, v1.String):RateLimit(2, 1),
+50: 	["GymEnd"] = v1("GymEnd", v1.NumberU8, v1.NumberU16):Response(v1.Boolean8, v1.String, v1.String):RateLimit(2, 1),
+51: 	["RivalsTitle"] = v1("RivalsTitle", v1.String):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+52: 	["RivalsNameRoll"] = v1("RivalsNameRoll", v1.Boolean8):Response(v1.Boolean8, v1.String, v1.String):RateLimit(3, 1),
+53: 	["RivalsNamePick"] = v1("RivalsNamePick", v1.Boolean8):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+54: 	["RivalsNameSlot"] = v1("RivalsNameSlot", v1.NumberU8):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+55: 	["TutorialBattle"] = v1("TutorialBattle"):Response(v1.Boolean8, v1.String):RateLimit(1, 1),
+56: 	["TutorialPick"] = v1("TutorialPick", v1.NumberU8):Response(v1.Boolean8, v1.String, v1.String):RateLimit(2, 1),
+57: 	["TutorialTour"] = v1("TutorialTour", v1.Boolean8):Response(v1.Boolean8, v1.String, v1.String):RateLimit(2, 5),
+58: 	["OpeningSeen"] = v1("OpeningSeen"):RateLimit(1, 5),
+59: 	["RankedQueue"] = v1("RankedQueue", v1.String):Response(v1.Boolean8, v1.String):RateLimit(2, 3),
+60: 	["RankedCancel"] = v1("RankedCancel"):Response(v1.Boolean8, v1.String):RateLimit(2, 2),
+61: 	["RankedState"] = v1("RankedState", v1.StringLong),
+62: 	["RankedReady"] = v1("RankedReady"):RateLimit(2, 5),
+63: 	["RankedOrder"] = v1("RankedOrder", v1.NumberU8):RateLimit(4, 1),
+64: 	["RankedChallenge"] = v1("RankedChallenge", v1.NumberF64):Response(v1.Boolean8, v1.String):RateLimit(2, 5),
+65: 	["RankedOffer"] = v1("RankedOffer", v1.NumberF64),
+66: 	["RankedAnswer"] = v1("RankedAnswer", v1.NumberF64, v1.Boolean8):RateLimit(3, 1),
+67: 	["HalloweenAct"] = v1("HalloweenAct", v1.String, v1.String):Response(v1.Boolean8, v1.String, v1.StringLong):RateLimit(
