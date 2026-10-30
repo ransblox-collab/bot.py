@@ -1,0 +1,2601 @@
+keys: BeyLaunch, AimPrompt, RipRing, BattleInput, tapReady, ready, aim
+scripts scanned: 362
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.BattleCamera =====
+1: local v_u_1 = game:GetService("Players")
+2: local v_u_2 = game:GetService("RunService")
+3: local v_u_3 = game:GetService("TweenService")
+4: local v_u_4 = game:GetService("ContextActionService")
+5: local v_u_5 = game:GetService("ReplicatedStorage")
+6: require(v_u_5.Bey.Sim)
+7: local v_u_6 = require(v_u_5.Bey.Stadiums)
+8: local v_u_7 = require(script.Parent.Parent.UI.Kit)
+9: local v_u_8 = require(script.Parent.Parent.UI.UiSfx)
+10: local v_u_9 = require(script.Parent.TouchPad)
+11: local v_u_10 = require(script.Parent.HudSkin)
+12: local v_u_11 = require(script.Parent.BattleInput)
+13: local v_u_12 = require(v_u_5.Packets)
+14: local v_u_13 = {}
+15: local v_u_14 = {
+16: 	[0] = "NORMAL",
+17: 	[1] = "TOP-DOWN",
+18: 	[2] = "BROADCAST",
+19: 	[3] = "ACTION"
+20: }
+21: local v_u_15 = { 1.2915436464758039, 0.5934119456780721, 0.6981317007977318 }
+22: local v_u_16 = { 1.3, 1.5 }
+23: local v_u_17 = Color3.fromRGB(255, 58, 96)
+24: local v_u_18 = Color3.fromRGB(40, 6, 16)
+   ...
+782: 								end
+783: 							end
+784: 						end
+785: 					end
+786: 				else
+787: 					v226.t = v226.t + v197
+788: 					local v289 = v226.head.Position
+789: 					local v290 = v_u_40
+790: 					local v291 = (v290 - v289) * Vector3.new(1, 0, 1)
+791: 					local v292 = v291.Magnitude <= 0.05 and Vector3.new(1, 0, 0) or v291.Unit
+792: 					local v293 = v292:Cross(Vector3.new(0, 1, 0))
+793: 					local v294
+794: 					if v226.mode == "aim" then
+795: 						local v295 = v226.t
+796: 						local v296 = math.min(v295, 10) * 0.06
+797: 						local v297 = v289 - v292 * (3.2 - v296) + v293 * 4.2
+798: 						local v298 = 8.6 - v296 * 0.5
+799: 						local v299 = v297 + Vector3.new(0, v298, 0)
+800: 						v294 = CFrame.lookAt(v299, v290 - v292 * 1.2)
+801: 					else
+802: 						local v300 = v226.t / 2.6
+803: 						local v301 = math.min(v300, 1)
+804: 						local v302 = 0.62 - v301 * 0.22
+805: 						local v303 = (v292 * math.cos(v302) + v293 * math.sin(v302)).Unit
+806: 						local v304 = v226.focus and v226.focus() or v289 - Vector3.new(0, 0.9, 0)
+   ...
+1446: 	end
+1447: end
+1448: function v_u_13.preLaunch(p480) -- name: preLaunch
+1449: 	-- upvalues: (ref) v_u_73, (ref) v_u_21, (ref) v_u_71, (ref) v_u_32, (ref) v_u_35, (ref) v_u_36, (ref) v_u_30, (copy) v_u_11, (copy) v_u_4
+1450: 	if p480 then
+1451: 		p480 = p480:FindFirstChild("Head")
+1452: 	end
+1453: 	v_u_73 = nil
+1454: 	if v_u_21 and (p480 and p480:IsA("BasePart")) then
+1455: 		v_u_71 = {
+1456: 			["head"] = nil,
+1457: 			["t"] = 0,
+1458: 			["mode"] = "aim",
+1459: 			["head"] = p480
+1460: 		}
+1461: 		if v_u_32 ~= false then
+1462: 			if not v_u_21 then
+1463: 				return
+1464: 			end
+1465: 			v_u_32 = false
+1466: 			v_u_35 = nil
+1467: 			v_u_36 = nil
+1468: 			if v_u_30 then
+1469: 				v_u_30.Enabled = false
+1470: 			end
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.BattleHud =====
+   ...
+3: local v_u_3 = game:GetService("ContextActionService")
+4: local v_u_4 = game:GetService("GuiService")
+5: local v5 = game:GetService("ReplicatedStorage")
+6: local v_u_6 = require(v5.Bey.Sim)
+7: local v_u_7 = require(v5.Bey.PartCatalog)
+8: local v_u_8 = require(v5.Bey.Abilities)
+9: local v_u_9 = require(v5.Bey.TipSkills)
+10: local v_u_10 = require(v5.Bey.MoveText)
+11: local v_u_11 = require(script.Parent.Parent.UI.Tip)
+12: local v_u_12 = require(script.Parent.Parent.UI.Locale)
+13: local v_u_13 = require(v5.Bey.Launch)
+14: local v_u_14 = game:GetService("TweenService")
+15: local v_u_15 = require(script.Parent.BattleInput)
+16: local v_u_16 = require(script.Parent.TouchPad)
+17: local v_u_17 = require(script.Parent.BeyView)
+18: local v_u_18 = require(script.Parent.Parent.UI.PearlUI)
+19: local v_u_19 = require(script.Parent.HudSkin)
+20: local v_u_20 = require(script.Parent.Parent.UI.RivalsKit)
+21: local v21 = require(script.Parent.Parent.UI.MoveEmblem)
+22: local v_u_22 = require(script.Parent.Parent.UI.HudKit)
+23: local v_u_23 = {}
+24: local v_u_24 = v_u_18.NAVY
+25: local v_u_25 = v_u_18.WHITE
+26: local v_u_26 = v_u_18.CRIMSON
+27: local v_u_27 = Vector2.new(1712, 963)
+   ...
+645: 		["Name"] = "Stage",
+646: 		["BackgroundTransparency"] = 1,
+647: 		["AnchorPoint"] = nil,
+648: 		["Position"] = nil,
+649: 		["Size"] = nil,
+650: 		["ZIndex"] = 30,
+651: 		["AnchorPoint"] = Vector2.new(0.5, 0.5),
+652: 		["Position"] = UDim2.fromScale(0.5, 0.37),
+653: 		["Size"] = UDim2.fromOffset(1, 1)
+654: 	}, v_u_142)
+655: 	v_u_37.stage = v167
+656: 	local v168 = v_u_46("Frame", {
+657: 		["Name"] = "RipRing",
+658: 		["BackgroundTransparency"] = 1,
+659: 		["AnchorPoint"] = nil,
+660: 		["Position"] = nil,
+661: 		["Size"] = nil,
+662: 		["Visible"] = false,
+663: 		["ZIndex"] = 30,
+664: 		["AnchorPoint"] = Vector2.new(0.5, 0.5),
+665: 		["Position"] = UDim2.fromOffset(0, 24),
+666: 		["Size"] = UDim2.fromOffset(236, 236)
+667: 	}, v167)
+668: 	v_u_37.ringPop = v_u_46("UIScale", {
+669: 		["Scale"] = 1
+   ...
+992: 		["Scale"] = 1
+993: 	}, v_u_37.gradeText)
+994: 	v_u_37.gradeCall = v204("", UDim2.fromOffset(900, 52), UDim2.new(0.5, 0, 0.37, 78), 40)
+995: 	local v205 = v_u_19.pill(v_u_142, "BankTag", "BANK SHOT", Color3.fromRGB(70, 170, 255), UDim2.new(0.5, -90, 0.37, 254), Vector2.new(180, 40), 35)
+996: 	v205.Visible = false
+997: 	v_u_37.bankTag = v205
+998: 	v_u_37.bankPop = v_u_46("UIScale", {
+999: 		["Scale"] = 1
+1000: 	}, v205)
+1001: 	local v206 = v_u_2.PreferredInput
+1002: 	local v207 = v206 == Enum.PreferredInput.Touch
+1003: 	local v208 = v_u_46("Frame", {
+1004: 		["Name"] = "AimPrompt",
+1005: 		["AnchorPoint"] = nil,
+1006: 		["BackgroundTransparency"] = 1,
+1007: 		["Position"] = nil,
+1008: 		["Size"] = nil,
+1009: 		["Visible"] = false,
+1010: 		["ZIndex"] = 24,
+1011: 		["AnchorPoint"] = Vector2.new(0.5, 0.5),
+1012: 		["Position"] = UDim2.new(0.5, 0, 1, -150),
+1013: 		["Size"] = UDim2.fromOffset(300, 78)
+1014: 	}, v_u_142)
+1015: 	v_u_37.aimBox = v208
+1016: 	v_u_37.aimPop = v_u_46("UIScale", {
+1017: 		["Scale"] = 1
+1018: 	}, v208)
+1019: 	v_u_19.panel(v208, "Glass", UDim2.fromOffset(0, 0), Vector2.new(300, 78), v_u_19.MINE, 22, 24)
+1020: 	local v209
+1021: 	if v207 then
+1022: 		v209 = 24
+1023: 	else
+1024: 		local v210 = v_u_19.keycap
+1025: 		local v211
+1026: 		if v206 == Enum.PreferredInput.Gamepad then
+1027: 			v211 = v_u_15.padName(v_u_15.padFor("Rip"))
+1028: 		else
+   ...
+1044: 		["Size"] = UDim2.fromOffset(276 - v209, 40)
+1045: 	}
+1046: 	local v217
+1047: 	if v207 then
+1048: 		v217 = Enum.TextXAlignment.Center
+1049: 	else
+1050: 		v217 = Enum.TextXAlignment.Left
+1051: 	end
+1052: 	v216.TextXAlignment = v217
+1053: 	v213(v208, v214, v215, v216)
+1054: 	local _, v218, v219 = v_u_19.bar(v208, "Time", Vector2.new(v209, 56), Vector2.new(276 - v209, 10), { v_u_19.MINE[2], v_u_19.MINE[1] }, 26)
+1055: 	v218.Visible = false
+1056: 	v_u_37.aimFill = v219
+1057: 	v_u_37.aimFull = v219.Size
+1058: 	v141.Parent = v_u_1.LocalPlayer:WaitForChild("PlayerGui")
+1059: 	v_u_18.start
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.BattleInput =====
+   ...
+498: 	end
+499: 	if v_u_25 then
+500: 		local v128 = v_u_6.Tuning.TIRE_BIT
+501: 		v127 = bit32.bor(v127, v128)
+502: 	end
+503: 	return {
+504: 		["sx"] = v118,
+505: 		["sz"] = v119,
+506: 		["b"] = v124,
+507: 		["t"] = v127
+508: 	}
+509: end
+510: function v_u_11.aiming() -- name: aiming
+511: 	-- upvalues: (ref) v_u_21, (ref) v_u_22
+512: 	local v129 = v_u_21
+513: 	if v129 then
+514: 		v129 = v_u_22
+515: 	end
+516: 	return v129
+517: end
+518: function v_u_11.bracing() -- name: bracing
+519: 	-- upvalues: (ref) v_u_21, (ref) v_u_18, (copy) v_u_12
+520: 	local v130 = v_u_21
+521: 	if v130 then
+522: 		local v131 = v_u_18
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.BeyView =====
+   ...
+659: 		local v250
+660: 		if v249 then
+661: 			v250 = v249.phases[p243.abPh]
+662: 		else
+663: 			v250 = nil
+664: 		end
+665: 		local v251
+666: 		if v250 then
+667: 			v251 = v250.lunge
+668: 		else
+669: 			v251 = nil
+670: 		end
+671: 		if v251 and (v251.aim == "away" and not p242.cutT) then
+672: 			p242.springAt = p242.clock
+673: 		end
+674: 	end
+675: 	local v252 = p242.cutT
+676: 	if not v252 then
+677: 		local v253 = p242.clock - p242.springAt
+678: 		if v253 >= 0.42 or v253 < 0 then
+679: 			return v244, nil
+680: 		end
+681: 		if v253 < 0.06 then
+682: 			local v254 = (v253 / 0.06) ^ 2
+683: 			return v244, CFrame.new(0, v254 * -0.05, 0) * CFrame.Angles(0, v254 * 0.3490658503988659 * p243.spinDir, 0)
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.Launcher =====
+   ...
+72: 	local v31 = v_u_2.model(p28, p29)
+73: 	local v32 = v_u_15("Launchers", v31)
+74: 	if not v32 then
+75: 		return nil
+76: 	end
+77: 	local v33 = v32:FindFirstChild("BeyAttachment", true)
+78: 	if not (v33 and v33:IsA("Attachment")) then
+79: 		v32:Destroy()
+80: 		return nil
+81: 	end
+82: 	local v34 = v33.Parent
+83: 	local v35 = Instance.new("Model")
+84: 	v35.Name = "BeyLauncher"
+85: 	v32.Name = "Launcher"
+86: 	v32.Parent = v35
+87: 	local v36 = CFrame.identity
+88: 	local v37 = false
+89: 	local v38
+90: 	if #v30.mounts > 0 then
+91: 		local v39 = v_u_15("Grips", p28.grip)
+92: 		local v40
+93: 		if v39 then
+94: 			v40 = v39:FindFirstChild("launcherInsertion", true)
+95: 		else
+96: 			v40 = v39
+
+===== Players.RansbloxScripts.PlayerScripts.Battle.TouchPad =====
+1: local v_u_1 = game:GetService("ContextActionService")
+2: local v_u_2 = require(script.Parent.Parent.UI.RivalsKit)
+3: local v_u_3 = {}
+4: local v_u_4 = Enum.Font.FredokaOne
+5: local v_u_5 = Color3.new(1, 1, 1)
+6: local v_u_6 = Color3.fromRGB(12, 10, 16)
+7: local v_u_7 = {
+8: 	["BeyLaunch"] = {
+9: 		["size"] = 70,
+10: 		["at"] = nil,
+11: 		["color"] = nil,
+12: 		["lit"] = true,
+13: 		["at"] = Vector2.new(-58, -58),
+14: 		["color"] = Color3.fromRGB(255, 210, 60)
+15: 	},
+16: 	["BeyDash"] = {
+17: 		["size"] = 68,
+18: 		["at"] = nil,
+19: 		["color"] = nil,
+20: 		["at"] = Vector2.new(-58, -58),
+   ...
+122: 			p21.InputBegan:Connect(function(p34)
+123: 				-- upvalues: (copy) v_u_33
+124: 				if p34.UserInputType == Enum.UserInputType.Touch then
+125: 					v_u_33.Scale = 0.88
+126: 				end
+127: 			end)
+128: 			p21.InputEnded:Connect(function(p35)
+129: 				-- upvalues: (copy) v_u_33
+130: 				if p35.UserInputType == Enum.UserInputType.Touch then
+131: 					v_u_33.Scale = 1
+132: 				end
+133: 			end)
+134: 			if p_u_19 ~= "BeyLaunch" then
+135: 				p21.Visible = v_u_9 == true
+136: 			end
+137: 		end)
+138: 	end
+139: end
+140: function v_u_3.button(p36) -- name: button
+141: 	-- upvalues: (copy) v_u_11
+142: 	local v37 = v_u_11[p36]
+143: 	if v37 and v37.Parent then
+144: 		return v37
+145: 	else
+146: 		return nil
+   ...
+194: 		v_u_9 = v_u_48
+195: 		v_u_10 = p46
+196: 		for _, v49 in v_u_8 do
+197: 			if next(v_u_1:GetBoundActionInfo(v49)) == nil then
+198: 				continue
+199: 			end
+200: 			v_u_18("show " .. v49, v49, function(p50)
+201: 				-- upvalues: (copy) v_u_48
+202: 				p50.Visible = v_u_48
+203: 			end)
+204: 		end
+205: 		local v_u_51 = not p46
+206: 		v_u_18("show BeyLaunch", "BeyLaunch", function(p52)
+207: 			-- upvalues: (copy) v_u_51
+208: 			p52.Visible = v_u_51
+209: 		end)
+210: 	end
+211: end
+212: return v_u_3
+
+===== Players.RansbloxScripts.PlayerScripts.Character.Poses =====
+   ...
+372: 		},
+373: 		["d"] = {
+374: 			["torso"] = 0,
+375: 			["lift"] = 0,
+376: 			["spin"] = 0,
+377: 			["footL"] = 0,
+378: 			["footR"] = 0.04,
+379: 			["launch"] = 0.04,
+380: 			["pull"] = 0.05,
+381: 			["head"] = 0.07
+382: 		}
+383: 	},
+384: 	["ready"] = {
+385: 		["f"] = {
+386: 			["torso"] = 5,
+387: 			["lift"] = 4.5,
+388: 			["spin"] = 2.6,
+389: 			["feet"] = 6.6,
+390: 			["launch"] = 8,
+391: 			["pull"] = 7,
+392: 			["head"] = 6.5
+393: 		},
+394: 		["z"] = {
+395: 			["torso"] = 0.62,
+396: 			["lift"] = 0.9,
+   ...
+1540: 		["lean"] = nil,
+1541: 		["twist"] = nil,
+1542: 		["launch"] = nil,
+1543: 		["pull"] = nil,
+1544: 		["gaze"] = nil,
+1545: 		["lean"] = v_u_626.lean - 0.16,
+1546: 		["twist"] = v_u_626.twist - (v636.twist - v_u_626.twist) * 0.2,
+1547: 		["launch"] = (Vector3.new(0.3, -0.55, -0.6)).Unit,
+1548: 		["pull"] = (Vector3.new(-0.45, -0.5, -0.6)).Unit,
+1549: 		["gaze"] = v_u_53
+1550: 	})
+1551: 	local v640 = v_u_60(v636, {
+1552: 		["kind"] = "ready"
+1553: 	})
+1554: 	local v641 = v636.spin
+1555: 	local v642
+1556: 	if math.abs(v641) > 0.1 then
+1557: 		local v643 = table.clone(v640)
+1558: 		v643.lift = 0.4
+1559: 		v642 = {
+1560: 			{
+1561: 				["at"] = 0,
+1562: 				["pose"] = nil,
+1563: 				["pose"] = v639
+1564: 			},
+
+===== Players.RansbloxScripts.PlayerScripts.Character.Emotes =====
+   ...
+951: 		["lean"] = -0.15,
+952: 		["launch"] = nil,
+953: 		["pull"] = nil,
+954: 		["head"] = nil,
+955: 		["launch"] = v_u_4(0.3, -0.55, -0.6),
+956: 		["pull"] = v_u_4(-0.4, -0.5, -0.6),
+957: 		["head"] = v_u_9(-0.15, 0)
+958: 	}
+959: }
+960: local v135 = {
+961: 	0.15,
+962: 	{
+963: 		["kind"] = "ready",
+964: 		["feet"] = nil,
+965: 		["yaw"] = nil,
+966: 		["twist"] = -0.15,
+967: 		["lean"] = -0.35,
+968: 		["launch"] = nil,
+969: 		["pull"] = nil,
+970: 		["head"] = nil,
+971: 		["feet"] = { v5(-0.8, -1.2), v5(0.95, 0.85) },
+972: 		["yaw"] = { 0.15, -0.9 },
+973: 		["launch"] = v_u_4(0.1, 0, -1),
+974: 		["pull"] = v_u_4(-0.95, -0.05, -0.9),
+975: 		["head"] = v_u_9(-0.2, 0)
+
+===== Players.RansbloxScripts.PlayerScripts.Controllers.BattleController =====
+   ...
+17: local v_u_17 = require(v_u_4.Bey.Stadiums)
+18: local v_u_18 = require(script.Parent.Parent.Battle.AvatarFlip)
+19: local v_u_19 = require(v_u_4.Bey.PartCatalog)
+20: local v_u_20 = require(v_u_4.Bey.Passives)
+21: local v_u_21 = require(v_u_4.Rivals.Catalog)
+22: local v_u_22 = require(v_u_4.Rivals.Shop)
+23: local v_u_23 = require(v_u_4.Bey.Cosmetics)
+24: local v_u_24 = require(v_u_4.Bey.TipSkills)
+25: local v_u_25 = require(v_u_4.Registries.Trainers)
+26: local v_u_26 = require(script.Parent.Parent.Cutscene.Actors)
+27: local v_u_27 = require(v_u_4.Registries.Drills)
+28: local v_u_28 = require(script.Parent.Parent.Battle.BeyView)
+29: local v_u_29 = require(script.Parent.Parent.Battle.BattleInput)
+30: local v_u_30 = require(script.Parent.Parent.Battle.BattleCamera)
+31: local v_u_31 = require(script.Parent.Parent.Battle.BattleHud)
+32: local v_u_32 = require(script.Parent.Parent.Battle.BattleFx)
+33: local v_u_33 = require(script.Parent.Parent.Battle.AbilityFx)
+34: local v_u_34 = require(script.Parent.Parent.Battle.CombatFeel)
+35: local v_u_35 = require(script.Parent.Parent.Battle.LaunchFx)
+36: local v_u_36 = require(script.Parent.Parent.Battle.HitMarkers)
+37: local v_u_37 = require(script.Parent.Parent.Battle.Launcher)
+38: local v_u_38 = require(script.Parent.Parent.Battle.AimPointer)
+39: local v_u_39 = require(script.Parent.Parent.Battle.TouchPad)
+40: local v_u_40 = require(script.Parent.Parent.Battle.FinishCinematic)
+41: local v_u_41 = require(script.Parent.Parent.Battle.AwakenCinematic)
+   ...
+98: 		["corrSum"] = 0,
+99: 		["corrMax"] = 0,
+100: 		["lateEvents"] = 0,
+101: 		["replayMs"] = 0,
+102: 		["assistN"] = 0,
+103: 		["assistDeg"] = 0,
+104: 		["ownN"] = 0,
+105: 		["ownSum"] = 0,
+106: 		["ownMax"] = 0,
+107: 		["lagD"] = 0,
+108: 		["lagBehindN"] = 0,
+109: 		["lagFrames"] = 0,
+110: 		["reclaims"] = 0
+111: 	}
+112: }
+113: local v_u_71 = nil
+114: local v_u_72 = false
+115: local v_u_73 = nil
+116: local v_u_74 = false
+117: local v_u_75 = false
+118: local v_u_76 = false
+119: local v_u_77 = {
+120: 	["smash"] = "Your bey is glowing! Hit them head-on now for a SMASH.",
+121: 	["break_dealt"] = "GUARD BREAK! Keep pushing into a bracing bey and its guard gives out.",
+122: 	["break_taken"] = "Your guard broke! Holding Brace won\'t stop a long push. Dash into them instead.",
+   ...
+499: 		local v207 = debug.traceback
+500: 		local v208, v209 = xpcall(function()
+501: 			-- upvalues: (copy) v_u_181
+502: 			v_u_181.folder:Destroy()
+503: 		end, v207)
+504: 		if not v208 then
+505: 			warn((("[BattleController] teardown folder: %*"):format(v209)))
+506: 		end
+507: 		v_u_73 = nil
+508: 		for _, v210 in {
+509: 			{ "CombatFeel", v_u_34.stop },
+510: 			{ "HitMarkers", v_u_36.stop },
+511: 			{ "BattleInput", v_u_29.stop },
+512: 			{ "BattleCamera", v_u_30.stop },
+513: 			{ "BattleHud", v_u_31.hide },
+514: 			{ "AbilityFx", v_u_33.clear },
+515: 			{ "LaunchFx", v_u_35.clear },
+516: 			{ "FinishDirector", v_u_44.stop },
+517: 			{ "LaunchDirector", v_u_45.stop },
+518: 			{ "BattleFx", v_u_32.stop },
+519: 			{ "FinishCinematic", v_u_40.clear },
+520: 			{ "FinishFx", v_u_46.stop },
+521: 			{ "VsIntro", v_u_49.clear },
+522: 			{ "SwapScreen", v_u_50.close },
+523: 			{ "Crowd", v_u_55.stop }
+524: 		} do
+525: 			local v211 = v210[1]
+526: 			local v212 = v210[2]
+527: 			local v213 = debug.traceback
+528: 			local v214, v215 = xpcall(v212, v213)
+529: 			if v214 then
+530: 				continue
+531: 			end
+532: 			warn((("[BattleController] teardown %*: %*"):format(v211, v215)))
+533: 		end
+534: 		v_u_1.LocalPlayer:SetAttribute("MatchPoint", nil)
+535: 		v_u_7:UnbindAction("BeyLaunch")
+536: 		v_u_7:UnbindAction("BeyClashTriggers")
+537: 		v_u_31.modePick(nil, nil)
+538: 		v_u_7:UnbindAction("BeyMode")
+539: 		local function v218()
+540: 			-- upvalues: (copy) v_u_181, (ref) v_u_7, (ref) v_u_3, (ref) v_u_39
+541: 			if v_u_181.watch then
+542: 				v_u_7:UnbindAction("BeyWatchLeave")
+543: 				v_u_7:UnbindAction("BeyWatchCycle")
+544: 				v_u_3:UnbindFromRenderStep("BeyWatchCam")
+5
+
+===== Players.RansbloxScripts.PlayerScripts.Controllers.CutsceneController =====
+   ...
+1911: 						if v544.trigger ~= "zone" or ((v_u_37[v543] or 0) >= v541 or not (v_u_56(v540, v543, v544) and v_u_535(v543, v544, v539.root.Position, v540, v542))) then
+1912: 							continue
+1913: 						end
+1914: 						v_u_37[v543] = v541 + 2.5
+1915: 						v_u_12.StoryTrigger:Fire(v543)
+1916: 						return
+1917: 					end
+1918: 				end
+1919: 			end
+1920: 		end
+1921: 	end
+1922: end
+1923: local function v_u_549() -- name: ready
+1924: 	-- upvalues: (copy) v_u_24, (copy) v_u_14, (copy) v_u_56, (copy) v_u_19, (ref) v_u_32, (ref) v_u_33, (copy) v_u_30, (copy) v_u_12
+1925: 	require(script.Parent.TitleController):WaitForPlay()
+1926: 	local v546 = v_u_24:Get({ "Story" }) or {}
+1927: 	for _, v547 in v_u_14.Order do
+1928: 		local v548 = v_u_14.Scenes[v547]
+1929: 		if v548.trigger ~= "auto" or not v_u_56(v546, v547, v548) then
+1930: 			continue
+1931: 		end
+1932: 		v_u_19.show(true)
+1933: 		v_u_19.fade(1, 0)
+1934: 		task.delay(6, function()
+1935: 			-- upvalues: (ref) v_u_32, (ref) v_u_33, (ref) v_u_30, (ref) v_u_19
+
+===== Players.RansbloxScripts.PlayerScripts.Controllers.SettingsController =====
+1: local v_u_1 = game:GetService("ContextActionService")
+2: local v2 = game:GetService("ReplicatedStorage")
+3: local v_u_3 = game:GetService("RunService")
+4: local v_u_4 = game:GetService("SoundService")
+5: local v_u_5 = require(v2.Packets)
+6: local v_u_6 = require(script.Parent.Parent.UI.Kit)
+7: local v_u_7 = require(script.Parent.Parent.UI.RivalsFrame)
+8: local v_u_8 = require(script.Parent.Parent.UI.RivalsKit)
+9: local v_u_9 = require(script.Parent.Parent.UI.UiSfx)
+10: local v_u_10 = require(script.Parent.Parent.UI.Dialogue)
+11: local v_u_11 = require(script.Parent.Parent.UI.Workshop)
+12: local v_u_12 = require(script.Parent.Parent.Battle.BattleInput)
+13: local v_u_13 = require(script.Parent.Parent.Battle.FxBudget)
+14: local v_u_14 = require(script.Parent.Parent.World.Quality)
+15: local v_u_15 = game:GetService("Players")
+16: local v_u_16 = game:GetService("UserInputService")
+17: local v_u_17 = game:GetService("GuiService")
+18: local v_u_18 = require(script.Parent.BattleController)
+19: local v_u_19 = require(script.Parent.DataController)
+20: local v_u_20 = {
+21: 	["c1"] = nil,
+22: 	["c2"] = nil,
+23: 	["soft"] = true,
+24: 	["c1"] = Color3.fromRGB(150, 178, 225),
+   ...
+722: 				v267 = v_u_12.keyFor(v266.id)
+723: 			end
+724: 			if v267 ~= p263 then
+725: 				continue
+726: 			end
+727: 			v_u_5.SettingsSet:Fire(v264 .. v266.id, v265.Value)
+728: 		end
+729: 		v_u_5.SettingsSet:Fire(v264 .. p262.id, p263.Value)
+730: 		v_u_9.play("good")
+731: 	end
+732: 	v_u_257 = function()
+733: 		-- upvalues: (copy) v_u_255, (ref) v_u_254, (copy) v_u_258, (copy) v_u_253, (copy) v_u_261, (ref) v_u_256, (ref) v_u_12, (ref) v_u_8, (ref) v_u_20, (ref) v_u_9, (ref) v_u_257, (ref) v_u_17, (ref) v_u_1, (ref) v_u_250, (copy) v_u_268, (ref) v_u_16
+734: 		v_u_255.Text = v_u_254 and "Pick an action, then press its new button. START keeps it. A button already in use swaps over." or "Click a key, then press the new one. Esc keeps it. A key already in use swaps over."
+735: 		for v269, v270 in v_u_258 do
+736: 			v270.kind(v269 == "pad" == v_u_254 and "theme" or "off")
+737: 		end
+738: 		for _, v271 in v_u_253:GetChildren() do
+739: 			if v271.Name ~= "Key" then
+740: 				continue
+741: 			end
+742: 			v271:Destroy()
+743: 		end
+744: 		for v272, v_u_273 in v_u_261() do
+745: 			local v274 = (v272 - 1) % 3
+746: 			local v275 = (v272 - 1) // 3
+
+===== Players.RansbloxScripts.PlayerScripts.Controllers.TrainerController =====
+   ...
+140: local function v_u_72(p66, p67) -- name: followUp
+141: 	-- upvalues: (copy) v_u_15, (copy) v_u_11
+142: 	local v68 = v_u_15:Get({ "Story" }) or {}
+143: 	for v69, v70 in v_u_11.Scenes do
+144: 		local v71 = v70.after
+145: 		if not v71 or (v71.trainer ~= p66 or v71.won ~= nil and v71.won ~= p67) or v68["done:" .. v69] then
+146: 			continue
+147: 		end
+148: 		return true
+149: 	end
+150: 	return false
+151: end
+152: local function v_u_81(p73) -- name: exclaim
+153: 	-- upvalues: (copy) v_u_6
+154: 	local v74 = p73.model:FindFirstChild("Head")
+155: 	if v74 then
+156: 		local v75 = Instance.new("BillboardGui")
+157: 		v75.Name = "Exclaim"
+158: 		v75.Size = UDim2.fromScale(0, 0)
+159: 		v75.StudsOffset = Vector3.new(0, 2.6, 0)
+160: 		v75.AlwaysOnTop = true
+161: 		v75.LightInfluence = 0
+162: 		local v76 = Instance.new("Frame")
+163: 		v76.AnchorPoint = Vector2.new(0.5, 0.5)
+164: 		v76.Position = UDim2.fromScale(0.5, 0.5)
+165: 		v76.Size = UDim2.fromScale(1, 1)
+166: 		v76.BackgroundColor3 = Color3.new(1, 1, 1)
+167: 		v76.Parent = v75
+168: 		local v77 = Instance.new("UICorner")
+169: 		v77.CornerRadius = UDim.new(1, 0)
+
+===== Players.RansbloxScripts.PlayerScripts.Controllers.RivalsController =====
+   ...
+10: local v_u_10 = require(v4.Rivals.Catalog)
+11: local v_u_11 = require(script.Parent.Parent.UI.RivalsHud)
+12: local v_u_12 = require(script.Parent.Parent.UI.Kit)
+13: local v_u_13 = require(script.Parent.Parent.UI.RivalsFrame)
+14: local v_u_14 = require(script.Parent.Parent.UI.RivalsBag)
+15: local v_u_15 = require(script.Parent.Parent.UI.RivalsTraits)
+16: local v_u_16 = require(script.Parent.Parent.UI.RivalsSpin)
+17: local v_u_17 = require(script.Parent.Parent.UI.RivalsReveal)
+18: local v18 = require(script.Parent.Parent.UI.RivalsScreens)
+19: local v_u_19 = require(script.Parent.Parent.UI.RivalsStore)
+20: local v_u_20 = require(script.Parent.Parent.UI.RivalsBoosts)
+21: local v_u_21 = require(script.Parent.Parent.UI.Night)
+22: local v_u_22 = require(script.Parent.Parent.Battle.BattleInput)
+23: local v_u_23 = require(script.Parent.LiveController)
+24: local v_u_24 = require(script.Parent.Parent.UI.Workshop)
+25: local v_u_25 = require(script.Parent.Parent.UI.RivalsResults)
+26: local v_u_26 = require(script.Parent.Parent.UI.Dialogue)
+27: local v_u_27 = require(script.Parent.Parent.World.RivalsCounters)
+28: local v_u_28 = require(script.Parent.Parent.World.StadiumNight)
+29: local v_u_29 = require(script.Parent.Parent.World.StaffAuras)
+30: local v_u_30 = require(script.Parent.Parent.UI.Squad)
+31: local v_u_31 = require(script.Parent.Parent.UI.Shout)
+32: local v_u_32 = require(script.Parent.Parent.UI.RivalsModes)
+33: local v_u_33 = require(script.Parent.Parent.UI.RivalsPlay)
+34: local v_u_34 = require(script.Parent.Parent.UI.HalloweenEvent)
+
+===== Players.RansbloxScripts.PlayerScripts.Controllers.TutorialController =====
+   ...
+31: local v_u_31 = require(script.Parent.TitleController)
+32: local v_u_32 = require(script.Parent.CharacterController)
+33: local v_u_33 = require(v_u_2.Registries.Trainers)
+34: local v_u_34 = require(v_u_2.Bey.Sim)
+35: local v_u_35 = require(v_u_2.Bey.Stadiums)
+36: local v_u_36 = require(script.Parent.Parent.Battle.BeyView)
+37: local v_u_37 = require(script.Parent.Parent.Battle.AwakenCinematic)
+38: local v_u_38 = require(script.Parent.OverheadController)
+39: local v_u_39 = require(script.Parent.Parent.Battle.FinishDirector)
+40: local v_u_40 = require(script.Parent.Parent.UI.Guide)
+41: local v_u_41 = require(script.Parent.Parent.UI.LobbyHints)
+42: local v_u_42 = require(script.Parent.Parent.UI.Spotlight)
+43: local v_u_43 = require(script.Parent.Parent.Battle.BattleInput)
+44: local v_u_44 = require(script.Parent.Parent.Battle.BattleHud)
+45: local v_u_45 = require(script.Parent.Parent.Battle.BattleCamera)
+46: local v_u_46 = require(script.Parent.Parent.UI.RivalsHud)
+47: local v_u_47 = require(script.Parent.Parent.UI.RivalsFrame)
+48: local v_u_48 = require(script.Parent.Parent.UI.Workshop)
+49: local v_u_49 = require(script.Parent.TelemetryController)
+50: local v_u_50 = require(script.Parent.Parent.Character.FaceAnim)
+51: local v51 = {
+52: 	["Name"] = "TutorialController"
+53: }
+54: local v_u_52 = v_u_19.make
+55: local v_u_53 = v_u_21.WHITE
+   ...
+634: 	-- upvalues: (copy) v_u_44, (copy) v_u_42
+635: 	local v_u_208 = v_u_44.piece("theirs")
+636: 	return v_u_208 and function()
+637: 		-- upvalues: (copy) v_u_208, (ref) v_u_42
+638: 		if not v_u_208.Parent or v_u_208.AbsoluteSize.X < 1 then
+639: 			return nil, nil
+640: 		end
+641: 		local v209 = v_u_208.AbsoluteSize.X / 720
+642: 		local v210 = Vector2.new(636, 186) * v209
+643: 		return v_u_208.AbsolutePosition - v_u_42.origin() + Vector2.new(56, 24) * v209 + v210 / 2, v210
+644: 	end or nil
+645: end
+646: local function v_u_212() -- name: aimTarget
+647: 	-- upvalues: (copy) v_u_42, (copy) v_u_29
+648: 	return v_u_42.world(function()
+649: 		-- upvalues: (ref) v_u_29
+650: 		return v_u_29:AimWorld()
+651: 	end, 140)
+652: end
+653: local function v_u_214(p213) -- name: keyOf
+654: 	-- upvalues: (copy) v_u_5, (copy) v_u_43
+655: 	if v_u_5.PreferredInput == Enum.PreferredInput.Gamepad then
+656: 		return v_u_43.padName(v_u_43.padFor(p213))
+657: 	else
+658: 		return v_u_43.keyName(v_u_43.keyFor(p213))
+   ...
+662: 	-- upvalues: (copy) v_u_5
+663: 	return v_u_5.PreferredInput == Enum.PreferredInput.Gamepad and { "L STICK" } or {
+664: 		"W",
+665: 		"A",
+666: 		"S",
+667: 		"D"
+668: 	}
+669: end
+670: local function v_u_216() -- name: lockedIn
+671: 	-- upvalues: (copy) v_u_29
+672: 	return v_u_29:LockedIn()
+673: end
+674: local function v_u_228() -- name: aimSteps
+675: 	-- upvalues: (copy) v_u_5, (copy) v_u_43, (copy) v_u_212, (copy) v_u_216, (copy) v_u_29
+676: 	local v217 = v_u_5.PreferredInput == Enum.PreferredInput.Gamepad
+677: 	local v218
+678: 	if v_u_5.PreferredInput == Enum.PreferredInput.Gamepad then
+679: 		v218 = v_u_43.padName(v_u_43.padFor("Rip"))
+680: 	else
+681: 		v218 = v_u_43.keyName(v_u_43.keyFor("Rip"))
+682: 	end
+683: 	local v219 = {}
+684: 	local v223 = {
+685: 		["keys"] = nil,
+686: 		["title"] = "AIM",
+   ...
+695: 		["help"] = nil,
+696: 		["touchHelp"] = "Push the stick at the bottom left. The target on the floor moves with it!",
+697: 		["done"] = nil,
+698: 		["keys"] = { v217 and "L STICK" or "Mouse" },
+699: 		["cue"] = v217 and "PUSH THE" or "MOVE YOUR",
+700: 		["focus"] = v_u_212,
+701: 		["skip"] = v_u_216,
+702: 		["text"] = v217 and "Push the LEFT STICK to choose where your bey will land." or "Move your MOUSE to choose where your bey will land.",
+703: 		["help"] = v217 and "Push the left stick left and right. The target on the floor moves with it!" or "Move your mouse left and right. The target on the floor moves with it!",
+704: 		["done"] = function(p220) -- name: done
+705: 			-- upvalues: (ref) v_u_29
+706: 			local v221 = v_u_29:AimSpot()
+707: 			local v222 = p220.aimFrom
+708: 			retur
+
+===== Players.RansbloxScripts.PlayerScripts.UI.Workshop =====
+   ...
+112: 	}
+113: }
+114: local v_u_34 = {
+115: 	["layer"] = "LAYER",
+116: 	["disc"] = "DISC",
+117: 	["driver"] = "DRIVER",
+118: 	["launcher"] = "LAUNCHER",
+119: 	["grip"] = "GRIP",
+120: 	["mount"] = "MOUNT",
+121: 	["accessory"] = "ACCESSORIES"
+122: }
+123: local v_u_35 = {
+124: 	"BeyLauncher",
+125: 	"SpeedLauncher",
+126: 	"HeavyLauncher",
+127: 	"LightLauncher",
+128: 	"SwordLauncher"
+129: }
+130: local v_u_36 = { "LauncherGrip", "KnuckleGrip", "CarabinerGrip" }
+131: local v_u_37 = {
+132: 	"",
+133: 	"AngleCompass",
+134: 	"PowerTrigger",
+135: 	"WeightDamper"
+136: }
+   ...
+5143: 			local v_u_1212 = v_u_1206.buy
+5144: 			if v1208 and (v_u_1210 and (v_u_1211 and v_u_1212)) then
+5145: 				v_u_62 = true
+5146: 				local v_u_1213 = v_u_46
+5147: 				local v_u_1214 = v_u_98(v_u_1210, v_u_1211)
+5148: 				v_u_263()
+5149: 				task.spawn(function()
+5150: 					-- upvalues: (copy) v_u_1212, (ref) v_u_94, (copy) v_u_1210, (copy) v_u_1211, (ref) v_u_46, (copy) v_u_1213, (ref) v_u_45, (ref) v_u_62, (copy) v_u_1214, (ref) v_u_63, (ref) v_u_48, (ref) v_u_18, (ref) v_u_529, (ref) v_u_262, (ref) v_u_1205, (ref) v_u_263
+5151: 					local v1215, v1216 = v_u_1212(v_u_94[v_u_1210], v_u_1211)
+5152: 					if v_u_46 == v_u_1213 and v_u_45 then
+5153: 						v_u_62 = false
+5154: 						if v1215 then
+5155: 							local v1217 = "Bought the " .. v_u_1214 .. "! Equip it whenever you\'re ready."
+5156: 							v_u_63 = v1217 and {
+5157: 								["text"] = nil,
+5158: 								["bad"] = false,
+5159: 								["at"] = nil,
+5160: 								["text"] = v1217,
+5161: 								["at"] = os.clock()
+5162: 							} or nil
+5163: 							local v1218 = v_u_48.status
+5164: 							if v1218 then
+5165: 								v1218.Text = v1217 or ""
+5166: 								v1218.TextColor3 = v_u_18.UP
+5167: 								if v1217 then
+
+===== Players.RansbloxScripts.PlayerScripts.UI.Customize =====
+   ...
+1612: 		local v444 = v443:FindFirstChildOfClass("WorldModel")
+1613: 		local v445 = v_u_2.LocalPlayer.Character
+1614: 		if v444 and v445 then
+1615: 			v445.Archivable = true
+1616: 			local v446 = v445:Clone()
+1617: 			if v446 then
+1618: 				for _, v447 in v446:GetDescendants() do
+1619: 					if not (v447:IsA("LuaSourceContainer") or (v447:IsA("Animator") or (v447:IsA("Tool") or v447:IsA("ForceField")))) then
+1620: 						continue
+1621: 					end
+1622: 					v447:Destroy()
+1623: 				end
+1624: 				local v448 = v446:FindFirstChild("BeyLauncher")
+1625: 				if v448 then
+1626: 					v448:Destroy()
+1627: 				end
+1628: 				local v449 = v446:FindFirstChildOfClass("Humanoid")
+1629: 				if v449 then
+1630: 					v449.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+1631: 				end
+1632: 				local v450 = v446:FindFirstChild("HumanoidRootPart")
+1633: 				if v450 and v450:IsA("BasePart") then
+1634: 					v450.Anchored = true
+1635: 					v446:PivotTo(CFrame.new(0, 3, 0))
+1636: 					v446.Parent = v444
+   ...
+1653: 					local v459, v460 = pcall(v456, v457, v458)
+1654: 					if v459 and v460 then
+1655: 						v460.Parent = v444
+1656: 						v_u_52.bey = v460
+1657: 						v_u_52.drop = v460:GetExtentsSize().Y
+1658: 					end
+1659: 					v_u_52.t = 0
+1660: 					v_u_52.phase = ""
+1661: 					local v461 = v_u_52
+1662: 					local v462
+1663: 					if v_u_51 == "" then
+1664: 						v462 = ({
+1665: 							["BeyLauncher"] = "Power",
+1666: 							["SpeedLauncher"] = "Rush",
+1667: 							["HeavyLauncher"] = "Upper",
+1668: 							["SwordLauncher"] = "Bank",
+1669: 							["LightLauncher"] = "Stamina"
+1670: 						})[v442.launcher.launcher] or "Power"
+1671: 					else
+1672: 						v462 = v_u_51
+1673: 					end
+1674: 					v461.stance = v462
+1675: 					v_u_27.lcam.CFrame = CFrame.lookAt(Vector3.new(-4.3, 5.8500004, -11.2), Vector3.new(1.1, 4.55, -1))
+1676: 				else
+1677: 					v446:Destroy()
+
+===== Players.RansbloxScripts.PlayerScripts.UI.PearlUI =====
+   ...
+16: 	["plate_player"] = {
+17: 		1024,
+18: 		196,
+19: 		340,
+20: 		720
+21: 	},
+22: 	["plate_rival"] = {
+23: 		1024,
+24: 		197,
+25: 		320,
+26: 		700
+27: 	},
+28: 	["movebar_ready"] = {
+29: 		1024,
+30: 		142,
+31: 		480,
+32: 		880
+33: 	},
+34: 	["movebar_cooldown"] = {
+35: 		1024,
+36: 		144,
+37: 		480,
+38: 		880
+39: 	},
+40: 	["movebar_ultimate"] = {
+   ...
+77: 		504,
+78: 		153,
+79: 		150,
+80: 		432
+81: 	},
+82: 	["burst_cracked"] = { 512, 157 },
+83: 	["toast_pill"] = {
+84: 		1024,
+85: 		77,
+86: 		150,
+87: 		874
+88: 	},
+89: 	["keycap_ready"] = {
+90: 		331,
+91: 		322,
+92: 		70,
+93: 		70,
+94: 		261,
+95: 		252
+96: 	},
+97: 	["keycap_cooldown"] = {
+98: 		328,
+99: 		320,
+100: 		70,
+101: 		70,
+102: 		258,
+103: 		250
+104: 	},
+105: 	["keycap_ultimate"] = {
+106: 		331,
+107: 		320,
+108: 		70,
+109: 		70,
+110: 		261,
+111: 		250
+112: 	},
+113: 	["score_banner"] = { 1024, 153 },
+114: 	["socket_ready"] = { 367, 365 },
+115: 	["socket_cooldown"] = { 364, 362 },
+116: 	["socket_ultimate"] = { 367, 365 },
+117: 	["ring_player"] = { 375, 373 },
+118: 	["ring_rival"] = { 370, 373 },
+119: 	["pip_empty"] = { 119, 122 },
+120: 	["pip_player"] = { 119, 123 },
+121: 	["pip_rival"] = { 121, 122 },
+122: 	["sticker_player"] = { 587, 274 },
+123: 	["sticker_rival"] = { 575, 279 },
+124: 	["sticker_ultimate"] = { 608, 282 },
+125: 	["count_1"] = { 354, 445 },
+126: 	["count_2"] = { 512, 445 },
+   ...
+305: 		14,
+306: 		42
+307: 	},
+308: 	["seg_glow"] = {
+309: 		88,
+310: 		56,
+311: 		26,
+312: 		54
+313: 	},
+314: 	["orb_glow"] = { 256, 256 },
+315: 	["pp_player_s"] = { 939, 259 },
+316: 	["pp_rival_s"] = { 946, 252 },
+317: 	["pb_ready_s"] = {
+318: 		960,
+319: 		150,
+320: 		220,
+321: 		740
+322: 	},
+323: 	["pb_cd_s"] = {
+324: 		960,
+325: 		150,
+326: 		220,
+327: 		740
+328: 	},
+329: 	["pb_ult_s"] = {
+330: 		960,
+331: 		150,
+332: 		220,
+333: 		740
+334: 	},
+335: 	["pp_player_s_sh"] = { 995, 315 },
+336: 	["pp_rival_s_sh"] = { 1002, 308 },
+337: 	["pb_ready_s_sh"] = {
+338: 		1016,
+339: 		206,
+340: 		248,
+341: 		768
+342: 	},
+343: 	["nplate_player"] = { 1618, 411 },
+344: 	["nplate_rival"] = { 1600, 402 },
+345: 	["ntab_player"] = { 724, 115 },
+346: 	["ntab_rival"] = { 722, 115 },
+347: 	["nrow_ready"] = { 1300, 284 },
+348: 	["nrow_cd"] = { 1300, 284 },
+349: 	["nrow_ult"] = { 1300, 284 },
+350: 	["nkey_cyan"] = {
+351: 		320,
+352: 		320,
+353: 		150,
+354: 		170
+355: 	},
+356: 	["nkey_purple"] = {
+357: 		320,
+358: 		320,
+359: 		150,
+
+===== Players.RansbloxScripts.PlayerScripts.UI.RivalsHud =====
+   ...
+3869: 		if type(p783) ~= "string" or p783 == "" then
+3870: 			p783 = not v792 and "" or v792.id
+3871: 		end
+3872: 		v793(v794, p783)
+3873: 		local v795 = v785.elo
+3874: 		if v795 then
+3875: 			local v796 = p781.Elo or v_u_7.ELO_START
+3876: 			local v797 = math.floor(v796)
+3877: 			v795.Text = tostring(v797):reverse():gsub("(%d%d%d)", "%1,"):reverse():gsub("^,", "")
+3878: 		end
+3879: 		local v798 = false
+3880: 		for v799 = 1, p781.Tier or 1 do
+3881: 			if p781.Claimed and p781.Claimed[tostring(v799)] then
+3882: 				continue
+3883: 			end
+3884: 			v798 = true
+3885: 		end
+3886: 		v785.newTag.Visible = v798
+3887: 		local v800 = p781.Quests and (p781.Quests.list or {}) or {}
+3888: 		local v801 = false
+3889: 		for v802, v803 in v785.questRows do
+3890: 			local v804 = v800[v802]
+3891: 			local v805
+3892: 			if v804 then
+3893: 				v805 = v_u_7.quest(v804.id)
+3894: 			else
+3895: 				v805 = v804
+3896: 			end
+3897: 			v803.Visible = v805 ~= nil
+3898: 			if not (v804 and v805) then
+3899: 				continue
+3900: 			end
+3901: 			local v806 = v804.prog >= v805.need
+3902: 			v801 = v806 and not v804.claimed and true or v801
+3903: 			local v807 = v803:FindFirstChild("Text")
+3904: 			local v808
+3905: 			if v806 then
+3906: 				v808 = v805.text
+3907: 			else
+3908: 				v808 = ("%* (%*/%*)"):format(v805.text, v804.prog, v805.need)
+3909: 			end
+3910: 			v807.Text = v808
+3911: 			local v809
+3912: 			if v806 then
+3913: 				v809 = Color3.fromRGB(150, 156, 170)
+3914: 			else
+   ...
+3916: 			end
+3917: 			v807.TextColor3 = v809
+3918: 			v803:FindFirstChild("Box"):FindFirstChild("Tick").Visible = v806
+3919: 			local v810 = v803:FindFirstChild("Strike")
+3920: 			v810.Visible = v806
+3921: 			local v811 = UDim2.fromOffset
+3922: 			local v812 = v807.TextBounds.X
+3923: 			local v813 = v785.scales[1].Scale
+3924: 			v810.Size = v811(v812 / math.max(v813, 0.001) + 6, 3)
+3925: 		end
+3926: 		local v814 = #v800 > 0
+3927: 		for _, v815 in v800 do
+3928: 			if v815.claimed then
+3929: 				continue
+3930: 			end
+3931: 			v814 = false
+3932: 		end
+3933: 		local v816
+3934: 		if p781.Quests == nil then
+3935: 			v816 = false
+3936: 		else
+3937: 			v816 = p781.Quests.bonus == true
+3938: 		end
+3939: 		local v817 = v814 and not v816 and true or v801
+3940: 		local v818 = ("%* Spin Tickets and %* Token%*"):format(v_u_7.QUEST_BONUS_TICKETS, v_u_7.QUEST_BONUS_TOKENS, v_u_7.QUEST_BONUS_TOKENS == 1 and "" or "s")
+3941: 		local v819 = v785.questDesc
+3942: 		local v820
+3943: 		if v816 then
+3944: 			v820 = "All done today. New quests tomorrow."
+3945: 		elseif v814 then
+3946: 			v820 = ("Bonus ready! Claim your %*."):format(v818)
+3947: 		else
+3948: 			v820 = ("Finish today\'s quests for %*."):format(v818)
+3949: 		end
+3950: 		v819.Text = v820
+3951: 		local v821 = p781.Weekly
+3952: 		if v821 and v821.week == v_u_7.weekOf(os.time()) then
+3953: 			local v822 = #v821.list > 0
+3954: 			for _, v823 in v821.list do
+3955: 				local v824 = v_u_7.weekly(v823.id)
+3956: 				v817 = v824 and (v823.prog >= v824.need and not v823.claimed) and true or v817
+3957: 				if v823.claimed then
+3958: 					continue
+3959: 				end
+3960: 				v822 = false
+3961: 			end
+3962: 			if v822 and not v821.bonus then
+3963: 				v817 = true
+3964: 			end
+3965: 		end
+3966: 		local v825 = p781.SeasonQ
+3967: 		if v825 and v825.id == v_u_7.SEASON then
+3968: 			for _, v826 in v_u_7.SEASON_QUESTS do
+3969: 				if (v825.prog[v826.id] or 0) < v826.need or v825.claimed[v826.id] then
+3970: 					continue
+3971: 				end
+3972: 				v817 = true
+3973: 			end
+3974: 		end
+3975: 		v785.tiles.quests.badge.Visible = v817
+3976: 		local v827 = v785.tiles.halloween
+3977: 		local v828 = v_u_27
+3978: 		if v827 and v828 then
+3979: 			local v829 = v_u_10.clean
+3980: 			local v830 = p781.Event
+3981: 			local v831
+
+===== Players.RansbloxScripts.PlayerScripts.UI.RankedTalk =====
+   ...
+293: 		local v99 = v_u_23
+294: 		v99.title.Text = "MATCH FOUND!"
+295: 		v99.sub.Text = "Off to the Nationals arena..."
+296: 		v99.cancel.button.Visible = false
+297: 		v_u_14.play("good", 1.2)
+298: 		return
+299: 	elseif v72.state == "waiting" then
+300: 		v_u_69(true)
+301: 		local v100 = v_u_23
+302: 		v100.title.Text = ("RANKED %*"):format(v73)
+303: 		local v101 = v72.here
+304: 		local v102 = tonumber(v101) or 0
+305: 		local v103 = v72.ready
+306: 		local v104 = v102 - (tonumber(v103) or 0)
+307: 		local v105 = v100.sub
+308: 		local v106
+309: 		if v104 > 0 then
+310: 			v106 = ("Bladers ready: %*/%*  \194\183  %* loading in..."):format(v72.ready or 0, v72.need or 0, v104)
+311: 		else
+312: 			v106 = ("Bladers ready: %*/%*"):format(v72.ready or 0, v72.need or 0)
+313: 		end
+314: 		v105.Text = v106
+315: 		v100.cancel.button.Visible = false
+316: 		return
+317: 	elseif v72.state == "nocontest" then
+318: 		v_u_69(true)
+319: 		local v107 = v_u_23
+320: 		v107.title.Text = "NO CONTEST"
+321: 		v107.sub.Text = "Your rivals didn\'t show up. Heading back..."
+322: 		v107.cancel.button.Visible = false
+323: 		return
+324: 	elseif v72.state == "home" then
+   ...
+576: 							end
+577: 							if v182 then
+578: 								local v183, v184 = v_u_9.RankedQueue:Fire(v182)
+579: 								if v183 then
+580: 									local v185
+581: 									if v184 == "top" then
+582: 										v185 = ("You\'re in the Top 15, so you\'ll face other Top 15 bladers or Masters. After %* seconds, anyone close to your ELO too."):format(v_u_10.RANKED_TOP_WAIT)
+583: 									elseif v184 == "topparty" then
+584: 										v185 = ("Your party has a Top 15 blader, so you\'ll face teams with one too, or Master teams. After %* seconds, any team close to your ELO too."):format(v_u_10.RANKED_TOP_WAIT)
+585: 									else
+586: 										v185 = v184 == "place" and "You\'re in placements, so you can face anyone up to Gold. Beat someone ranked higher and you\'ll climb faster!" or ("You\'ll face bladers within %* ELO of you."):format(v_u_10.ELO_BRACKET)
+587: 									end
+588: 									v_u_12.say({ ("You\'re in the %* queue! When your match is ready I\'ll send you to the Nationals arena."):format(v182), v185, "Every ranked win pays a Spin Ticket. Each new rank pays BP and tickets, plus a title." }, "Volt", v_u_17)
+589: 								else
+590: 									v_u_12.say({ (type(v184) ~= "string" or v184 == "") and "The queue didn\'t answer. Try again!" or v184 }, "Volt", v_u_17)
+591: 								end
+592: 							else
+593: 								return
+594: 							end
+595: 						else
+596: 							return
+597: 						end
+598: 					end
+599: 				end
+600: 			end
+
+===== Players.RansbloxScripts.PlayerScripts.UI.RivalsBag =====
+   ...
+442: 			v141:SetAttribute("AuditIgnore", true)
+443: 			v_u_17.label(v141, tostring(v140 or ""), 56, {
+444: 				["Name"] = "Order",
+445: 				["AnchorPoint"] = nil,
+446: 				["Position"] = nil,
+447: 				["Size"] = nil,
+448: 				["ZIndex"] = 18,
+449: 				["AnchorPoint"] = Vector2.new(0.5, 0.5),
+450: 				["Position"] = UDim2.fromOffset(v_u_34 / 2, v_u_35 / 2 - 12),
+451: 				["Size"] = UDim2.fromOffset(v_u_34, 64)
+452: 			})
+453: 			if v120 then
+454: 				v_u_17.glyph(v134, "gm4_claim", Rect.new(v_u_34 - 10 - 22, 6, v_u_34 - 10, 28), Color3.fromRGB(150, 255, 110), Color3.fromRGB(60, 220, 60), 16).Name = "Equipped"
+455: 			end
+456: 			if v_u_116.item.locked then
+457: 				v_u_17.glyph(v134, "gm4_lock", Rect.new(v_u_34 - 10 - 22 - 6 - 20, 7, v_u_34 - 10 - 22 - 6, 27), v_u_36, Color3.fromRGB(255, 150, 20), 16)
+458: 			end
+459: 			v_u_79[v_u_116.uid] = v134
+460: 			return v134
+461: 		end, function(p142)
+462: 			-- upvalues: (ref) v_u_79, (copy) v_u_112
+463: 			v_u_79[v_u_112[p142].uid] = nil
+464: 		end, p110)
+465: 		if #v_u_112 == 0 then
+466: 			v_u_17.label(v_u_81, v_u_70 ~= "" and "Nothing matches that." or (v_u_69 == "All" and "No parts yet. Go summon some!" or ("No %* yet."):format((string.lower(v_u_69)))), 28, {
+   ...
+2297: 						else
+2298: 							v516 = "Try again."
+2299: 						end
+2300: 						break
+2301: 					end
+2302: 					v515 = v515 + 1
+2303: 				end
+2304: 				v_u_513 = false
+2305: 				if v516 then
+2306: 					v_u_15.toast(v516, "bad")
+2307: 					return
+2308: 				elseif v515 == 0 then
+2309: 					v_u_15.toast("Your best parts are already on.")
+2310: 				else
+2311: 					v_u_15.toast("Equipped your best parts!", "good")
+2312: 				end
+2313: 			end)
+2314: 		end
+2315: 	end)
+2316: 	v_u_85 = v_u_17.button(v_u_492, "SELL MODE", Rect.new(258, 446, 502, 500), "off", nil, 13, function()
+2317: 		-- upvalues: (ref) v_u_496, (copy) v_u_74, (copy) v_u_79, (copy) v_u_103, (ref) v_u_15, (copy) p_u_66, (ref) v_u_5, (copy) v_u_80, (ref) v_u_11, (ref) v_u_1, (ref) v_u_28, (ref) v_u_495, (ref) v_u_65
+2318: 		if v_u_496 then
+2319: 			local v_u_525 = {}
+2320: 			for v526 in v_u_74 do
+2321: 				table.insert(v_u_525, v526)
+
+===== Players.RansbloxScripts.PlayerScripts.UI.RivalsScreens =====
+   ...
+39: 				local v35 = Enum.InfoType.Product
+40: 				local v36, v37 = pcall(v32, v33, v34, v35)
+41: 				if v36 and type(v37) == "table" then
+42: 					local v38 = v37.PriceInRobux
+43: 					if type(v38) == "number" and p_u_27.button.Parent then
+44: 						p_u_27.set((("%*  %*"):format(p_u_28, (v_u_6.price(v_u_13.grouped(v37.PriceInRobux))))))
+45: 					end
+46: 				end
+47: 			end)
+48: 		end
+49: 	end
+50: end
+51: local v_u_40 = require(script.Parent.Parent.Battle.BattleInput)
+52: local v_u_41 = require(script.Parent.RivalsPopup)
+53: local v_u_42 = require(script.Parent.SpinGuard)
+54: local v_u_43 = require(script.Parent.Squad)
+55: local v_u_44 = require(script.Parent.Parent.Controllers.LiveController)
+56: local v45 = {}
+57: local v_u_46 = v_u_11.make
+58: local v_u_47 = v_u_23.WHITE
+59: local v_u_48 = Color3.fromRGB(255, 214, 60)
+60: local v_u_49 = Color3.fromRGB(255, 150, 20)
+61: local v_u_50 = Color3.fromRGB(90, 230, 255)
+62: local v_u_51 = Color3.fromRGB(30, 140, 255)
+63: local v_u_52 = Color3.fromRGB(150, 255, 90)
+64: local v_u_53 = Color3.fromRGB(30, 200, 60)
+65: local v_u_54 = Color3.fromRGB(190, 192, 205)
+66: local v_u_55 = Color3.fromRGB(110, 112, 125)
+67: local function v_u_70(p_u_56) -- name: claimToast
+68: 	-- upvalues: (copy) v_u_13, (copy) v_u_4, (copy) v_u_41
+69: 	local v57, v58 = pcall(function()
+70: 		-- upvalues: (copy) p_u_56
+71: 		return game:GetService("HttpService"):JSONDecode(p_u_56)
+72: 	end)
+73: 	if v57 and type(v58) == "table" then
+74: 		local v59 = {}
+75: 		if (v58.bp or 0) > 0 then
+76: 			local v60 = ("+%* BP"):format((v_u_13.grouped(v58.bp)))
+77: 			table.insert(v59, v60)
+78: 		end
+79: 		if (v58.tickets or 0) > 0 then
+   ...
+290: 	local v133 = v122 - v_u_132
+291: 	local v_u_134 = v_u_126 and 44 or 32
+292: 	local v135 = (v_u_123 - v_u_130 - 8 - 16 - 10 - v_u_134 - 18) / 2
+293: 	local v_u_136 = math.floor(v135)
+294: 	local v_u_137 = v_u_126 and 256 or 248
+295: 	local v_u_138 = v_u_137 + 16
+296: 	local v139 = (v133 - 12 + 16) / v_u_138
+297: 	local v_u_140 = math.floor(v139) * v_u_138 - 16 + 12
+298: 	local v_u_141 = v_u_136 + 8 + 16
+299: 	local v_u_142 = v_u_141 + v_u_136 + 10
+300: 	local v_u_143 = v_u_142 + v_u_134 + 18
+301: 	local v_u_144 = nil
+302: 	local function v_u_166(p_u_145) -- name: claimed
+303: 		-- upvalues: (ref) v_u_70, (ref) v_u_4, (ref) v_u_41, (ref) v_u_5, (ref) v_u_48, (ref) v_u_8
+304: 		v_u_70(p_u_145)
+305: 		local v146, v147 = pcall(function()
+306: 			-- upvalues: (copy) p_u_145
+307: 			return game:GetService("HttpService"):JSONDecode(p_u_145)
+308: 		end)
+309: 		if v146 and type(v147) == "table" then
+310: 			local v148 = v147.parts
+311: 			if type(v148) == "table" then
+312: 				for _, v149 in v147.parts do
+313: 					if type(v149) ~= "table" then
+314: 						continue
+   ...
+468: 		local v180 = v120.conns
+469: 		local v181 = v_u_170:GetPropertyChangedSignal("Position")
+470: 		table.insert(v180, v181:Connect(v179))
+471: 	end
+472: 	local v_u_182 = nil
+473: 	local v_u_183 = nil
+474: 	local function v_u_384(p184) -- name: draw
+475: 		-- upvalues: (ref) v_u_23, (copy) v_u_121, (copy) p_u_117, (ref) v_u_182, (ref) v_u_183, (ref) v_u_5, (ref) v_u_4, (copy) v_u_169, (ref) v_u_46, (copy) v_u_127, (copy) v_u_123, (ref) v_u_24, (ref) v_u_112, (ref) v_u_113, (copy) v_u_126, (ref) v_u_114, (ref) v_u_115, (ref) v_u_116, (ref) v_u_13, (ref) v_u_1, (ref) v_u_48, (copy) v_u_124, (ref) v_u_9, (ref) v_u_47, (ref) v_u_11, (ref) v_u_25, (ref) v_u_39, (copy) v_u_132, (copy) v_u_129, (ref) v_u_119, (ref) v_u_140, (copy) v_u_166, (copy) v_u_141, (copy) v_u_128, (copy) v_u_131, (copy) v_u_130, (copy) v_u_136, (ref) v_u_144, (copy) v_u_143, (copy) v_u_138, (copy) v_u_137, (ref) v_u_111, (copy) v_u_125, (copy) v_u_142, (copy) v_u_134, (ref) v_u_16
+476: 		v_u_23.clear(v_u_121)
+477: 		local v185 = p_u_117()
+478: 		local v_u_186 = v185 and (v185.Tier or 1) or 1
+479: 		local v187 = v185 and (v185.TierXp or 0) or 0
+480: 		local v_u_188 = v185 and (v185.Claimed or {}) or {}
+481: 		local v_u_189 = v185 and (v185.ClaimedP or
+
+===== Players.RansbloxScripts.PlayerScripts.UI.FrameSkin =====
+   ...
+1059: 	return v244
+1060: end
+1061: function v_u_10.coin(p257, p258, p259, p260) -- name: coin
+1062: 	-- upvalues: (copy) v_u_256, (copy) v_u_14
+1063: 	return v_u_256(p257, "gm4_coin", p258, p259, p260, v_u_14(255, 226, 90), v_u_14(255, 150, 20))
+1064: end
+1065: function v_u_10.lock(p261, p262, p263, p264, _) -- name: lock
+1066: 	-- upvalues: (copy) v_u_256
+1067: 	return v_u_256(p261, "gm4_lock", p262, p263, p264)
+1068: end
+1069: function v_u_10.check(p265, p266, p267, p268, _) -- name: check
+1070: 	-- upvalues: (copy) v_u_256
+1071: 	return v_u_256(p265, "gm4_claim", p266, p267, p268)
+1072: end
+1073: function v_u_10.gear(p269, p270, p271, p272, _) -- name: gear
+1074: 	-- upvalues: (copy) v_u_256, (copy) v_u_10
+1075: 	return v_u_256(p269, "gm3_settings", p270, p271, p272, v_u_10.THEME.c1, v_u_10.THEME.c2)
+1076: end
+1077: function v_u_10.cross(p273, p274, p275, p276, _) -- name: cross
+1078: 	-- upvalues: (copy) v_u_15, (copy) v_u_11, (copy) v_u_5, (copy) v_u_12
+1079: 	local v277 = v_u_15("Frame", {
+1080: 		["Name"] = "Cross",
+1081: 		["BackgroundTransparency"] = 1,
+1082: 		["AnchorPoint"] = nil,
+1083: 		["Position"] = nil,
+
+===== Players.RansbloxScripts.PlayerScripts.UI.WorkbenchScene =====
+   ...
+809: 		local v255 = Instance.new("Folder")
+810: 		v255.Name = p253
+811: 		v255.Parent = v_u_16 or v_u_6
+812: 		v254 = {
+813: 			["folder"] = nil,
+814: 			["target"] = nil,
+815: 			["folder"] = v255
+816: 		}
+817: 		v_u_18[p253] = v254
+818: 	end
+819: 	return v254.folder
+820: end
+821: local function v_u_307(p256, p257, p258, p259) -- name: aim
+822: 	-- upvalues: (copy) v_u_6, (copy) v_u_11, (ref) v_u_26, (ref) v_u_25, (ref) v_u_23
+823: 	local v260 = v_u_6.CurrentCamera
+824: 	if v260 and p256.Parent then
+825: 		local v261 = v260.ViewportSize
+826: 		local v262 = p258.AbsoluteSize
+827: 		local v263 = p258.AbsolutePosition
+828: 		if v261.Y <= 0 or (v262.X <= 0 or v262.Y <= 0) then
+829: 			return
+830: 		else
+831: 			local v264 = Vector3.new(1, 1, 1) * (1 / 0)
+832: 			local v265 = Vector3.new(-1, -1, -1) * (1 / 0)
+833: 			for _, v266 in p256:GetDescendants() do
+
+===== Players.RansbloxScripts.PlayerScripts.UI.RivalsResults =====
+   ...
+1227: 					["color"] = Color3.fromRGB(255, 120, 200)
+1228: 				}
+1229: 				table.insert(v393, v405)
+1230: 			end
+1231: 			v522 = p83.tierUps
+1232: 			if (type(v522) ~= "number" and 0 or v522) > 0 then
+1233: 				v362 = {
+1234: 					["tag"] = "BATTLEPASS",
+1235: 					["text"] = nil,
+1236: 					["color"] = nil
+1237: 				}
+1238: 				v520 = p83.tier
+1239: 				v362.text = ("Tier %* reached! Claim it on the Battlepass."):format(type(v520) ~= "number" and 1 or v520)
+1240: 				v362.color = Color3.fromRGB(214, 170, 255)
+1241: 				table.insert(v393, v362)
+1242: 			end
+1243: 			v482 = p83.partUps
+1244: 			if type(v482) == "table" then
+1245: 				for _, v655 in p83.partUps do
+1246: 					if type(v655) ~= "table" then
+1247: 						continue
+1248: 					end
+1249: 					v406 = v655.name
+1250: 					if type(v406) ~= "string" then
+1251: 						continue
+
+===== Players.RansbloxScripts.PlayerScripts.UI.RivalsStore =====
+   ...
+919: 			["Size"] = UDim2.fromScale(1, 1),
+920: 			["ZIndex"] = p252 + 1
+921: 		}, v256)
+922: 		v_u_229(v256, v257)
+923: 		return {
+924: 			["root"] = v256,
+925: 			["art"] = v_u_258,
+926: 			["hit"] = v268
+927: 		}
+928: 	end
+929: 	local v_u_270 = {
+930: 		["green"] = "price",
+931: 		["gold"] = "claim",
+932: 		["violet"] = "price_violet",
+933: 		["grey"] = "price_grey"
+934: 	}
+935: 	local function v_u_285(p271, p272, p273, p274, p275, p276, p_u_277) -- name: natBuy
+936: 		-- upvalues: (copy) v_u_270, (ref) v_u_31, (copy) v_u_193, (ref) v_u_32, (copy) v_u_217, (ref) v_u_33
+937: 		local v_u_278 = true
+938: 		local function v279() -- name: go
+939: 			-- upvalues: (ref) v_u_278, (copy) p_u_277
+940: 			if v_u_278 then
+941: 				p_u_277()
+942: 			end
+943: 		end
+   ...
+3223: 						local v936, v937, v938 = v_u_15.RivalsCode:Fire(v_u_935)
+3224: 						if not v936 and v938 == "join" then
+3225: 							local v939 = v_u_11.PromptJoinAsync
+3226: 							local v940 = v_u_11
+3227: 							local v941 = v_u_20.GroupId
+3228: 							local v942, v943 = pcall(v939, v940, v941)
+3229: 							local v944
+3230: 							if v942 then
+3231: 								v944 = v943 == Enum.GroupMembershipStatus.Joined
+3232: 							else
+3233: 								v944 = v942
+3234: 							end
+3235: 							if v944 or v942 and v943 == Enum.GroupMembershipStatus.AlreadyMember then
+3236: 								v936, v937, v938 = v_u_15.RivalsCode:Fire(v_u_935)
+3237: 								if not v936 and (v938 == "join" and v944) then
+3238: 									v937 = "You joined! Give it a moment, then redeem the code again."
+3239: 								end
+3240: 							end
+3241: 						end
+3242: 						return v936, v937, v938
+3243: 					end, function(p945)
+3244: 						-- upvalues: (ref) v_u_5, (ref) v_u_28, (ref) v_u_934, (ref) v_u_908, (ref) v_u_903
+3245: 						local v946 = v_u_5.JSONDecode
+3246: 						local v947 = v_u_5
+3247: 						local v948, v949 = pcall(v946, v947, p945)
+
+===== Players.RansbloxScripts.PlayerScripts.UI.RivalsNames =====
+   ...
+276: 			else
+277: 				v109 = ("FILL IT: %*"):format((string.upper(v107)))
+278: 			end
+279: 			local v116 = v108(v75, v109, {
+280: 				v73 - 30 - 380,
+281: 				v97 - 6,
+282: 				v73 - 30,
+283: 				v97 + 40
+284: 			}, v106 and not v71[v_u_101.id] and "gold" or "grey", 34, function()
+285: 				-- upvalues: (copy) v_u_96, (ref) v_u_9, (copy) v_u_101, (ref) v_u_1, (ref) v_u_11, (copy) v_u_72, (copy) p_u_67
+286: 				v_u_96(function()
+287: 					-- upvalues: (ref) v_u_9, (ref) v_u_101
+288: 					return v_u_9.RivalsClaim:Fire("book", v_u_101.id)
+289: 				end, function(p110)
+290: 					-- upvalues: (ref) v_u_1, (ref) v_u_11, (ref) v_u_101, (ref) v_u_72, (ref) p_u_67
+291: 					local v111 = v_u_1.JSONDecode
+292: 					local v112 = v_u_1
+293: 					local v113, v114 = pcall(v111, v112, p110)
+294: 					if v113 and type(v114) == "table" then
+295: 						v_u_11.toast(("%* page complete! +%* BP"):format(v_u_101.id, (v_u_11.grouped(v114.bp or 0))) .. ((v114.tickets or 0) <= 0 and "" or ("  +%* Tickets"):format(v114.tickets)), "good")
+296: 					end
+297: 					local v115 = v_u_72.Parent
+298: 					if v115 then
+299: 						v115:Destroy()
+300: 					end
+
+===== Players.RansbloxScripts.PlayerScripts.UI.RivalsModes =====
+   ...
+4: local v_u_4 = game:GetService("HttpService")
+5: local v_u_5 = require(v2.Packets)
+6: local v_u_6 = require(v2.Rivals.Modes)
+7: local v_u_7 = require(v2.Rivals.Catalog)
+8: local v_u_8 = require(v2.Registries.Trainers)
+9: local v9 = require(script.Parent.Kit)
+10: local v_u_10 = require(script.Parent.Night)
+11: local v_u_11 = require(script.Parent.RivalsFrame)
+12: local v_u_12 = require(script.Parent.RivalsKit)
+13: local v_u_13 = require(script.Parent.HudKit)
+14: local v_u_14 = require(script.Parent.Shout)
+15: local v_u_15 = require(script.Parent.PadTravel)
+16: local v_u_16 = require(script.Parent.Parent.Battle.BattleInput)
+17: local v_u_17 = {}
+18: local v_u_18 = v9.make
+19: local v_u_19 = v_u_12.WHITE
+20: local v_u_20 = Color3.fromRGB(255, 214, 60)
+21: local v_u_21 = Color3.fromRGB(255, 150, 20)
+22: local v_u_22 = Color3.fromRGB(150, 255, 90)
+23: local v_u_23 = Color3.fromRGB(255, 110, 120)
+24: local v_u_24 = {}
+25: local v_u_25 = Instance.new("BindableEvent")
+26: local v_u_26 = nil
+27: local function v_u_30(p27) -- name: clock
+28: 	local v28 = math.floor(p27)
+   ...
+727: 					["TextWrapped"] = true,
+728: 					["ZIndex"] = 14,
+729: 					["Position"] = UDim2.fromOffset(16, 0),
+730: 					["Size"] = UDim2.new(1, -32, 1, 0),
+731: 					["TextXAlignment"] = Enum.TextXAlignment.Left
+732: 				})
+733: 			end
+734: 			local v223 = p211 and p211.Modes
+735: 			if v223 then
+736: 				v223 = p211.Modes.raidWeek == v214
+737: 			end
+738: 			local v224 = v_u_12.label
+739: 			local v225 = v223 and "You\'ve claimed this week\'s prize. Raids still pay normal BP." or ("This week\'s first win: +%* BP  +%* Spin Tickets"):format(v216.firstBp, v216.firstTickets)
+740: 			local v226 = 23
+741: 			local v227 = {
+742: 				["Position"] = nil,
+743: 				["Size"] = nil,
+744: 				["TextXAlignment"] = nil,
+745: 				["TextWrapped"] = true,
+746: 				["TextColor3"] = nil,
+747: 				["ZIndex"] = 13,
+748: 				["Position"] = UDim2.fromOffset(20, 280),
+749: 				["Size"] = UDim2.fromOffset(648, 34),
+750: 				["TextXAlignment"] = Enum.TextXAlignment.Left
+751: 			}
+
+===== Players.RansbloxScripts.PlayerScripts.UI.RivalsClubs =====
+   ...
+110: 				v_u_34(function()
+111: 					-- upvalues: (ref) v_u_6, (ref) v_u_42
+112: 					return v_u_6.ClubInvite:Fire(v_u_42.UserId)
+113: 				end, function()
+114: 					-- upvalues: (ref) v_u_45, (ref) v_u_8, (ref) v_u_42
+115: 					v_u_45.set("Sent!")
+116: 					v_u_45.enable(false)
+117: 					v_u_8.toast(("Club invite sent to %*!"):format(v_u_42.DisplayName), "good")
+118: 				end)
+119: 			end)
+120: 		end
+121: 		if v41 == 0 then
+122: 			v_u_10.label(v40, "Everyone here is already in a club (or it\'s just you).", 22, {
+123: 				["Size"] = nil,
+124: 				["TextColor3"] = nil,
+125: 				["ZIndex"] = 22,
+126: 				["Size"] = UDim2.fromOffset(716, 60),
+127: 				["TextColor3"] = v_u_10.MUTED
+128: 			})
+129: 		end
+130: 		v_u_10.button(v39, "Close", Rect.new(260, 428, 500, 480), "go", nil, 22, function()
+131: 			-- upvalues: (ref) v_u_36
+132: 			if v_u_36 then
+133: 				v_u_36:Destroy()
+134: 				v_u_36 = nil
+
+===== Players.RansbloxScripts.PlayerScripts.UI.Tip =====
+1: local v_u_1 = game:GetService("GuiService")
+2: local v_u_2 = game:GetService("Players")
+3: local v_u_3 = game:GetService("UserInputService")
+4: local v_u_4 = game:GetService("Workspace")
+5: local v_u_5 = require(script.Parent.Parent.Battle.BattleInput)
+6: local v_u_6 = {
+7: 	["WORDS"] = table.freeze({
+8: 		["atk"] = "<b>Attack</b>: its hits push rivals further and knock more spin and burst out of them.",
+9: 		["def"] = "<b>Defense</b>: harder to burst, and it loses less spin each time it\'s hit.",
+10: 		["sta"] = "<b>Stamina</b>: its spin drains slower, so it outlasts rivals.",
+11: 		["spd"] = "<b>Speed</b>: it moves around the bowl faster, for dashes and rail rushes.",
+12: 		["weight"] = "<b>Weight</b>: a heavier bey is knocked back less and hits heavier.",
+13: 		["guard"] = "<b>Burst Guard</b>: how many hits it takes before it can burst.",
+14: 		["Attack"] = "<b>Attack type</b>: hits harder the faster it\'s going and knocks rivals farther, but has fewer burst locks.",
+15: 		["Defense"] = "<b>Defense type</b>: built to take hits and outlast attackers; its stamina counts for 20% more.",
+16: 		["Stamina"] = "<b>Stamina type</b>: extra burst locks (it rides hits instead of taking them); it wins by outspinning.",
+17: 		["Balance"] = "<b>Balance type</b>: the strongest burst locks of any type, and it changes its plan to match its rival.",
+
+===== Players.RansbloxScripts.PlayerScripts.UI.LobbyHints =====
+   ...
+144: 		local v50 = v47 == 0
+145: 		local v51 = (v46 - v40.Position).Magnitude
+146: 		if (not v50 or v42) and (v50 ~= v42 or v51 >= v41) then
+147: 			continue
+148: 		end
+149: 		v44 = v46
+150: 		v43 = v45
+151: 		v42 = v50
+152: 		v41 = v51
+153: 	end
+154: 	return v43, v44
+155: end
+156: local function v_u_56() -- name: aim
+157: 	-- upvalues: (copy) v_u_52, (ref) v_u_31, (copy) v_u_11, (ref) v_u_30, (ref) v_u_29, (copy) v_u_7
+158: 	local v53, v54 = v_u_52()
+159: 	if v53 and v54 then
+160: 		if v53 ~= v_u_30 or not v_u_31 then
+161: 			v_u_30 = v53
+162: 			local v55 = v_u_29
+163: 			if not v55 then
+164: 				v55 = Instance.new("Part")
+165: 				v55.Name = "PadHint"
+166: 				v55.Anchored = true
+167: 				v55.CanCollide = false
+168: 				v55.CanQuery = false
+
+===== Players.RansbloxScripts.PlayerScripts.UI.NatShop =====
+   ...
+753: 	["fill"] = {
+754: 		["rot"] = 90,
+755: 		["keys"] = nil,
+756: 		["keys"] = {
+757: 			{ 0, Color3.fromRGB(60, 200, 60) },
+758: 			{ 1, Color3.fromRGB(24, 140, 30) }
+759: 		}
+760: 	}
+761: }
+762: v8.day_done = v21
+763: local v22 = {
+764: 	["k"] = "box",
+765: 	["id"] = "claim",
+766: 	["r"] = nil,
+767: 	["rad"] = 16,
+768: 	["rings"] = nil,
+769: 	["fill"] = nil,
+770: 	["deco"] = "nat_sh_claim",
+771: 	["over"] = "nat_sh_claim_over",
+772: 	["glow"] = nil,
+773: 	["r"] = {
+774: 		0,
+775: 		0,
+776: 		272,
+777: 		78
+778: 	},
+779: 	["rings"] = {
+780: 		{ 3, Color3.fromRGB(8, 2, 12) },
+781: 		{
+782: 			5,
+783: 			{
+   ...
+793: 		{ 2, Color3.fromRGB(84, 32, 0) }
+794: 	},
+795: 	["fill"] = {
+796: 		["rot"] = 90,
+797: 		["keys"] = nil,
+798: 		["keys"] = {
+799: 			{ 0, Color3.fromRGB(252, 212, 32) },
+800: 			{ 0.45, Color3.fromRGB(232, 152, 6) },
+801: 			{ 1, Color3.fromRGB(150, 82, 2) }
+802: 		}
+803: 	},
+804: 	["glow"] = {
+805: 		"nat_sh_claim_glow",
+806: 		-12,
+807: 		-12,
+808: 		284,
+809: 		90
+810: 	}
+811: }
+812: v8.claim = v22
+813: local v23 = {
+814: 	["k"] = "box",
+815: 	["id"] = "card4_gold",
+816: 	["r"] = nil,
+817: 	["rad"] = 20,
+818: 	["rings"] = nil,
+819: 	["fill"] = nil,
+820: 	["tint"] = nil,
+821: 	["drop"] = nil,
+822: 	["deco"] = "nat_sh_card4_gold",
+823: 	["over"] = "nat_sh_card4_gold_over",
+824: 	["r"] = {
+   ...
+2661: 	},
+2662: 	["nat_sh_card4_gold_over"] = {
+2663: 		0,
+2664: 		282,
+2665: 		890,
+2666: 		280,
+2667: 		133,
+2668: 		4,
+2669: 		4,
+2670: 		594,
+2671: 		640
+2672: 	},
+2673: 	["nat_sh_claim"] = {
+2674: 		2,
+2675: 		476,
+2676: 		755,
+2677: 		504,
+2678: 		116,
+2679: 		0,
+2680: 		0,
+2681: 		504,
+2682: 		116
+2683: 	},
+2684: 	["nat_sh_claim_glow"] = {
+2685: 		3,
+2686: 		0,
+2687: 		590,
+2688: 		296,
+2689: 		102,
+2690: 		0,
+2691: 		0,
+2692: 		296,
+2693: 		102
+2694: 	},
+2695: 	["nat_sh_claim_over"] = {
+2696: 		3,
+2697: 		0,
+2698: 		694,
+2699: 		173,
+2700: 		55,
+2701: 		4,
+2702: 		4,
+2703: 		544,
+2704: 		156
+2705: 	},
+2706: 	["nat_sh_codes"] = {
+2707: 		3,
+
+===== Players.RansbloxScripts.PlayerScripts.UI.NatPanel =====
+   ...
+271: 	local v62 = p58 or v_u_8(120, 122, 132)
+272: 	v_u_5.face(v61, v62:Lerp(v_u_9, 0.25), v62, {
+273: 		["layers"] = "wide",
+274: 		["radius"] = 8,
+275: 		["glow"] = nil,
+276: 		["glow"] = p58 and 0.6 or 1
+277: 	})
+278: 	return v61
+279: end
+280: local v_u_63 = {
+281: 	["green"] = "green",
+282: 	["gold"] = "gold",
+283: 	["claim"] = "gold",
+284: 	["violet"] = "purple",
+285: 	["grey"] = "off",
+286: 	["blue"] = "go",
+287: 	["pink"] = "red",
+288: 	["red"] = "red"
+289: }
+290: function v_u_6.button(p64, p65, p66, p67, p68, p69, _) -- name: button
+291: 	-- upvalues: (copy) v_u_3, (copy) v_u_63
+292: 	local v70 = v_u_3.button(p64, p65, Rect.new(p66[1], p66[2], p66[3], p66[4]), v_u_63[p67] or "green", nil, p68, p69)
+293: 	return {
+294: 		["button"] = v70.button,
+295: 		["label"] = v70.text,
+
+===== Players.RansbloxScripts.PlayerScripts.UI.HalloweenEvent =====
+   ...
+1629: 		}
+1630: 	else
+1631: 		v496 = {
+1632: 			v477 - 16 - 44,
+1633: 			16,
+1634: 			v477 - 16,
+1635: 			60
+1636: 		}
+1637: 	end
+1638: 	v495(v488, v496, v494, 214)
+1639: 	if not v468 then
+1640: 		local v497 = v_u_48
+1641: 		local v498 = v_u_134(v489, ("Hallow Lantern guaranteed by your %*th draw. Anything you already own pays Soul Coins."):format(v_u_8.PITY), 20, Rect.new(28, 2, v477 - 28, v479 - 4), 206, {
+1642: 			["TextXAlignment"] = Enum.TextXAlignment.Left
+1643: 		})
+1644: 		local v499 = v498:FindFirstChildOfClass("UIGradient")
+1645: 		if v499 then
+1646: 			v499:Destroy()
+1647: 		end
+1648: 		v498.TextColor3 = v497 or v_u_48
+1649: 	end
+1650: 	if v473 then
+1651: 		local v500 = Rect.new(24, v479, v477 - 24, v479 + v480)
+1652: 		local v501 = v_u_36
+1653: 		local v502 = v_u_37
+   ...
+2602: 		}),
+2603: 		["pay"] = v_u_134(v771.button, "", 24, Rect.new(0, 0, 10, 10), p769 + 4, {
+2604: 			["TextXAlignment"] = Enum.TextXAlignment.Left
+2605: 		}),
+2606: 		["art"] = {}
+2607: 	}
+2608: end
+2609: local function v_u_796(p773, p774, p775, p776, p777, p778) -- name: paintPill
+2610: 	-- upvalues: (copy) v_u_46, (copy) v_u_47, (copy) v_u_40, (copy) v_u_41, (copy) v_u_34, (copy) v_u_35, (copy) v_u_146, (copy) v_u_29, (copy) v_u_15, (copy) v_u_739, (ref) v_u_708, (copy) v_u_16
+2611: 	local v779
+2612: 	if p774 == "done" then
+2613: 		v779 = { v_u_46, v_u_47 }
+2614: 	elseif p774 == "claim" then
+2615: 		v779 = { v_u_40, v_u_41 }
+2616: 	else
+2617: 		v779 = { v_u_34, v_u_35 }
+2618: 	end
+2619: 	p773.b.recolor(v779[1], v779[2], p774 == "claim")
+2620: 	if p774 == "next" then
+2621: 		v_u_146(p773.b.face, 0.7)
+2622: 	end
+2623: 	local v780 = p773.b.face.glow
+2624: 	if v780 then
+2625: 		if p774 ~= "claim" then
+2626: 			p778 = false
+2627: 		end
+2628: 		v780.Enabled = p778
+2629: 	end
+2630: 	for _, v781 in p773.b.face.face:GetDescendants() do
+2631: 		if not v781:IsA("ImageLabel") or v781.Name ~= "Layer" then
+2632: 			continue
+2633: 		end
+2634: 		v781.Visible = p774 ~= "next"
+2635: 	end
+2636: 	local v782 = p773.b.button.Size.Y.Offset
+2637: 	local v783 = p773.b.button.Size.X.Offset
+   ...
+2689: 		p773.pay.Text = p777
+2690: 		p773.pay.Visible = true
+2691: 		p773.pay.Position = UDim2.fromOffset(v793, v782 / 2 - 2)
+2692: 		p773.pay.Size = UDim2.fromOffset(v794, v782 / 2 - 4)
+2693: 		p773.pay.TextSize = v_u_708.phone and 28 or 24
+2694: 		p773.pay.TextTransparency = 0.35
+2695: 	else
+2696: 		p773.pay.Visible = false
+2697: 		p773.word.Position = UDim2.fromOffset(v793, 0)
+2698: 		p773.word.Size = UDim2.fromOffset(v794, v782)
+2699: 	end
+2700: end
+2701: local function v_u_804(p797, p798, p799, p800) -- name: claimPop
+2702: 	-- upvalues: (copy) v_u_14, (copy) v_u_15
+2703: 	if not v_u_14.reduced() then
+2704: 		local v801 = p797.b.face.flash
+2705: 		v801.BackgroundTransparency = 0.3
+2706: 		v_u_15.tw(v801, 0.3, {
+2707: 			["BackgroundTransparency"] = 1
+2708: 		}, Enum.EasingStyle.Linear)
+2709: 		local v802 = p797.b.button:FindFirstChild("FX")
+2710: 		if v802 and v802:IsA("UIScale") then
+2711: 			v802.Scale = 1.12
+2712: 			v_u_15.tw(v802, 0.3, {
+2713: 				["Scale"] = 1
+   ...
+2740: 	else
+2741: 		local v811 = v_u_134(v_u_809, "QUESTS", 52, Rect.new(456, 150, 900, 210), 20, {
+2742: 			["TextXAlignment"] = Enum.TextXAlignment.Left
+2743: 		})
+2744: 		local v812 = Rect.new(668, 176, 1400, 210)
+2745: 		local v813 = v_u_48
+2746: 		local v814 = {
+2747: 			["TextXAlignment"] = Enum.TextXAlignment.Left
+2748: 		}
+2749: 		if v_u_708.phone then
+2750: 			v_u_810 = nil
+2751: 		else
+2752: 			v_u_810 = v_u_134(v_u_809, "Every quest pays Soul Tickets. Claim them on the right.", 22, v812, 20, v814)
+2753: 			local v815 = v_u_810:FindFirstChildOfClass("UIGradient")
+2754: 			if v815 then
+2755: 				v815:Destroy()
+2756: 			end
+2757: 			v_u_810.TextColor3 = v813 or v_u_48
+2758: 		end
+2759: 		v807(v811, 0)
+2760: 		if v_u_810 then
+2761: 			v807(v_u_810, 0)
+2762: 		end
+2763: 	end
+2764: 	local v_u_816 = nil
+   ...
+2776: 			local v824 = v_u_821
+2777: 			local v825, v826 = pcall(v822, v823, v824)
+
+===== Players.RansbloxScripts.PlayerScripts.UI.RivalsTraits =====
+   ...
+1538: 			elseif v_u_285 or v_u_202 then
+1539: 				return
+1540: 			else
+1541: 				local v456 = p_u_188()
+1542: 				local v457 = v456 and v456.Items
+1543: 				if v457 then
+1544: 					v457 = v456.Items[v_u_192]
+1545: 				end
+1546: 				if v457 then
+1547: 					v457 = v_u_7.trait((v457.traits or {})[v_u_193] or "")
+1548: 				end
+1549: 				if v457 and v_u_39[v457.id] then
+1550: 					v_u_20.toast(("This slot already has %*, one you\'re after!"):format(v457.name), "good")
+1551: 					return
+1552: 				elseif next(v_u_39) == nil then
+1553: 					v_u_20.toast("Tick the traits AUTO stops on first (on the right).", "bad")
+1554: 					return
+1555: 				else
+1556: 					local v458 = p_u_188()
+1557: 					local v459
+1558: 					if v458 then
+1559: 						local v460 = v458.Tokens
+1560: 						v459 = type(v460) ~= "number" and 0 or v458.Tokens
+1561: 					else
+1562: 						v459 = 0
+
+===== Players.RansbloxScripts.PlayerScripts.Vendor.WindShake.Octree.OctreeNode =====
+   ...
+82: 					local v29 = v24.Parent
+83: 					if not v29 then
+84: 						error("CurrentFrom.Parent doesn\'t exist.")
+85: 					end
+86: 					local v30 = v29.SubRegions
+87: 					if v30[v28] ~= v24 then
+88: 						error("Failed equality check.")
+89: 					end
+90: 					v30[v28] = nil
+91: 				end
+92: 				local v31 = v22.Nodes
+93: 				if v31[p14] then
+94: 					error("CurrentTo.Nodes already has a node here.")
+95: 				end
+96: 				v31[p14] = p14
+97: 				v22.NodeCount = v22.NodeCount + 1
+98: 				v24 = v24.Parent
+99: 				v22 = v22.Parent
+100: 			end
+101: 		else
+102: 			v23 = v22
+103: 			while v22 do
+104: 				local v32 = v22.Nodes
+105: 				if not v32[p14] then
+106: 					v32[p14] = p14
+
+===== ReplicatedStorage.Packets =====
+   ...
+64: 	["RankedChallenge"] = v1("RankedChallenge", v1.NumberF64):Response(v1.Boolean8, v1.String):RateLimit(2, 5),
+65: 	["RankedOffer"] = v1("RankedOffer", v1.NumberF64),
+66: 	["RankedAnswer"] = v1("RankedAnswer", v1.NumberF64, v1.Boolean8):RateLimit(3, 1),
+67: 	["HalloweenAct"] = v1("HalloweenAct", v1.String, v1.String):Response(v1.Boolean8, v1.String, v1.StringLong):RateLimit(4, 1),
+68: 	["AfkRejoin"] = v1("AfkRejoin"):RateLimit(1, 30),
+69: 	["HallMove"] = v1("HallMove", v1.Boolean8):Response(v1.Boolean8, v1.String):RateLimit(2, 3),
+70: 	["RivalsEquip"] = v1("RivalsEquip", v1.String):Response(v1.Boolean8, v1.String):RateLimit(8, 1),
+71: 	["RivalsLock"] = v1("RivalsLock", v1.String, v1.Boolean8):Response(v1.Boolean8, v1.String):RateLimit(8, 1),
+72: 	["RivalsSell"] = v1("RivalsSell", v1.StringLong):Response(v1.Boolean8, v1.String, v1.NumberF64):RateLimit(2, 1),
+73: 	["RivalsFeature"] = v1("RivalsFeature", v1.NumberU8, v1.String):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+74: 	["RivalsExchange"] = v1("RivalsExchange", v1.StringLong, v1.String):Response(v1.Boolean8, v1.String, v1.String):RateLimit(2, 1),
+75: 	["RivalsLoadout"] = v1("RivalsLoadout", v1.NumberU8, v1.Boolean8):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+76: 	["RivalsClaim"] = v1("RivalsClaim", v1.String, v1.String):Response(v1.Boolean8, v1.String, v1.StringLong):RateLimit(6, 1),
+77: 	["RivalsMail"] = v1("RivalsMail", v1.String, v1.String):Response(v1.Boolean8, v1.String, v1.StringLong):RateLimit(8, 1),
+78: 	["RivalsNotice"] = v1("RivalsNotice", v1.String),
+79: 	["RivalsLeftSeen"] = v1("RivalsLeftSeen"):RateLimit(1, 5),
+80: 	["RivalsMatch"] = v1("RivalsMatch", v1.StringLong),
+81: 	["RivalsPulled"] = v1("RivalsPulled", v1.StringLong),
+82: 	["RivalsBuy"] = v1("RivalsBuy", v1.String, v1.String):Response(v1.Boolean8, v1.String):RateLimit(4, 1),
+83: 	["RivalsWear"] = v1("RivalsWear", v1.String, v1.String):Response(v1.Boolean8, v1.String):RateLimit(6, 1),
+84: 	["RivalsEmote"] = v1("RivalsEmote", v1.String):RateLimit(2, 1),
+85: 	["RivalsEmoted"] = v1("RivalsEmoted", v1.NumberF64, v1.String),
+86: 	["RivalsRobux"] = v1("RivalsRobux", v1.String):Response(v1.Boolean8, v1.String):RateLimit(2, 2),
+87: 	["RivalsGiftPass"] = v1("RivalsGiftPass", v1.NumberF64):Response(v1.Boolean8, v1.String):RateLimit(2, 2),
+88: 	["RivalsCode"] = v1("RivalsCode", v1.String):Response(v1.Boolean8, v1.String, v1.String):RateLimit(3, 5),
+
+===== ReplicatedStorage.Bey.Abilities =====
+   ...
+310: 			["ai"] = nil,
+311: 			["fx"] = nil,
+312: 			["phases"] = {
+313: 				{
+314: 					["len"] = 120,
+315: 					["lunge"] = nil,
+316: 					["path"] = nil,
+317: 					["rush"] = true,
+318: 					["vmax"] = 1.6,
+319: 					["hit"] = nil,
+320: 					["lunge"] = {
+321: 						["imp"] = 6,
+322: 						["aim"] = "rival"
+323: 					},
+324: 					["path"] = {
+325: 						["shape"] = "rose",
+326: 						["r0"] = 0.4,
+327: 						["k"] = 2,
+328: 						["w"] = 2,
+329: 						["centre"] = "rival",
+330: 						["chase"] = true
+331: 					},
+332: 					["hit"] = {
+333: 						["mult"] = 1.15,
+334: 						["stack"] = 0.1,
+   ...
+391: 			["ai"] = nil,
+392: 			["fx"] = nil,
+393: 			["phases"] = {
+394: 				{
+395: 					["len"] = 14,
+396: 					["lunge"] = nil,
+397: 					["home"] = 4,
+398: 					["rush"] = true,
+399: 					["hit"] = nil,
+400: 					["follow"] = true,
+401: 					["lunge"] = {
+402: 						["imp"] = 11,
+403: 						["aim"] = "rival"
+404: 					},
+405: 					["hit"] = {
+406: 						["mult"] = 1.05,
+407: 						["dmg"] = 0.8,
+408: 						["knock"] = 1,
+409: 						["stun"] = 0.1,
+410: 						["next"] = true
+411: 					}
+412: 				},
+413: 				{
+414: 					["len"] = 40,
+415: 					["path"] = nil,
+   ...
+450: 						["chase"] = true
+451: 					}
+452: 				},
+453: 				{
+454: 					["len"] = 22,
+455: 					["lunge"] = nil,
+456: 					["home"] = 7,
+457: 					["rush"] = true,
+458: 					["power"] = 1.2,
+459: 					["hit"] = nil,
+460: 					["lunge"] = {
+461: 						["imp"] = 16,
+462: 						["aim"] = "rival"
+463: 					},
+464: 					["hit"] = {
+465: 						["mult"] = 1.3,
+466: 						["dmg"] = 0.8,
+467: 						["knock"] = 6,
+468: 						["stun"] = 0.3
+469: 					}
+470: 				}
+471: 			},
+472: 			["ai"] = {
+473: 				{
+474: 					["when"] = "close",
+   ...
+543: 					["len"] = 200,
+544: 					["lunge"] = nil,
+545: 					["reflect"] = true,
+546: 					["rush"] = true,
+547: 					["vmax"] = 2.2,
+548: 					["drive"] = 2,
+549: 					["power"] = 1.15,
+550: 					["banks"] = 8,
+551: 					["bankSpin"] = 0.008,
+552: 					["hit"] = nil,
+553: 					["lunge"] = {
+554: 						["imp"] = 17,
+555: 						["aim"] = "stick"
+556: 					},
+557: 					["hit"] = {
+558: 						["pow"] = 3,
+559: 						["bank"] = 0.06,
+560: 						["knock"] = 4,
+561: 						["max"] = 9,
+562: 						["gap"] = 12
+563: 					}
+564: 				},
+565: 				{
+566: 					["len"] = 26,
+567: 					["lift"] = nil,
+   ...
+690: 			["phases"] = {
+691: 				{
+692: 					["len"] = 100,
+693: 					["lunge"] = nil,
+694: 					["path"] = nil,
+695: 					["rush"] = true,
+696: 					["vmax"] = 2.6,
+697: 					["drive"] = 2.4,
+698: 					["amax"] = 2,
+699: 					["hit"] = nil,
+700: 					["lunge"] = {
+701: 						["imp"] = 7,
+702: 						["aim"] = "rival"
+703: 					},
+704: 					["path"] = {
+705: 						["shape"] = "rose",
+706: 						["r0"] = 0.4,
+707: 						["k"] = 2,
+708: 						["w"] = 2.4,
+709: 						["centre"] = "rival",
+710: 						["chase"] = true
+711: 					},
+712: 					["hit"] = {
+713: 						["mult"] = 1.15,
+714: 						["stack"] = 0.1,
+   ...
+782: 			["ai"] = nil,
+783: 			["fx"] = nil,
+784: 			["phases"] = {
+785: 				{
+786: 					["len"] = 12,
+787: 					["lunge"] = nil,
+788: 					["home"] = 4,
+789: 					["rush"] = true,
+790: 					["hit"] = nil,
+791: 					["follow"] = true,
+792: 					["lunge"] = {
+793: 						["imp"] = 13,
+794: 						["aim"] = "rival"
+795: 					},
+796: 					["hit"] = {
+797: 						["mult"] = 1.05,
+798: 						["knock"] = 1,
+799: 						["stun"] = 0.1,
+800: 						["next"] = true
+801: 					}
+802: 				},
+803: 				{
+804: 					["len"] = 30,
+805: 					["path"] = nil,
+806: 					["rush"] = true,
+   ...
+841: 						["chase"] = true
+842: 					}
+843: 				},
+844: 				{
+845: 					["len"] = 20,
+846: 					["lunge"] = nil,
+847: 					["home"] = 7,
+848: 					["rush"] = true,
+849: 					["power"] = 1.2,
+850: 					["hit"] = nil,
+851: 					["lunge"] = {
+852: 						["imp"] = 19,
+853: 						["aim"] = "rival"
+854: 					},
+855: 					["hit"] = {
+856: 						["mult"] = 1.3,
+857: 						["knock"] = 6,
+858: 						["stun"] = 0.3
+859: 					}
+860: 				}
+861: 			},
+862: 			["ai"] = {
+863: 				{
+864: 					["whe
+
+===== ReplicatedStorage.Bey.Launch =====
+1: local v1 = require(script.Parent.Sim)
+2: local v_u_2 = require(script.Parent.Cosmetics)
+3: local v_u_3 = require(script.Parent.PartCatalog)
+4: local v_u_25 = {
+5: 	["STYLES"] = v1.STYLES,
+6: 	["PERFECT"] = 1.05,
+7: 	["AIM_MIN"] = 0.1,
+8: 	["AIM_MAX"] = 0.85,
+9: 	["STANCE"] = table.freeze({
+10: 		["BeyLauncher"] = "Power",
+11: 		["SpeedLauncher"] = "Rush",
+12: 		["HeavyLauncher"] = "Upper",
+13: 		["SwordLauncher"] = "Bank",
+14: 		["LightLauncher"] = "Stamina"
+15: 	}),
+16: 	["SIGNATURE"] = table.freeze({
+17: 		["rantaro"] = "Leap",
+18: 		["shu"] = "Spin",
+19: 		["lui"] = "Slam",
+20: 		["wakiya"] = "Bank",
+21: 		["daigo"] = "Upper"
+22: 	}),
+
+===== ReplicatedStorage.Bey.LauncherCatalog =====
+1: local v_u_1 = {}
+2: local v2 = table.freeze
+3: local v3 = {
+4: 	["BeyLauncher"] = {
+5: 		["display"] = "Bey Launcher",
+6: 		["models"] = nil,
+7: 		["pull"] = "string",
+8: 		["mounts"] = nil,
+9: 		["stats"] = nil,
+10: 		["blurb"] = "The standard string launcher, with a bit of every stat.",
+11: 		["models"] = {
+12: 			["R"] = "BeyLauncherR",
+13: 			["L"] = "BeyLauncherL"
+14: 		},
+15: 		["mounts"] = { "B", "L", "R" },
+16: 		["stats"] = table.freeze({
+17: 			["power"] = 3,
+18: 			["speed"] = 2,
+19: 			["control"] = 3,
+20: 			["stability"] = 2
+21: 		})
+22: 	},
+23: 	["SpeedLauncher"] = {
+24: 		["display"] = "Speed Launcher",
+25: 		["models"] = nil,
+   ...
+175: 		})
+176: 	}
+177: }
+178: v_u_1.Accessories = v6(v7)
+179: v_u_1.MOUNTS = table.freeze({ "B", "L", "R" })
+180: v_u_1.MOUNT_NAMES = table.freeze({
+181: 	["B"] = "Back",
+182: 	["L"] = "Left",
+183: 	["R"] = "Right"
+184: })
+185: local v_u_8 = {}
+186: for v9, v10 in {
+187: 	["BeyLauncher/L/CarabinerGrip/gripPort"] = { "AngleCompass", "PowerTrigger", "WeightDamper" },
+188: 	["BeyLauncher/L/KnuckleGrip/gripPort"] = { "AngleCompass", "PowerTrigger", "WeightDamper" },
+189: 	["BeyLauncher/L/LauncherGrip/gripPort1"] = { "AngleCompass", "PowerTrigger", "WeightDamper" },
+190: 	["BeyLauncher/L/LauncherGrip/gripPort2"] = { "AngleCompass", "WeightDamper" },
+191: 	["BeyLauncher/R/CarabinerGrip/gripPort"] = { "PowerTrigger", "WeightDamper" },
+192: 	["BeyLauncher/R/KnuckleGrip/gripPort"] = { "PowerTrigger", "WeightDamper" },
+193: 	["BeyLauncher/R/LauncherGrip/gripPort1"] = { "PowerTrigger", "WeightDamper" },
+194: 	["BeyLauncher/R/LauncherGrip/gripPort2"] = { "AngleCompass", "WeightDamper" },
+195: 	["HeavyLauncher/L/CarabinerGrip/gripPort"] = { "AngleCompass", "PowerTrigger", "WeightDamper" },
+196: 	["HeavyLauncher/L/KnuckleGrip/gripPort"] = { "AngleCompass", "PowerTrigger", "WeightDamper" },
+197: 	["HeavyLauncher/L/LauncherGrip/gripPort1"] = { "AngleCompass", "PowerTrigger", "WeightDamper" },
+198: 	["HeavyLauncher/L/LauncherGrip/gripPort2"] = { "AngleCompass", "WeightDamper" },
+199: 	["HeavyLauncher/R/CarabinerGrip/gripPort"] = { "AngleCompass", "PowerTrigger", "WeightDamper" },
+200: 	["HeavyLauncher/R/KnuckleGrip/gripPort"] = { "AngleCompass", "PowerTrigger", "WeightDamper" },
+201: 	["HeavyLauncher/R/LauncherGrip/gripPort1"] = { "AngleCompass", "PowerTrigger", "WeightDamper" },
+202: 	["HeavyLauncher/R/LauncherGrip/gripPort2"] = { "AngleCompass", "WeightDamper" },
+203: 	["LightLauncher/L/CarabinerGrip/gripPort"] = { "AngleCompass", "PowerTrigger" },
+204: 	["LightLauncher/L/KnuckleGrip/gripPort"] = { "AngleCompass", "PowerTrigger" },
+205: 	["LightLauncher/L/LauncherGrip/gripPort1"] = { "PowerTrigger" },
+206: 	["LightLauncher/L/LauncherGrip/gripPort2"] = { "AngleCompass", "PowerTrigger" },
+   ...
+215: 	["SpeedLauncher/R/KnuckleGrip/gripPort"] = { "PowerTrigger", "WeightDamper" },
+216: 	["SpeedLauncher/R/LauncherGrip/gripPort1"] = { "PowerTrigger", "WeightDamper" },
+217: 	["SpeedLauncher/R/LauncherGrip/gripPort2"] = { "AngleCompass", "WeightDamper" }
+218: } do
+219: 	local v11 = {}
+220: 	for _, v12 in v10 do
+221: 		v11[v12] = true
+222: 	end
+223: 	v_u_8[v9] = table.freeze(v11)
+224: end
+225: function v_u_1.default() -- name: default
+226: 	return {
+227: 		["launcher"] = "BeyLauncher",
+228: 		["grip"] = "LauncherGrip",
+229: 		["mount"] = "B",
+230: 		["accessories"] = nil,
+231: 		["accessories"] = {}
+232: 	}
+233: end
+234: function v_u_1.fits(p13, p14, p15) -- name: fits
+235: 	-- upvalues: (copy) v_u_8
+236: 	local v16 = v_u_8[p13.launcher .. "/" .. p13.mount .. "/" .. p13.grip .. "/" .. p14]
+237: 	if v16 then
+238: 		v16 = v16[p15]
+239: 	end
+   ...
+269: 			end
+270: 			v18.accessories[v24] = v25
+271: 		end
+272: 	end
+273: 	return v18
+274: end
+275: function v_u_1.launcherFor(p26, p27) -- name: launcherFor
+276: 	-- upvalues: (copy) v_u_1
+277: 	local v28 = v_u_1.Launchers[p26.launcher]
+278: 	if v28 and v28.models[p27 and "L" or "R"] then
+279: 		return p26.launcher, v28
+280: 	else
+281: 		return "BeyLauncher", v
+
+===== ReplicatedStorage.Bey.Loadout =====
+1: local v_u_1 = require(script.Parent.LauncherCatalog)
+2: local v_u_2 = require(script.Parent.PartCatalog)
+3: local v_u_3 = require(script.Parent.Parent.Rivals.Catalog)
+4: local v_u_51 = {
+5: 	["STARTER"] = table.freeze({
+6: 		["launcher"] = "BeyLauncher",
+7: 		["grip"] = "LauncherGrip",
+8: 		["combo"] = nil,
+9: 		["combo"] = table.freeze({
+10: 			["layer"] = "VictoryValkyrie",
+11: 			["disc"] = "Boost",
+12: 			["driver"] = "Variable"
+13: 		})
+14: 	}),
+15: 	["MAX_ACCESSORY"] = 3,
+16: 	["starter"] = function() -- name: starter
+17: 		-- upvalues: (copy) v_u_51
+18: 		local v4 = v_u_51.STARTER
+
+===== ReplicatedStorage.Bey.Net =====
+   ...
+124: 	"rideTime",
+125: 	"rush",
+126: 	"guard",
+127: 	"absorb",
+128: 	"upper",
+129: 	"counter",
+130: 	"stun",
+131: 	"prevB",
+132: 	"outTick",
+133: 	"wobble",
+134: 	"lip",
+135: 	"down",
+136: 	"aimA",
+137: 	"aimD",
+138: 	"aimS",
+139: 	"press",
+140: 	"ripTick",
+141: 	"ripQ",
+142: 	"landTick",
+143: 	"clashS",
+144: 	"clashC",
+145: 	"clashG",
+146: 	"ab",
+147: 	"abPh",
+148: 	"abT",
+149: 	"abHits",
+150: 	"abHitCd",
+
+===== ReplicatedStorage.Bey.Sim =====
+   ...
+402: 	v88.upper = 0
+403: 	v88.counter = 0
+404: 	v88.stun = 0
+405: 	v88.lip = 0
+406: 	v88.down = 0
+407: 	local v122 = v_u_8.LAD_BASE + v_u_8.LAD_FREE * (1 - v55.grip)
+408: 	v88.lad = math.clamp(v122, 0.4, 3)
+409: 	v88.prevB = 0
+410: 	v88.prevIn = false
+411: 	v88.launched = false
+412: 	v88.out = nil
+413: 	v88.outTick = 0
+414: 	v88.aimA = p50 == 1 and 3.141592653589793 or 0
+415: 	v88.aimD = 0.6
+416: 	v88.aimS = 0
+417: 	v88.press = 0
+418: 	v88.ripTick = 0
+419: 	v88.ripQ = 0
+420: 	v88.landTick = 0
+421: 	v88.beats = 0
+422: 	v88.beatPerf = 0
+423: 	v88.beatSum = 0
+424: 	v88.boostEnd = 0
+425: 	v88.knockT = 99
+426: 	local v123 = v63.power
+427: 	local v124 = (type(v123) ~= "number" or v123 ~= v123) and 0 or v123
+428: 	v88.gPow = math.clamp(v124, 0, 10)
+   ...
+949: 		local v268 = v264.awakeM
+950: 		local v269 = v264.team
+951: 		local v270 = v264.won
+952: 		v265.special = v266
+953: 		v265.awoke = v267
+954: 		v265.awakeM = v268
+955: 		v265.team = v269
+956: 		v265.won = v270
+957: 		v265.springCut = v264.springCut
+958: 		p254.beys[p255] = v265
+959: 	end
+960: 	local v271 = p254.beys[p255]
+961: 	v271.aimA = p256 % 6.283185307179586
+962: 	v271.aimD = math.clamp(p257, 0.1, 0.85)
+963: 	v271.aimS = table.find(v_u_207, p258) or 1
+964: end
+965: local function v_u_280(p272, p273) -- name: ripQuality
+966: 	-- upvalues: (copy) v_u_8
+967: 	local v274 = math.abs(p273)
+968: 	local v275 = p272.gCtl * 0.4
+969: 	local v276 = v_u_8.RIP_PERFECT + v275
+970: 	local v277 = v_u_8.RIP_GREAT + v275
+971: 	local v278 = v_u_8.RIP_GOOD + v275
+972: 	if v274 <= v276 then
+973: 		return 1.05, "Perfect"
+974: 	end
+975: 	if v274 <= v277 then
+   ...
+1163: 			["slot"] = p330.slot,
+1164: 			["n"] = 3 - p331,
+1165: 			["perfect"] = v336,
+1166: 			["tick"] = p329.tick
+1167: 		}
+1168: 		local v340 = p329.events
+1169: 		table.insert(v340, v339)
+1170: 	end
+1171: end
+1172: local function v_u_401(p342, p343, p344) -- name: launchStep
+1173: 	-- upvalues: (copy) v_u_8, (copy) v_u_341, (copy) v_u_9, (copy) v_u_286, (copy) v_u_207, (copy) v_u_206, (copy) v_u_250
+1174: 	for v345, v346 in p342.beys do
+1175: 		if v346.aimS <= 0 or v346.launched then
+1176: 			continue
+1177: 		end
+1178: 		local v347 = p342.ai[v345]
+1179: 		if v346.ripTick == 0 then
+1180: 			local v348 = v_u_8.RIP_TICK - 3 * v_u_8.RIP_BEAT
+1181: 			if v347 then
+1182: 				if v346.press == 0 then
+1183: 					local v349 = 2 + v_u_8.AI_SPREAD * (1 - v347.level)
+1184: 					local v350 = v_u_8.RIP_TICK
+1185: 					local v351 = p342.rng
+1186: 					local v352 = bit32.lshift(v351, 13)
+1187: 					local v353 = bit32.bxor(v351, v352)
+   ...
+1249: 			local v385 = nil
+1250: 			local v386 = nil
+1251: 			local v387, v388, v389, v390, v391, v392, v393, v394, v395, v396, v397
+1252: 			if v346.press > 0 then
+1253: 				local v398 = p342.tick
+1254: 				local v399 = v346.press
+1255: 				local v400 = v_u_8.RIP_TICK
+1256: 				if math.max(v399, v400) <= v398 then
+1257: 					v385, v386 = v_u_286(v346)
+1258: 					if v385 then
+1259: 						v346.ripTick = p342.tick
+1260: 						v346.ripQ = v385
+1261: 						v387 = v346.aimA
+1262: 						v388 = v346.aimD
+1263: 						if (v_u_206[v_u_207[v346.aimS] or "Power"] or v_u_206.Power).ring then
+1264: 							v389 = p343.ridgeRadius
+1265: 						else
+1266: 							v389 = math.clamp(v388, 0.1, 0.85) * p343.bowlRadius
+1267: 						end
+1268: 						v390 = math.cos(v387) * v389
+1269: 						v391 = math.sin(v387) * v389
+1270: 						v346.x = v390
+1271: 						v346.z = v391
+1272: 						if v346.tilt == 1 then
+1273: 							v392 = v346.aimA
+1274: 							v393 = math.cos(v392) * p343.ridgeRadius
+1275: 							v394 = v346.aimA
+1276: 							v395 = math.sin(v394) * p343.ridgeRadius
+1277: 							v346.x = v393
+1278: 							v346.z = v395
+1279: 						end
+1280: 						v396 = {
+1281: 							["kind"] = "Rip",
+1282: 							["slot"] = nil,
+1283: 							["q"] = nil,
+1284: 							["grade"] = nil,
+1285: 							["x"] = nil,
+1286: 							["z"] = nil,
+1287: 							["bank"] = nil,
+   ...
+1295: 						}
+1296: 						v397 = p342.events
+1297: 						table.insert(v3
+
+===== ReplicatedStorage.Bey.TipSkills =====
+1: local v1 = Color3.fromRGB(255, 92, 72)
+2: local v2 = Color3.fromRGB(255, 205, 70)
+3: local v3 = Color3.fromRGB(185, 120, 255)
+4: local v4 = Color3.fromRGB(80, 165, 255)
+5: local v_u_5 = {
+6: 	["RushDash"] = {
+7: 		["id"] = "RushDash",
+8: 		["name"] = "Rush Dash",
+9: 		["type"] = "Attack",
+10: 		["press"] = "tap",
+11: 		["cd"] = 2.6,
+12: 		["color"] = nil,
+13: 		["desc"] = "A quick dash where you aim. Your next hit lands harder.",
+14: 		["color"] = v1
+15: 	},
+16: 	["XtremeDash"] = {
+17: 		["id"] = "XtremeDash",
+18: 		["name"] = "Xtreme Dash",
+19: 		["type"] = "Attack",
+20: 		["press"] = "tap",
+21: 		["cd"] = 4,
+22: 		["color"] = nil,
+23: 		["desc"] = "A charge that homes in on the rival. Hits very hard but costs spin.",
+24: 		["color"] = v1
+25: 	},
+   ...
+31: 		["cd"] = 4.6,
+32: 		["color"] = nil,
+33: 		["desc"] = "Hop and slam down: the shockwave deals burst damage and pushes nearby rivals back.",
+34: 		["color"] = v1
+35: 	},
+36: 	["AssaultCombo"] = {
+37: 		["id"] = "AssaultCombo",
+38: 		["name"] = "Assault Combo",
+39: 		["type"] = "Attack",
+40: 		["press"] = "tap",
+41: 		["cd"] = 3.8,
+42: 		["color"] = nil,
+43: 		["desc"] = "Two dashes: one where you aim, then one straight at the rival.",
+44: 		["color"] = v1
+45: 	},
+46: 	["SpiralCutter"] = {
+47: 		["id"] = "SpiralCutter",
+48: 		["name"] = "Spiral Cutter",
+49: 		["type"] = "Attack",
+50: 		["press"] = "tap",
+51: 		["cd"] = 3.8,
+52: 		["color"] = nil,
+53: 		["desc"] = "Swings out wide and curls in to strike the rival from the side.",
+54: 		["color"] = v1
+55: 	},
+
+===== ReplicatedStorage.Bey.MoveText =====
+1: return table.freeze({
+2: 	["RushShoot"] = "A fast flower-shaped run through the centre: up to four hits, each one harder.",
+3: 	["FlashShoot"] = "Spirals out to the rim, hitting over and over and pushing the rival to the wall.",
+4: 	["JetShoot"] = "Bounces wall to wall, harder each bounce, then leaps and slams down on the rival.",
+5: 	["RushLaunch"] = "A very fast flower-shaped run round the rival: up to four hits, each one harder.",
+6: 	["FlashLaunch"] = "Spirals out round the rival at top speed, hitting over and over, then flashes in through it.",
+7: 	["GenesisJetShoot"] = "Bounces wall to wall where you aim, harder each bounce, then leaps and slams down on the rival.",
+8: 	["LostSpiral"] = "Circles the rival, then crashes in head-on: a big hit that knocks it far.",
+9: 	["SpiralShoot"] = "Spirals out to the rival\'s distance and circles there, hitting it up to twice.",
+10: 	["DragonCrush"] = "Bites the rival, then leaps and crashes down on it: big burst damage, throws it up.",
+11: 	["SaberStrike"] = "Holds the rival in place, then brings the sword down on it for burst damage.",
+12: 	["XStrike"] = "Sends the next hit back at its attacker, then steps back and cuts in hard.",
+13: 	["DualSabers"] = "Strikes twice. The second hit is much harder and knocks the rival far.",
+14: 	["PumpkinBomb"] = "Rushes in for a hit, then a pumpkin blast stuns the rival.",
+15: 	["SoulHarvest"] = "Three quick slashes at the rival; each hit steals a little of its spin.",
+16: 	["HeadlessHarvest"] = "Knocks the rival into the air, then the scythe comes down for big burst damage.",
+17: 	["ShakeShoot"] = "Zig-zags in three quick swerves that are hard to read, then hits hard.",
+18: 	["DarkShoot"] = "Three quick dashes straight at the rival, hitting up to three times.",
+19: 	["ScytheStrike"] = "Knocks the rival into the air, then the scythe comes down for big burst damage.",
+20: 	["BeastCharge"] = "A long, heavy stampede that chases the rival down and hits up to three times.",
+21: 	["BeastHold"] = "Holds the centre: takes 65% less burst damage and knocks hitters back. Costs spin.",
+22: 	["CanineCharge"] = "Three growing shockwaves slow the rival and push it back, then it charges in.",
+23: 	["BlastBeat"] = "Loops round the rival, hitting it up to three times.",
+24: 	["CrescendoStrike"] = "Each hit lands harder than the last, and the fourth sets off a big blast.",
+25: 	["HarmonicJudgement"] = "From the centre, it calls down nine strikes that chase the rival.",
+26: 	["FangCrush"] = "Bites the rival and carries it as you steer, then flings it away with a blast.",
+27: 	["StormShoot"] = "Whirls round the bowl in a looping storm, hitting the rival up to three times.",
+28: 	["HowlingStrike"] = "A howl stuns the rival, then it lunges in for a huge hit that knocks it far.",
+29: 	["CircletShoot"] = "Charges round the bowl in a four-leaf loop, hitting the rival up to three times.",
+30: 	["LabyrinthCharge"] = "Grabs the rival, pounds it six times, then throws it.",
+31: 	["MinoanRage"] = "Three furious charges at the rival, then a blast from the floor throws it up.",
+32: 	["SolarFlare"] = "A fire dash where you aim. A hit burns the rival: burst damage over time.",
+33: 	["CoronaRing"] = "Laps the bowl in a ring of fire that burns the rival. Press again to dash out.",
+34: 	["Supernova"] = "Charges up, then a huge blast burns the rival. Its hits are harder for a while.",
+35: 	["ChainShoot"] = "Sends the next hit back at its attacker, then lashes it twice, taking its spin.",
+36: 	["ChainProtection"] = "Guards until it\'s hit three times, then bursts out and pushes the rival back.",
+37: 	["TriGuard"] = "Locks a nearby rival in place, then strikes it three times.",
+38: 	["HornShoot"] = "For a while, every touch throws the rival up with burst damage, up to four times.",
+39: 	["SoleStrike"] = "Sends the next hit back at its attacker, then sidesteps and drives back in hard.",
+40: 	["ManeGuard"] = "Stands firm in a whirlpool that drags the rival in and steals its spin.",
+41: 
+
+===== ReplicatedStorage.Config.UiImages =====
+   ...
+39: 	["gm3_leaderboard"] = 106473884966325,
+40: 	["gm3_party"] = 139722337532395,
+41: 	["gm3_play"] = 108428565928419,
+42: 	["gm3_profile"] = 113136518162907,
+43: 	["gm3_quests"] = 122786017159914,
+44: 	["gm3_rewards"] = 109880266233772,
+45: 	["gm3_settings"] = 104819950257263,
+46: 	["gm3_spectate"] = 132971545769765,
+47: 	["gm3_store"] = 79948691349197,
+48: 	["gm3_trade"] = 118260660782510,
+49: 	["gm3_update"] = 99675608327560,
+50: 	["gm4_boost"] = 140501280693255,
+51: 	["gm4_claim"] = 128218102092082,
+52: 	["gm4_coin"] = 123669923225274,
+53: 	["gm4_dice"] = 131188960685134,
+54: 	["gm4_effect"] = 121492020409150,
+55: 	["gm4_emote"] = 99909059142512,
+56: 	["gm4_gem"] = 73026884001265,
+57: 	["gm4_lock"] = 77399569213902,
+58: 	["gm4_luck"] = 104782350047682,
+59: 	["gm4_sell"] = 132603207817427,
+60: 	["gm4_ticket"] = 107671491372599,
+61: 	["gm4_timer"] = 95937340336967,
+62: 	["gm4_title"] = 135240663012334,
+63: 	["gm4_upgrade"] = 129550447079799,
+
+===== ReplicatedStorage.Config.TelemetryIds =====
+   ...
+192: 	"Tab_Surname",
+193: 	"Tab_ladder",
+194: 	"Tab_week",
+195: 	"Tab_Layers",
+196: 	"Tab_Grips",
+197: 	"Tab_Launchers",
+198: 	"Tab_Paint",
+199: 	"Back",
+200: 	"Next",
+201: 	"Done",
+202: 	"Continue",
+203: 	"Cancel",
+204: 	"Claim",
+205: 	"ClaimAll",
+206: 	"Claimed",
+207: 	"InProgress",
+208: 	"Buy",
+209: 	"ComingSoon",
+210: 	"Equip",
+211: 	"Equipped",
+212: 	"EquipBest",
+213: 	"Merge",
+214: 	"MaxLevel",
+215: 	"StarUp",
+216: 	"MaxStars",
+217: 	"Evolve",
+218: 	"Roll",
