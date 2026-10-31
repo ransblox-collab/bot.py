@@ -1,0 +1,611 @@
+keys: MeleeHit, MeleeLockUntil, SwingHit, Melee, Remote, FireServer
+scripts scanned: 198
+
+===== Players.Ranscripts.PlayerScripts.Controllers.ItemSpawnerController =====
+   ...
+178: 					if v51 then
+179: 						v_u_7:Create(v51, v_u_10, {
+180: 							["Scale"] = 0.7
+181: 						}):Play()
+182: 					end
+183: 				end
+184: 			end
+185: 		elseif p45.KeyCode == Enum.KeyCode.ButtonA and v_u_2.GamepadCursorEnabled then
+186: 			v47 = v_u_14
+187: 		end
+188: 		if v47 then
+189: 			v_u_33(v47)
+190: 			v_u_20:FireServer(v47)
+191: 		end
+192: 	end)
+193: 	v_u_8.InputEnded:Connect(function(p52)
+194: 		-- upvalues: (ref) v_u_15, (ref) v_u_7, (ref) v_u_11
+195: 		if p52.UserInputType == Enum.UserInputType.Touch and v_u_15 then
+196: 			local v53 = v_u_15
+197: 			v_u_15 = nil
+198: 			if v53.Parent then
+199: 				local v54 = v53:FindFirstChildOfClass("SurfaceGui")
+200: 				local v55
+201: 				if v54 then
+202: 					v55 = v54:FindFirstChild("Root")
+   ...
+217: 						["Scale"] = 1
+218: 					}):Play()
+219: 				end
+220: 			end
+221: 		end
+222: 	end)
+223: 	v_u_8.TouchTapInWorld:Connect(function(p56, p57)
+224: 		-- upvalues: (ref) v_u_40, (ref) v_u_18, (ref) v_u_20
+225: 		if not p57 then
+226: 			local v58 = v_u_40(p56.X, p56.Y)
+227: 			if v58 then
+228: 				v_u_18:Play()
+229: 				v_u_20:FireServer(v58)
+230: 			end
+231: 		end
+232: 	end)
+233: end
+234: return v12
+
+===== Players.Ranscripts.PlayerScripts.Controllers.ToolGUIController =====
+   ...
+128: 			return v52.Position
+129: 		else
+130: 			return v50.Origin + v50.Direction * 1000
+131: 		end
+132: 	else
+133: 		return v_u_12:GetMouse().Hit.Position
+134: 	end
+135: end
+136: local function v_u_58(p54, p55) -- name: activate
+137: 	-- upvalues: (copy) v_u_53
+138: 	local v56 = p54:GetAttribute("Cooldown_" .. p55.Id)
+139: 	if (typeof(v56) ~= "number" and 0 or v56) <= workspace:GetServerTimeNow() and p54:GetAttribute("Disabled_" .. p55.Id) ~= true then
+140: 		local v57 = p54:FindFirstChild("Remote")
+141: 		if v57 and v57:IsA("RemoteEvent") then
+142: 			v57:FireServer(p55.Key, (v_u_53(p55)))
+143: 		end
+144: 	end
+145: end
+146: local function v_u_62(p59) -- name: releaseHolder
+147: 	-- upvalues: (copy) v_u_16
+148: 	for _, v60 in v_u_16 do
+149: 		if not v60.holders[p59] then
+150: 			continue
+151: 		end
+152: 		v60.holders[p59] = nil
+153: 		local v61 = next(v60.holders) ~= nil
+154: 		v60.tool:SetAttribute("Held_" .. v60.id, v61 and true or nil)
+
+===== Players.Ranscripts.PlayerScripts.Controllers.FxController.LightsaberFx =====
+   ...
+457: 						v_u_161.hum:Play()
+458: 					end
+459: 				end
+460: 			end
+461: 			v_u_166(p_u_156:GetAttribute("SaberOut") == true)
+462: 			local v167 = v_u_161.connections
+463: 			local v168 = p_u_156:GetAttributeChangedSignal("SaberOut")
+464: 			table.insert(v167, v168:Connect(function()
+465: 				-- upvalues: (copy) v_u_166, (copy) p_u_156
+466: 				v_u_166(p_u_156:GetAttribute("SaberOut") == true)
+467: 			end))
+468: 			local v169 = v_u_161.connections
+469: 			local v170 = p_u_157:GetAttributeChangedSignal("MeleeLockUntil")
+470: 			table.insert(v169, v170:Connect(function()
+471: 				-- upvalues: (copy) p_u_157, (copy) v_u_161
+472: 				local v_u_171 = p_u_157:GetAttribute("MeleeLockUntil")
+473: 				local v172 = typeof(v_u_171) ~= "number" and 0 or v_u_171 - workspace:GetServerTimeNow()
+474: 				if v_u_161.trail and (v172 > 0 and v172 <= 2) then
+475: 					v_u_161.trail.Enabled = true
+476: 					v_u_161.trailUntil = v_u_171
+477: 					task.delay(v172, function()
+478: 						-- upvalues: (ref) v_u_161, (copy) v_u_171
+479: 						if v_u_161.trailUntil == v_u_171 and v_u_161.trail then
+480: 							v_u_161.trail.Enabled = false
+481: 						end
+482: 					end)
+483: 				end
+484: 			end))
+
+===== Players.Ranscripts.PlayerScripts.Controllers.InventoryController =====
+   ...
+332: 				local v148 = v145[v147.Gear] or {
+333: 					["Name"] = nil,
+334: 					["Icon"] = "",
+335: 					["Name"] = v_u_9.Spaced(v147.Gear)
+336: 				}
+337: 				local v149 = v_u_139(v141, v146, v148.Name, v148.Icon)
+338: 				local v_u_150 = v_u_36.Skins[v147.Gear]
+339: 				v_u_130(v141, 0, "Default", v148.Icon, "The gear as it is.", false, v_u_150 == nil, true, function()
+340: 					-- upvalues: (copy) v_u_150, (ref) v_u_33
+341: 					if v_u_150 then
+342: 						local v151 = v_u_150
+343: 						if v_u_33 then
+344: 							v_u_33:FireServer("Unequip", v151)
+345: 						end
+346: 					end
+347: 				end).Parent = v149
+348: 				for v152, v_u_153 in v147.Entries do
+349: 					local v154 = v_u_28[v_u_153.Id]
+350: 					if not v154 then
+351: 						continue
+352: 					end
+353: 					local v155 = v_u_130
+354: 					local v156 = v154.Name
+355: 					local v157 = v154.Image
+356: 					local v158 = v154.Description or ""
+357: 					if v_u_153.From then
+358: 						if v158 == "" then
+359: 							v158 = ("From: %*"):format(v_u_153.From)
+360: 						else
+361: 							v158 = ("%*\nFrom: %*"):format(v158, v_u_153.From)
+362: 						end
+363: 					end
+364: 					v155(v141, v152, v156, v157, v158, v_u_37[v_u_153.Id] == true and true or v_u_153.New, v_u_153.Equipped, true, function()
+365: 						-- upvalues: (copy) v_u_153, (ref) v_u_33
+366: 						if not v_u_153.Equipped then
+367: 							local v159 = v_u_153.Id
+368: 							if v_u_33 then
+369: 								v_u_33:FireServer("Equip", v159)
+370: 							end
+371: 						end
+372: 					end).Parent = v149
+373: 					v144 = v144 + 1
+374: 				end
+375: 			end
+376: 		elseif v_u_36.Ready then
+377: 			local v160 = v_u_139(v141, 1, nil, nil)
+378: 			for v161, v_u_162 in v_u_9.InTab(v_u_36, v_u_28, v_u_35) do
+379: 				local v163 = v_u_28[v_u_162.Id]
+380: 				if not v163 then
+381: 					continue
+   ...
+387: 				if v_u_162.From then
+388: 					if v167 == "" then
+389: 						v167 = ("From: %*"):format(v_u_162.From)
+390: 					else
+391: 						v167 = ("%*\nFrom: %*"):format(v167, v_u_162.From)
+392: 					end
+393: 				end
+394: 				v164(v141, v161, v165, v166, v167, v_u_37[v_u_162.Id] == true and true or v_u_162.New, v_u_162.Equipped, false, function()
+395: 					-- upvalues: (copy) v_u_162, (ref) v_u_33
+396: 					local v168 = v_u_162.Equipped and "Unequip" or "Equip"
+397: 					local v169 = v_u_162.Id
+398: 					if v_u_33 then
+399: 						v_u_33:FireServer(v168, v169)
+400: 					end
+401: 				end).Parent = v160
+402: 				v144 = v144 + 1
+403: 			end
+404: 		end
+405: 		local v170 = v141.Empty
+406: 		local v171 = v_u_36.Ready
+407: 		if v171 then
+408: 			v171 = v144 == 0
+409: 		end
+410: 		v170.Visible = v171
+411: 		v_u_92()
+   ...
+431: 			v_u_173()
+432: 		else
+433: 			v_u_34 = true
+434: 			v_u_12.Take(v175.Gui)
+435: 			table.clear(v_u_37)
+436: 			for _, v176 in v_u_36.Items do
+437: 				if not v176.New then
+438: 					continue
+439: 				end
+440: 				v_u_37[v176.Id] = true
+441: 			end
+442: 			if next(v_u_37) ~= nil and v_u_33 then
+443: 				v_u_33:FireServer("Seen", nil)
+444: 			end
+445: 			v175.Root.Visible = true
+446: 			v_u_173()
+447: 			v175.Scale.Scale = 0.9
+448: 			v_u_5:Create(v175.Scale, v_u_22, {
+449: 				["Scale"] = 1
+450: 			}):Play()
+451: 		end
+452: 	else
+453: 		return
+454: 	end
+455: end
+
+===== Players.Ranscripts.PlayerScripts.Controllers.PlaytimeRewardController =====
+   ...
+708: 			v289 = v282.Name
+709: 		else
+710: 			v289 = v281.Product
+711: 		end
+712: 		v288.Text = v289
+713: 		v287.icon.Image = v281.Image
+714: 		v283.Visible = true
+715: 		v283.Parent = v275
+716: 		v_u_8.Attach(v283, v284:WaitForChild("Scale"), function()
+717: 			-- upvalues: (copy) v_u_280, (ref) v_u_45, (ref) v_u_40, (ref) v_u_37, (ref) v_u_36, (ref) v_u_3, (ref) v_u_35
+718: 			local v290 = v_u_280
+719: 			if v_u_45[v290] == "Ready" and v_u_40 then
+720: 				v_u_40:FireServer("Claim", v290)
+721: 			elseif v_u_45[v290] == "Claimed" then
+722: 				local v291 = v_u_37[v_u_36[v290].Product]
+723: 				if v291 and (v_u_45[v290] == "Claimed" and v291.RobloxId > 0) then
+724: 					v_u_3:PromptGamePassPurchase(v_u_35, v291.RobloxId)
+725: 				end
+726: 			end
+727: 		end, v_u_32)
+728: 		v_u_8.Attach(v285, v285:WaitForChild("Body"):WaitForChild("Scale"), function()
+729: 			-- upvalues: (copy) v_u_280, (ref) v_u_37, (ref) v_u_36, (ref) v_u_45, (ref) v_u_3, (ref) v_u_35
+730: 			local v292 = v_u_280
+731: 			local v293 = v_u_37[v_u_36[v292].Product]
+732: 			if v293 and (v_u_45[v292] == "Claimed" and v293.RobloxId > 0) then
+
+===== Players.Ranscripts.PlayerScripts.Controllers.GuildController =====
+   ...
+420: 	local v_u_221 = p217.templates:FindFirstChild("MemberRow"):Clone()
+421: 	v_u_221.Visible = true
+422: 	v_u_221.Parent = v220
+423: 	v_u_221.Name = "Member" .. p218
+424: 	v_u_221.LayoutOrder = p218
+425: 	local v222 = v_u_221:FindFirstChild("Kick")
+426: 	v_u_6.Attach(v222, v222:FindFirstChild("Body"):FindFirstChild("Scale"), function()
+427: 		-- upvalues: (copy) v_u_221, (ref) v_u_74, (ref) v_u_62
+428: 		local v223 = v_u_221:GetAttribute("UserId")
+429: 		if typeof(v223) == "number" then
+430: 			v_u_74 = "Kick"
+431: 			if v_u_62 then
+432: 				v_u_62:FireServer("Kick", v223, nil)
+433: 			end
+434: 		end
+435: 	end)
+436: 	v_u_78[p218] = v_u_221
+437: 	return v_u_221
+438: end
+439: local function v_u_258(p225) -- name: renderMine
+440: 	-- upvalues: (copy) v_u_127, (ref) v_u_61, (copy) v_u_7, (copy) v_u_59, (copy) v_u_57, (copy) v_u_8, (copy) v_u_54, (copy) v_u_46, (copy) v_u_36, (copy) v_u_55, (copy) v_u_56, (ref) v_u_69, (copy) v_u_12, (copy) v_u_27, (copy) v_u_26, (copy) v_u_29, (copy) v_u_28, (copy) v_u_23, (copy) v_u_22, (copy) v_u_25, (copy) v_u_24, (copy) v_u_14, (copy) v_u_58, (copy) v_u_224, (copy) v_u_78
+441: 	local _, v226, v227, v228 = v_u_127()
+442: 	if v226 and v227 then
+443: 		local v229 = v_u_127()
+444: 		local v230
+   ...
+588: 	v_u_269.Name = "Player" .. p266
+589: 	v_u_269.LayoutOrder = p266
+590: 	local v_u_270 = v_u_269:FindFirstChild("Invite")
+591: 	v_u_6.Attach(v_u_270, v_u_270:FindFirstChild("Body"):FindFirstChild("Scale"), function()
+592: 		-- upvalues: (copy) v_u_269, (ref) v_u_76, (copy) v_u_270, (ref) v_u_74, (ref) v_u_62
+593: 		local v271 = v_u_269:GetAttribute("UserId")
+594: 		if typeof(v271) == "number" then
+595: 			v_u_76[v271] = os.clock()
+596: 			v_u_270.Visible = false
+597: 			v_u_269:FindFirstChild("Invited").Visible = true
+598: 			v_u_74 = "Invite"
+599: 			if v_u_62 then
+600: 				v_u_62:FireServer("Invite", v271, nil)
+601: 			end
+602: 		end
+603: 	end)
+604: 	v_u_79[p266] = v_u_269
+605: 	return v_u_269
+606: end
+607: local function v_u_284(p273) -- name: renderInviteModal
+608: 	-- upvalues: (copy) v_u_2, (copy) v_u_59, (copy) v_u_57, (copy) v_u_272, (copy) v_u_76, (copy) v_u_7, (copy) v_u_79
+609: 	local v274 = {}
+610: 	for _, v275 in v_u_2:GetPlayers() do
+611: 		if v275 == v_u_59 or v275:GetAttribute(v_u_57.Id) ~= nil then
+612: 			continue
+   ...
+1422: 		if v451 and v_u_68 then
+1423: 			v_u_341(v451)
+1424: 			v_u_148()
+1425: 		end
+1426: 	end
+1427: 	local v453 = v450:WaitForChild("Body")
+1428: 	v_u_6.Attach(v450, v453:WaitForChild("Scale"), v452)
+1429: 	local v454 = v_u_433.leave
+1430: 	local function v455()
+1431: 		-- upvalues: (ref) v_u_74, (ref) v_u_62
+1432: 		v_u_74 = "Leave"
+1433: 		if v_u_62 then
+1434: 			v_u_62:FireServer("Leave", nil, nil)
+1435: 		end
+1436: 	end
+1437: 	local v456 = v454:WaitForChild("Body")
+1438: 	v_u_6.Attach(v454, v456:WaitForChild("Scale"), v455)
+1439: 	local v457 = v419:WaitForChild("Close")
+1440: 	local function v459()
+1441: 		-- upvalues: (ref) v_u_71, (ref) v_u_60, (ref) v_u_68, (ref) v_u_341, (ref) v_u_148
+1442: 		v_u_71 = nil
+1443: 		local v458 = v_u_60
+1444: 		if v458 and v_u_68 then
+1445: 			v_u_341(v458)
+1446: 			v_u_148()
+1447: 		end
+1448: 	end
+1449: 	local v460 = v457:WaitForChild("Body")
+1450: 	v_u_6.Attach(v457, v460:WaitForChild("Scale"), v459)
+1451: 	local v461 = v421:WaitForChild("Confirm")
+1452: 	local function v462()
+1453: 		-- upvalues: (ref) v_u_74, (ref) v_u_62
+1454: 		v_u_74 = "Delete"
+1455: 		if v_u_62 then
+1456: 			v_u_62:FireServer("Delete", nil, nil)
+1457: 		end
+1458: 	end
+1459: 	local v463 = v461:WaitForChild("Body")
+1460: 	v_u_6.Attach(v461, v463:WaitForChild("Scale"), v462)
+1461: 	local v464 = v421:WaitForChild("Cancel")
+1462: 	local function v466()
+1463: 		-- upvalues: (ref) v_u_71, (ref) v_u_60, (ref) v_u_68, (ref) v_u_341, (ref) v_u_148
+1464: 		v_u_71 = nil
+1465: 		local v465 = v_u_60
+1466: 		if v465 and v_u_68 then
+1467: 			v_u_341(v465)
+1468: 			v_u_148()
+   ...
+1507: 		if string.match(v477, "^%s*$") then
+1508: 			local v478 = v_u_433
+1
+
+===== Players.Ranscripts.PlayerScripts.Controllers.TutorialController =====
+   ...
+884: 			v300 = v299:FindFirstChild("HUD")
+885: 		else
+886: 			v300 = nil
+887: 		end
+888: 		if v300 and (v300:IsA("ScreenGui") and v298) then
+889: 			v300.Enabled = true
+890: 		end
+891: 		local v301 = v_u_20
+892: 		if v301 then
+893: 			v301.skip.Visible = false
+894: 		end
+895: 		if v_u_19 then
+896: 			v_u_19:FireServer("Skip")
+897: 		end
+898: 	end
+899: end
+900: local function v_u_311(p303) -- name: bind
+901: 	-- upvalues: (ref) v_u_20, (copy) v_u_8, (copy) v_u_302, (ref) v_u_21, (copy) v_u_111, (copy) v_u_2
+902: 	local v304 = p303:WaitForChild("Skip")
+903: 	local v305 = p303:WaitForChild("Finger")
+904: 	local v306 = p303:WaitForChild("Hint")
+905: 	local v307 = v306:WaitForChild("Mouse")
+906: 	local v308 = v306:WaitForChild("Tap")
+907: 	local v309 = v306:WaitForChild("Pad")
+908: 	local v310 = {
+
+===== Players.Ranscripts.PlayerScripts.Controllers.OutfitController =====
+   ...
+143: 				-- upvalues: (copy) p_u_45, (ref) v_u_16, (ref) v_u_15, (ref) v_u_12
+144: 				local v48 = os.clock()
+145: 				local v49 = p_u_45:FindFirstChild("Outfit")
+146: 				if v49 then
+147: 					v49 = v49:FindFirstChildOfClass("Humanoid")
+148: 				end
+149: 				if v49 then
+150: 					v49 = v49:FindFirstChildOfClass("HumanoidDescription")
+151: 				end
+152: 				if v48 - v_u_16 >= 2 and v49 then
+153: 					v_u_16 = v48
+154: 					v_u_15 = v49:Clone()
+155: 					v_u_12:FireServer("Buy", p_u_45)
+156: 				end
+157: 			end)
+158: 		end
+159: 	end
+160: end
+161: local function v_u_53(p51) -- name: detachStand
+162: 	-- upvalues: (copy) v_u_13
+163: 	local v52 = v_u_13[p51]
+164: 	if v52 then
+165: 		v_u_13[p51] = nil
+166: 		v52()
+167: 	end
+
+===== ReplicatedStorage.Shared.Net =====
+1: local v_u_1 = game:GetService("ReplicatedStorage")
+2: local v_u_2 = game:GetService("RunService")
+3: local v_u_11 = {
+4: 	["Declarations"] = {
+5: 		["Ping"] = "RemoteFunction",
+6: 		["GearDenied"] = "RemoteEvent",
+7: 		["GearClick"] = "RemoteEvent",
+8: 		["Fx"] = "RemoteEvent",
+9: 		["KillFeed"] = "RemoteEvent",
+10: 		["Inventory"] = "RemoteEvent",
+11: 		["Titles"] = "RemoteEvent",
+12: 		["PlaytimeRewards"] = "RemoteEvent",
+13: 		["Guilds"] = "RemoteEvent",
+14: 		["Tutorial"] = "RemoteEvent",
+15: 		["Outfits"] = "RemoteEvent"
+16: 	},
+17: 	["InitServer"] = function() -- name: InitServer
+18: 		-- upvalues: (copy) v_u_2, (copy) v_u_11, (copy) v_u_1
+19: 		local v3 = v_u_2:IsServer()
+20: 		assert(v3, "[Net] InitServer can only run on the server")
+21: 		local v4 = Instance.new("Folder")
+22: 		v4.Name = "Remotes"
+23: 		for v5, v6 in v_u_11.Declarations do
+24: 			local v7 = Instance.new(v6)
+25: 			v7.Name = v5
+26: 			v7.Parent = v4
+27: 		end
+28: 		v4.Parent = v_u_1
+29: 	end,
+30: 	["Get"] = function(p8) -- name: Get
+31: 		-- upvalues: (copy) v_u_11, (copy) v_u_2, (copy) v_u_1
+32: 		if not v_u_11.Declarations[p8] then
+33: 			error((("[Net] Remote \'%*\' is not declared in Net.Declarations"):format(p8)))
+34: 		end
+35: 		if not v_u_2:IsServer() then
+36: 			return v_u_1:WaitForChild("Remotes"):WaitForChild(p8)
+37: 		end
+38: 		local v9 = v_u_1:FindFirstChild("Remotes")
+39: 		if not v9 then
+40: 			error("[Net] InitServer must run before Net.Get on the server")
+41: 		end
+42: 		local v10 = v9:FindFirstChild(p8)
+43: 		if not v10 then
+44: 			error((("[Net] Remote \'%*\' is declared but was not created"):format(p8)))
+45: 		end
+46: 		return v10
+47: 	end
+48: }
+49: return v_u_11
+
+===== ReplicatedStorage.Packages.RagdollService =====
+   ...
+269: 	assert(v84, "Character is not model.")
+270: 	if v_u_7.Handles(p83) then
+271: 		return v_u_7.Up(p83)
+272: 	end
+273: 	if not v_u_11[p83] then
+274: 		return false
+275: 	end
+276: 	v_u_78(p83)
+277: 	v_u_59(p83)
+278: 	return true
+279: end
+280: if v_u_8 then
+281: 	v_u_14 = Instance.new("RemoteEvent")
+282: 	v_u_14.Name = "LocalPlayerRagdollRemote"
+283: 	v_u_14.Parent = script
+284: else
+285: 	v_u_14 = script:FindFirstChild("LocalPlayerRagdollRemote")
+286: 	if v_u_14 then
+287: 		v_u_14.OnClientEvent:Connect(function(p86, p87)
+288: 			-- upvalues: (copy) v_u_32, (copy) v_u_38
+289: 			if p86 then
+290: 				v_u_32(p87)
+291: 			else
+292: 				v_u_38(p87)
+293: 			end
+294: 		end)
+295: 	end
+296: 	local v_u_88 = nil
+297: 	v_u_88 = script.ChildAdded:Connect(function(p89)
+298: 		-- upvalues: (ref) v_u_88, (copy) v_u_32, (copy) v_u_38
+299: 		if p89:IsA("RemoteEvent") and p89.Name == "LocalPlayerRagdollRemote" then
+300: 			v_u_88:Disconnect()
+301: 			p89.OnClientEvent:Connect(function(p90, p91)
+302: 				-- upvalues: (ref) v_u_32, (ref) v_u_38
+303: 				if p90 then
+304: 					v_u_32(p91)
+305: 				else
+306: 					v_u_38(p91)
+307: 				end
+308: 			end)
+309: 		end
+310: 	end)
+311: end
+
+===== ReplicatedStorage.Packages.BowClient =====
+1: local v_u_1 = game:GetService("Players")
+2: return {
+3: 	["Attach"] = function(p_u_2) -- name: Attach
+4: 		-- upvalues: (copy) v_u_1
+5: 		local v_u_3 = p_u_2:WaitForChild("Remote")
+6: 		local v_u_4 = v_u_1.LocalPlayer
+7: 		local v_u_5 = nil
+8: 		local v_u_6 = false
+9: 		local v_u_7 = false
+10: 		local v_u_8 = Vector3.new(0, 0, 0)
+11: 		local function v_u_30() -- name: startFlying
+12: 			-- upvalues: (copy) v_u_4, (ref) v_u_7, (copy) v_u_3, (copy) p_u_2, (ref) v_u_8, (ref) v_u_6
+13: 			local v9 = v_u_4.Character
+14: 			local v10
+15: 			if v9 then
+16: 				v10 = v9:FindFirstChild("Torso")
+17: 			else
+18: 				v10 = v9
+19: 			end
+20: 			if v9 then
+21: 				v9 = v9:FindFirstChildOfClass("Humanoid")
+22: 			end
+23: 			if not v_u_7 and (v10 and (v9 and v9.Health > 0)) then
+24: 				v_u_7 = true
+25: 				v_u_3:FireServer("FlyState", true)
+26: 				local v11 = p_u_2:FindFirstChild("Stats")
+27: 				if v11 then
+28: 					v11 = v11:GetAttribute("FlyTopSpeed")
+29: 				end
+30: 				local v12 = typeof(v11) ~= "number" and 50 or v11
+31: 				local v13 = 1 - 2 / v12
+32: 				v_u_8 = v10.AssemblyLinearVelocity + v10.CFrame.LookVector * 3 + Vector3.new(0, 10, 0)
+33: 				v9.PlatformStand = true
+34: 				v9.AutoRotate = false
+35: 				local v14 = Instance.new("BodyGyro")
+36: 				v14.Name = "BowFlightGyro"
+37: 				v14.P = 1000000
+   ...
+83: 				end
+84: 				v14:Destroy()
+85: 				v15:Destroy()
+86: 				v_u_7 = false
+87: 				if v9.Parent then
+88: 					v9.PlatformStand = false
+89: 					v9.AutoRotate = true
+90: 					v9:ChangeState(Enum.HumanoidStateType.Freefall)
+91: 				end
+92: 				if v10.Parent then
+93: 					v10.AssemblyLinearVelocity = v_u_8
+94: 				end
+95: 				v_u_3:FireServer("FlyState", false)
+96: 			end
+97: 		end
+98: 		v_u_3.OnClientEvent:Connect(function(p31)
+99: 			-- upvalues: (ref) v_u_7, (copy) v_u_30
+100: 			if p31 == "Fly" then
+101: 				if v_u_7 then
+102: 					v_u_7 = false
+103: 				else
+104: 					task.spawn(v_u_30)
+105: 				end
+106: 			else
+107: 				return
+108: 			end
+109: 		end)
+110: 		p_u_2.Activated:Connect(function()
+111: 			-- upvalues: (ref) v_u_5, (copy) v_u_3
+112: 			if v_u_5 then
+113: 				v_u_3:FireServer("Fire", v_u_5.Hit.Position)
+114: 			end
+115: 		end)
+116: 		p_u_2.Equipped:Connect(function(p32)
+117: 			-- upvalues: (ref) v_u_5, (ref) v_u_6
+118: 			v_u_5 = p32
+119: 			v_u_6 = true
+120: 		end)
+121: 		p_u_2.Unequipped:Connect(function()
+122: 			-- upvalues: (ref) v_u_6, (ref) v_u_7
+123: 			v_u_6 = false
+124: 			v_u_7 = false
+125: 		end)
+
+===== StarterPlayer.PlayerModule.CameraModule.CameraInput =====
+1: game:GetService("ContextActionService")
+2: local v_u_1 = game:GetService("UserInputService")
+3: game:GetService("Players")
+4: local v_u_2 = UserSettings():GetService("UserGameSettings")
+5: game:GetService("VRService")
+6: local v3 = game:GetService("GuiService")
+7: local v4 = require(script.Parent.Parent:WaitForChild("CommonUtils")).get("FlagUtil")
+8: local v5 = v4.getUserFlag("UserPSTextboxResetCameraInput")
+9: local v_u_6 = v4.getUserFlag("UserPlayerScriptsSupportTVRemoteKeycodes")
+10: local v7 = script.Parent.Parent:WaitForChild("InputContexts"):WaitForChild("CameraContext")
+11: local v_u_8 = v7:WaitForChild("CameraRotationAction")
+12: local v_u_9 = v7:WaitForChild("CameraZoomAction")
+13: local v_u_10 = v_u_8:WaitForChild("GamepadBinding")
+14: local v_u_11
+15: if v_u_6 then
+16: 	v_u_11 = v_u_8:WaitForChild("MicroGamepadBinding")
+17: else
+18: 	v_u_11 = nil
+19: end
+20: local v_u_12 = v_u_8:WaitForChild("MouseBinding")
+21: local v_u_13 = v_u_8:WaitForChild("TrackpadBinding")
+
+===== REMOTES =====
+RemoteEvent  ReplicatedStorage.Packages.RagdollService.LocalPlayerRagdollRemote
