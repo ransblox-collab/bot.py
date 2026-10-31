@@ -1,0 +1,2725 @@
+keys: Remote, FireServer, Key, activate, Cooldown_, Disabled_, Melee, Swing, Slash, Held_
+scripts scanned: 198
+
+===== Players.Ranscripts.PlayerScripts.Controllers.ItemSpawnerController =====
+   ...
+173: 						v51 = v51:FindFirstChild("Scale")
+174: 					end
+175: 					if not (v51 and v51:IsA("UIScale")) then
+176: 						v51 = nil
+177: 					end
+178: 					if v51 then
+179: 						v_u_7:Create(v51, v_u_10, {
+180: 							["Scale"] = 0.7
+181: 						}):Play()
+182: 					end
+183: 				end
+184: 			end
+185: 		elseif p45.KeyCode == Enum.KeyCode.ButtonA and v_u_2.GamepadCursorEnabled then
+186: 			v47 = v_u_14
+187: 		end
+188: 		if v47 then
+189: 			v_u_33(v47)
+190: 			v_u_20:FireServer(v47)
+191: 		end
+192: 	end)
+193: 	v_u_8.InputEnded:Connect(function(p52)
+194: 		-- upvalues: (ref) v_u_15, (ref) v_u_7, (ref) v_u_11
+195: 		if p52.UserInputType == Enum.UserInputType.Touch and v_u_15 then
+196: 			local v53 = v_u_15
+197: 			v_u_15 = nil
+198: 			if v53.Parent then
+199: 				local v54 = v53:FindFirstChildOfClass("SurfaceGui")
+200: 				local v55
+201: 				if v54 then
+202: 					v55 = v54:FindFirstChild("Root")
+   ...
+217: 						["Scale"] = 1
+218: 					}):Play()
+219: 				end
+220: 			end
+221: 		end
+222: 	end)
+223: 	v_u_8.TouchTapInWorld:Connect(function(p56, p57)
+224: 		-- upvalues: (ref) v_u_40, (ref) v_u_18, (ref) v_u_20
+225: 		if not p57 then
+226: 			local v58 = v_u_40(p56.X, p56.Y)
+227: 			if v58 then
+228: 				v_u_18:Play()
+229: 				v_u_20:FireServer(v58)
+230: 			end
+231: 		end
+232: 	end)
+233: end
+234: return v12
+
+===== Players.Ranscripts.PlayerScripts.Controllers.ToolGUIController =====
+1: local v_u_1 = game:GetService("ContentProvider")
+2: local v2 = game:GetService("Players")
+3: local v3 = game:GetService("ReplicatedStorage")
+4: local v_u_4 = game:GetService("UserInputService")
+5: local v_u_5 = game:GetService("TweenService")
+6: local v_u_6 = require(v3.Packages.Trove)
+7: local v_u_7 = require(v3.Shared.Configs.ToolSkills)
+8: local v_u_8 = {
+9: 	Enum.KeyCode.ButtonX,
+10: 	Enum.KeyCode.ButtonY,
+11: 	Enum.KeyCode.ButtonB,
+12: 	Enum.KeyCode.ButtonL2
+13: }
+14: local v_u_9 = Color3.fromRGB(80, 80, 80)
+15: local v_u_10 = Color3.fromRGB(255, 255, 255)
+16: local v_u_11 = Color3.fromRGB(255, 196, 60)
+17: local v_u_12 = v2.LocalPlayer
+18: local v13 = {}
+19: local v_u_14 = nil
+20: local v_u_15 = nil
+21: local v_u_16 = {}
+22: local function v_u_21(p_u_17) -- name: keyGlyph
+23: 	-- upvalues: (copy) v_u_4
+24: 	local function v18()
+25: 		-- upvalues: (ref) v_u_4, (copy) p_u_17
+26: 		return v_u_4:GetStringForKeyCode(p_u_17)
+27: 	end
+28: 	local v19, v20 = pcall(v18)
+29: 	if v19 and (typeof(v20) == "string" and v20 ~= "") then
+30: 		return v20:gsub("^Button", "")
+31: 	else
+32: 		return p_u_17.Name:gsub("^Button", "")
+33: 	end
+34: end
+35: local function v_u_24() -- name: resolveGui
+36: 	-- upvalues: (copy) v_u_12
+37: 	local v22 = v_u_12:FindFirstChildOfClass("PlayerGui")
+38: 	if v22 then
+   ...
+54: 	end
+55: end
+56: local function v_u_43(p_u_25, p_u_26, p_u_27, p_u_28) -- name: startCountdown
+57: 	-- upvalues: (ref) v_u_15, (copy) v_u_9, (copy) v_u_10, (copy) v_u_5
+58: 	if not p_u_28.counting then
+59: 		p_u_28.counting = true
+60: 		local v_u_29 = p_u_27:FindFirstChild("SkillName")
+61: 		local v_u_30 = p_u_27:FindFirstChildOfClass("UIScale")
+62: 		v_u_15:Add(task.spawn(function()
+63: 			-- upvalues: (copy) p_u_27, (ref) v_u_9, (copy) p_u_25, (copy) p_u_26, (copy) v_u_29, (copy) p_u_28, (ref) v_u_10, (copy) v_u_30, (ref) v_u_5
+64: 			p_u_27.BackgroundColor3 = v_u_9
+65: 			while true do
+66: 				local v31 = p_u_25:GetAttribute("Cooldown_" .. p_u_26.Id)
+67: 				local v32 = (typeof(v31) ~= "number" and 0 or v31) - workspace:GetServerTimeNow()
+68: 				if v32 <= 0 then
+69: 					break
+70: 				end
+71: 				local v33 = math.ceil(v32)
+72: 				local v34 = v_u_29
+73: 				local v35
+74: 				if v33 >= 60 then
+75: 					v35 = string.format("%d:%02d", v33 // 60, v33 % 60)
+76: 				else
+77: 					v35 = tostring(v33)
+78: 				end
+   ...
+82: 			p_u_28.counting = false
+83: 			local v36 = v_u_29
+84: 			local v37 = p_u_25
+85: 			local v38 = p_u_26
+86: 			local v39 = v38.DisplayName or v38.Id
+87: 			local v40 = v37:GetAttribute("Charges_" .. v38.Id)
+88: 			if typeof(v40) == "number" then
+89: 				local v41 = math.floor(v40)
+90: 				local v42 = math.max(0, v41)
+91: 				v39 = v39 .. " \195\151" .. tostring(v42)
+92: 			end
+93: 			v36.Text = v39
+94: 			if p_u_25:GetAttribute("Disabled_" .. p_u_26.Id) ~= true then
+95: 				p_u_27.BackgroundColor3 = v_u_10
+96: 				v_u_30.Scale = 1.12
+97: 				v_u_5:Create(v_u_30, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+98: 					["Scale"] = 1
+99: 				}):Play()
+100: 			end
+101: 		end))
+102: 	end
+103: end
+104: local function v_u_53(p44) -- name: aimFor
+105: 	-- upvalues: (copy) v_u_4, (copy) v_u_12
+106: 	local v45 = v_u_4:GetLastInputType() == Enum.UserInputType.Touch
+   ...
+124: 		v51.FilterType = Enum.RaycastFilterType.Exclude
+125: 		v51.FilterDescendantsInstances = v_u_12.Character and { v_u_12.Character } or {}
+126: 		local v52 = workspace:Raycast(v50.Origin, v50.Direction * 1000, v51)
+127: 		if v52 then
+128: 			return v52.Position
+129: 		else
+130: 			return v50.Origin + v50.Direction * 1000
+131: 		end
+132: 	else
+133: 		return v_u_12:GetMouse().Hit.Position
+134: 	end
+135: end
+136: local function v_u_58(p54, p55) -- name: activate
+137: 	-- upvalues: (copy) v_u_53
+138: 	local v56 = p54:GetAttribute("Cooldown_" .. p55.Id)
+139: 	if (typeof(v56) ~= "number" and 0 or v56) <= workspace:GetServerTimeNow() and p54:GetAttribute("Disabled_" .. p55.Id) ~= true then
+140: 		local v57 = p54:FindFirstChild("Remote")
+
+===== Players.Ranscripts.PlayerScripts.Controllers.FxController =====
+   ...
+93: 		end
+94: 	end
+95: }
+96: local function v_u_41(p36, p37, p38) -- name: mistEmitters
+97: 	-- upvalues: (copy) v_u_2
+98: 	local v39 = p38 or 1
+99: 	for _ = 1, 2 do
+100: 		local v_u_40 = Instance.new("ParticleEmitter")
+101: 		v_u_40.Texture = "rbxasset://textures/particles/smoke_main.dds"
+102: 		v_u_40.Color = ColorSequence.new(Color3.fromRGB(20, 20, 20), Color3.fromRGB(5, 5, 5))
+103: 		v_u_40.LightInfluence = 0
+104: 		v_u_40.LightEmission = 0
+105: 		v_u_40.Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, 3 * v39), NumberSequenceKeypoint.new(1, 5.5 * v39) })
+106: 		v_u_40.Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.15), NumberSequenceKeypoint.new(1, 1) })
+107: 		v_u_40.Lifetime = NumberRange.new(0.5, 0.9)
+108: 		v_u_40.Speed = NumberRange.new(1.5, 4)
+109: 		v_u_40.SpreadAngle = Vector2.new(180, 180)
+110: 		v_u_40.Rate = 60
+111: 		v_u_40.Enabled = true
+112: 		v_u_40.Parent = p36
+113: 		task.delay(p37, function()
+114: 			-- upvalues: (copy) v_u_40
+115: 			v_u_40.Enabled = false
+116: 		end)
+117: 		v_u_2:AddItem(v_u_40, p37 + 1.2)
+118: 	end
+   ...
+206: 	end
+207: end
+208: function v_u_35.IceVapor(p57, p58) -- name: IceVapor
+209: 	-- upvalues: (copy) v_u_2
+210: 	if typeof(p57) == "Instance" and type(p58) == "number" then
+211: 		local v59 = p57:FindFirstChild("HumanoidRootPart")
+212: 		if v59 then
+213: 			local v_u_60 = Instance.new("ParticleEmitter")
+214: 			v_u_60.Name = "IceVaporFx"
+215: 			v_u_60.Texture = "rbxasset://textures/particles/smoke_main.dds"
+216: 			v_u_60.Color = ColorSequence.new(Color3.fromRGB(200, 232, 255), Color3.fromRGB(255, 255, 255))
+217: 			v_u_60.LightEmission = 0.15
+218: 			v_u_60.Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, 1.2), NumberSequenceKeypoint.new(1, 3) })
+219: 			v_u_60.Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.55), NumberSequenceKeypoint.new(1, 1) })
+220: 			v_u_60.Lifetime = NumberRange.new(1, 1.8)
+221: 			v_u_60.Speed = NumberRange.new(0.5, 1.5)
+222: 			v_u_60.Acceleration = Vector3.new(0, 1.5, 0)
+223: 			v_u_60.SpreadAngle = Vector2.new(60, 60)
+224: 			v_u_60.Rate = 20
+225: 			v_u_60.Enabled = true
+226: 			v_u_60.Parent = v59
+227: 			task.delay(p58, function()
+228: 				-- upvalues: (copy) v_u_60
+229: 				v_u_60.Enabled = false
+230: 			end)
+231: 			v_u_2:AddItem(v_u_60, p58 + 2)
+   ...
+749: 		else
+750: 			v_u_182 = v_u_181.Character == p_u_170
+751: 		end
+752: 		local v_u_183 = {}
+753: 		local v_u_184 = nil
+754: 		local v_u_185, v_u_186
+755: 		if v_u_182 then
+756: 			v_u_185 = Instance.new("ParticleEmitter")
+757: 			v_u_185.Name = "BurnEmbers"
+758: 			v_u_185.Texture = "rbxasset://textures/particles/sparkles_main.dds"
+759: 			v_u_185.Color = ColorSequence.new(Color3.fromRGB(255, 150, 40), Color3.fromRGB(255, 60, 0))
+760: 			v_u_185.LightEmission = 1
+761: 			v_u_185.Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.25), NumberSequenceKeypoint.new(1, 0.05) })
+762: 			v_u_185.Lifetime = NumberRange.new(0.2, 0.5)
+763: 			v_u_185.Speed = NumberRange.new(2, 5)
+764: 			v_u_185.SpreadAngle = Vector2.new(70, 70)
+765: 			v_u_185.Rate = 40
+766: 			v_u_185.Enabled = false
+767: 			v_u_185.Parent = v_u_173
+768: 			v_u_186 = Instance.new("ParticleEmitter")
+769: 			v_u_186.Name = "BurnSmoke"
+770: 			v_u_186.Texture = "rbxasset://textures/particles/smoke_main.dds"
+771: 			v_u_186.Color = ColorSequence.new(Color3.fromRGB(60, 60, 60))
+772: 			v_u_186.Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.4), NumberSequenceKeypoint.new(1, 1.4) })
+773: 			v_u_186.Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.5), NumberSequenceKeypoint.new(1, 1) })
+774: 			v_u_186.Lifetime = NumberRange.new(0.6, 1.1)
+775: 			v_u_186.Speed = NumberRange.new(0.5, 1.5)
+776: 			v_u_186.Acceleration = Vector3.new(0, 2, 0)
+777: 			v_u_186.Rate = 12
+778: 			v_u_186.Enabled = false
+779: 			v_u_186.Parent = v_u_173
+780: 		else
+781: 			v_u_185 = nil
+782: 			v_u_186 = nil
+783: 		end
+784: 		local function v_u_189(p187) -- name: i
+
+===== Players.Ranscripts.PlayerScripts.Controllers.FxController.ProjectileVisuals =====
+   ...
+43: 	local v35 = Instance.new("Attachment")
+44: 	v35.Name = "TrailRight"
+45: 	v35.Position = Vector3.new(0.32, 0, 0)
+46: 	v35.Parent = v33
+47: 	local v36 = Instance.new("Trail")
+48: 	v36.Name = "SpeedTrail"
+49: 	v36.Attachment0 = v34
+50: 	v36.Attachment1 = v35
+51: 	v36.FaceCamera = true
+52: 	v36.Lifetime = 0.16
+53: 	v36.MinLength = 0.05
+54: 	v36.LightEmission = 0.6
+55: 	v36.Color = ColorSequence.new({ ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)), ColorSequenceKeypoint.new(0.3, Color3.fromRGB(255, 65, 70)), ColorSequenceKeypoint.new(1, Color3.fromRGB(210, 15, 35)) })
+56: 	v36.Transparency = NumberSequence.new(0.15, 1)
+57: 	v36.WidthScale = NumberSequence.new(1, 0)
+58: 	v36.Enabled = false
+59: 	v36.Parent = v33
+60: 	local v37 = {}
+61: 	local v38 = {}
+62: 	for _, v39 in v33:GetChildren() do
+63: 		if v39:IsA("Beam") then
+64: 			v39.Enabled = false
+65: 			table.insert(v37, v39)
+66: 		else
+67: 			if not v39:IsA("Attachment") or v39.Name:sub(1, 4) ~= "Seam" then
+   ...
+164: 	v58.Name = "TrailB"
+165: 	v58.Position = Vector3.new(0, -0.5, 0)
+166: 	v58.Parent = v56
+167: 	local v59 = Instance.new("Trail")
+168: 	v59.Name = "SmokeTrail"
+169: 	v59.Attachment0 = v57
+170: 	v59.Attachment1 = v58
+171: 	v59.FaceCamera = true
+172: 	v59.Lifetime = 0.35
+173: 	v59.MinLength = 0.05
+174: 	v59.LightEmission = 0.2
+175: 	v59.Color = ColorSequence.new(Color3.new(1, 1, 1))
+176: 	v59.Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.45), NumberSequenceKeypoint.new(1, 1) })
+177: 	v59.WidthScale = NumberSequence.new(1, 0.2)
+178: 	v59.Enabled = false
+179: 	v59.Parent = v56
+180: 	v56.Parent = v_u_18
+181: 	local v60 = {
+182: 		["part"] = nil,
+183: 		["trail"] = nil,
+184: 		["busy"] = false,
+185: 		["part"] = v56,
+186: 		["trail"] = v59
+187: 	}
+188: 	local v61 = v_u_11
+
+===== Players.Ranscripts.PlayerScripts.Controllers.FxController.HeartSeekerFx =====
+   ...
+41: 	v18.Parent = v_u_13
+42: 	v16.shock = v18
+43: 	v16.shock.Shape = Enum.PartType.Ball
+44: 	v16.shock.Material = Enum.Material.Neon
+45: 	v16.smoke = v_u_7.Smoke:Clone()
+46: 	v16.smoke.Name = "HeartSeekerBurstSmoke"
+47: 	v16.smoke.Enabled = false
+48: 	v16.smoke.LockedToPart = false
+49: 	v16.smoke.Lifetime = NumberRange.new(0.6, 1.1)
+50: 	v16.smoke.Speed = NumberRange.new(3, 7)
+51: 	v16.smoke.SpreadAngle = Vector2.new(180, 180)
+52: 	v16.smoke.Acceleration = Vector3.new(0, 3, 0)
+53: 	v16.smoke.Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, 1.5), NumberSequenceKeypoint.new(0.35, 5), NumberSequenceKeypoint.new(1, 7) })
+54: 	v16.smoke.Parent = v16.holder
+55: 	v16.stars = v_u_7.Stars:Clone()
+56: 	v16.stars.Name = "HeartSeekerFirework"
+57: 	v16.stars.Enabled = false
+58: 	v16.stars.Parent = v16.holder
+59: 	v16.light = Instance.new("PointLight")
+60: 	v16.light.Enabled = false
+61: 	v16.light.Shadows = false
+62: 	v16.light.Parent = v16.holder
+63: 	v16.sound = v_u_14:Clone()
+64: 	v16.sound.Name = "HeartSeekerSpawnSound"
+65: 	v16.sound.Parent = v16.holder
+   ...
+98: 			["Transparency"] = 1,
+99: 			["Size"] = Vector3.new(1, 1, 1) * p22 * 2
+100: 		}):Play()
+101: 		v_u_24.light.Color = p_u_21
+102: 		v_u_24.light.Range = p22 * 1.5
+103: 		v_u_24.light.Brightness = 5
+104: 		v_u_24.light.Enabled = true
+105: 		v_u_5:Create(v_u_24.light, TweenInfo.new(0.6), {
+106: 			["Brightness"] = 0
+107: 		}):Play()
+108: 		task.delay(0.18, function()
+109: 			-- upvalues: (ref) v_u_24, (copy) p_u_21
+110: 			v_u_24.stars.Color = ColorSequence.new({ ColorSequenceKeypoint.new(0, p_u_21), ColorSequenceKeypoint.new(0.55, Color3.new(1, 1, 1)), ColorSequenceKeypoint.new(1, p_u_21) })
+111: 			v_u_24.stars:Emit(180)
+112: 		end)
+113: 	else
+114: 		v_u_24.sound.TimePosition = 0
+115: 		v_u_24.sound:Play()
+116: 	end
+117: 	local v27
+118: 	if p23 then
+119: 		local v28 = v_u_24.blast.TimeLength + 0.1
+120: 		local v29 = math.min(20, v28)
+121: 		v27 = math.max(3, v29)
+122: 	else
+
+===== Players.Ranscripts.PlayerScripts.Controllers.FxController.DualMonsterAxesFx =====
+   ...
+26: 	end
+27: 	v_u_7 = v8
+28: 	local v10
+29: 	if v_u_6 == nil then
+30: 		v10 = false
+31: 	else
+32: 		v10 = v_u_7 ~= nil
+33: 	end
+34: 	return v10
+35: end
+36: local function v_u_20(p12, p13) -- name: scaleSequence
+37: 	local v14 = {}
+38: 	for _, v15 in p12.Keypoints do
+39: 		local v16 = NumberSequenceKeypoint.new
+40: 		local v17 = v15.Time
+41: 		local v18 = v15.Value * p13
+42: 		local v19 = v15.Envelope * p13
+43: 		table.insert(v14, v16(v17, v18, v19))
+44: 	end
+45: 	return NumberSequence.new(v14)
+46: end
+47: function v3.Register(p21) -- name: Register
+48: 	-- upvalues: (copy) v_u_11, (ref) v_u_6, (copy) v_u_4, (copy) v_u_5, (copy) v_u_20, (copy) v_u_1, (ref) v_u_7
+49: 	function p21.DualAxesRelease(p22, p23)
+50: 		-- upvalues: (ref) v_u_11, (ref) v_u_6, (ref) v_u_4, (ref) v_u_5, (ref) v_u_20, (ref) v_u_1, (ref) v_u_7
+51: 		if typeof(p22) == "Instance" and (typeof(p23) == "number" and v_u_11()) then
+
+===== Players.Ranscripts.PlayerScripts.Controllers.FxController.HeartBalloonFx =====
+   ...
+129: 			v_u_15(p_u_32)
+130: 		end)
+131: 	end
+132: 	local v39 = p_u_32:FindFirstChild("HeartBalloon")
+133: 	if v39 and v39:IsA("Tool") then
+134: 		v_u_31(p_u_32, v39)
+135: 	else
+136: 		v_u_15(p_u_32)
+137: 	end
+138: end
+139: local function v_u_49(p41, p42) -- name: scaleSequence
+140: 	local v43 = {}
+141: 	for _, v44 in p41.Keypoints do
+142: 		local v45 = NumberSequenceKeypoint.new
+143: 		local v46 = v44.Time
+144: 		local v47 = v44.Value * p42
+145: 		local v48 = v44.Envelope * p42
+146: 		table.insert(v43, v45(v46, v47, v48))
+147: 	end
+148: 	return NumberSequence.new(v43)
+149: end
+150: local function v_u_52() -- name: loadAssets
+151: 	-- upvalues: (ref) v_u_10, (copy) v_u_3, (ref) v_u_11, (copy) v_u_1
+152: 	if v_u_10 then
+153: 		return true
+154: 	end
+
+===== Players.Ranscripts.PlayerScripts.Controllers.FxController.ZombieStaffFx =====
+   ...
+63: end
+64: local function v_u_34(p_u_21) -- name: loadClip
+65: 	-- upvalues: (copy) v_u_8, (copy) v_u_1
+66: 	local v22 = v_u_8[p_u_21]
+67: 	if v22 ~= nil then
+68: 		return v22 or nil
+69: 	end
+70: 	local function v23()
+71: 		-- upvalues: (ref) v_u_1, (copy) p_u_21
+72: 		return v_u_1:GetAnimationClipAsync(p_u_21)
+73: 	end
+74: 	local v24, v25 = pcall(v23)
+75: 	if not (v24 and (v25 and v25:IsA("KeyframeSequence"))) then
+76: 		v_u_8[p_u_21] = false
+77: 		return nil
+78: 	end
+79: 	local v26 = {}
+80: 	for _, v27 in v25:GetKeyframes() do
+81: 		local v28 = {
+82: 			["t"] = v27.Time,
+83: 			["right"] = CFrame.identity,
+84: 			["left"] = CFrame.identity,
+85: 			["head"] = CFrame.identity
+86: 		}
+87: 		for _, v29 in v27:GetDescendants() do
+88: 			if not v29:IsA("Pose") then
+89: 				continue
+90: 			end
+91: 			if v29.Name == "Right Arm" then
+92: 				v28.right = v29.CFrame
+
+===== Players.Ranscripts.PlayerScripts.Controllers.FxController.IlluminaFx =====
+   ...
+95: 	v29.Size = Vector3.new(1, 1, 1)
+96: 	v29.CFrame = v_u_7
+97: 	v29.Parent = v_u_11
+98: 	local v30 = v_u_12:Clone()
+99: 	v30.Parent = v29
+100: 	return {
+101: 		["part"] = v29,
+102: 		["sound"] = v30
+103: 	}
+104: end
+105: local function v_u_36() -- name: newStorm
+106: 	-- upvalues: (copy) v_u_5, (copy) v_u_7, (ref) v_u_11
+107: 	local v32 = v_u_5.SlashStorm:Clone()
+108: 	v32.Name = "IlluminaStorm"
+109: 	local v33 = v32:FindFirstChild("Cracks")
+110: 	local v34 = {}
+111: 	for _, v35 in v32:GetDescendants() do
+112: 		if not v35:IsA("ParticleEmitter") then
+113: 			continue
+114: 		end
+115: 		v35.Enabled = false
+116: 		table.insert(v34, v35)
+117: 	end
+118: 	v32.CFrame = v_u_7
+119: 	if v33 then
+
+===== Players.Ranscripts.PlayerScripts.Controllers.FxController.HealthPotionFx =====
+   ...
+6: local v_u_6 = require(v3.Packages.SoftBody)
+7: local v_u_7 = v3.FxAssets:WaitForChild("HealthPotion")
+8: local v8 = {}
+9: local v_u_9 = CFrame.new(0, -1000, 0)
+10: local v_u_10 = CFrame.new(0, -0.15, -1.05)
+11: local v_u_11 = { "Shatter", "Uncork" }
+12: local v_u_12 = Color3.fromRGB(90, 255, 130)
+13: local v_u_13 = Color3.fromRGB(205, 255, 215)
+14: local v_u_14 = Color3.fromRGB(20, 110, 50)
+15: local v_u_15 = Random.new()
+16: local v_u_16 = nil
+17: local v_u_17 = {}
+18: local function v_u_29(p18, p19) -- name: sampleKeyframes
+19: 	if p19 <= p18[1].t then
+20: 		return p18[1].v
+21: 	end
+22: 	for v20 = 1, #p18 - 1 do
+23: 		local v21 = p18[v20]
+24: 		local v22 = p18[v20 + 1]
+25: 		if p19 > v22.t then
+26: 			continue
+27: 		end
+28: 		local v23 = v21.v
+29: 		local v24 = v22.v
+30: 		local v25 = p19 - v21.t
+   ...
+421: 	v154.Size = Vector3.new(3, 5, 2)
+422: 	local v155 = Instance.new("PointLight")
+423: 	v155.Color = v_u_12
+424: 	v155.Range = 12
+425: 	v155.Brightness = 0
+426: 	v155.Shadows = false
+427: 	v155.Parent = v154
+428: 	local v156 = Instance.new("ParticleEmitter")
+429: 	v156.Texture = "rbxasset://textures/particles/sparkles_main.dds"
+430: 	v156.Color = ColorSequence.new(v_u_13, v_u_12)
+431: 	v156.LightEmission = 1
+432: 	v156.LightInfluence = 0
+433: 	v156.Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.1), NumberSequenceKeypoint.new(0.2, 0.45), NumberSequenceKeypoint.new(1, 0) })
+434: 	v156.Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(0.7, 0.2), NumberSequenceKeypoint.new(1, 1) })
+435: 	v156.Lifetime = NumberRange.new(0.7, 1.2)
+436: 	v156.Speed = NumberRange.new(2, 5)
+437: 	v156.EmissionDirection = Enum.NormalId.Top
+438: 	v156.SpreadAngle = Vector2.new(25, 25)
+439: 	v156.Acceleration = Vector3.new(0, 3, 0)
+440: 	v156.Drag = 1
+441: 	v156.RotSpeed = NumberRange.new(-90, 90)
+442: 	v156.Rate = 0
+443: 	v156.Enabled = false
+444: 	v156.Parent = v154
+445: 	local v157 = Instance.new("Highlight")
+446: 	v157.FillColor = v_u_12
+
+===== Players.Ranscripts.PlayerScripts.Controllers.FxController.VehicleFx =====
+   ...
+9: local v9 = {}
+10: local v_u_10 = CFrame.new(0, -1000, 0)
+11: local v_u_11 = NumberRange.new(0.8, 1.5)
+12: local v_u_12 = Color3.fromRGB(255, 140, 40)
+13: local v_u_13 = {}
+14: local v_u_14 = {}
+15: local v_u_15 = nil
+16: local v_u_16 = nil
+17: local v_u_17 = nil
+18: local v_u_18 = nil
+19: local function v_u_27(p19, p20) -- name: scaled
+20: 	local v21 = {}
+21: 	for _, v22 in p19.Keypoints do
+22: 		local v23 = NumberSequenceKeypoint.new
+23: 		local v24 = v22.Time
+24: 		local v25 = v22.Value * p20
+25: 		local v26 = v22.Envelope * p20
+26: 		table.insert(v21, v23(v24, v25, v26))
+27: 	end
+28: 	return NumberSequence.new(v21)
+29: end
+30: local function v_u_32() -- name: newBlast
+31: 	-- upvalues: (copy) v_u_10, (ref) v_u_17, (ref) v_u_18, (copy) v_u_11, (copy) v_u_12, (ref) v_u_16
+32: 	local v28 = Instance.new("Part")
+33: 	v28.Name = "VehicleBlastHolder"
+34: 	v28.Anchored = true
+
+===== Players.Ranscripts.PlayerScripts.Controllers.FxController.SnailMountFx =====
+1: local v_u_1 = game:GetService("CollectionService")
+2: local v_u_2 = game:GetService("ContentProvider")
+3: local v_u_3 = game:GetService("ReplicatedStorage")
+4: local v_u_4 = game:GetService("RunService")
+5: local v5 = {}
+6: local v_u_6 = CFrame.new(0, -1, 0)
+7: local v_u_7 = ColorSequence.new(Color3.fromRGB(175, 255, 95), Color3.fromRGB(95, 200, 55))
+8: local v_u_8 = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.2), NumberSequenceKeypoint.new(0.75, 0.45), NumberSequenceKeypoint.new(1, 1) })
+9: local v_u_9 = {}
+10: local v_u_10 = nil
+11: local v_u_11 = nil
+12: local function v_u_24(p12) -- name: bake
+13: 	if p12 and p12:IsA("KeyframeSequence") then
+14: 		local v13 = p12:GetKeyframes()
+15: 		if #v13 < 2 then
+16: 			return nil
+17: 		else
+18: 			table.sort(v13, function(p14, p15)
+19: 				return p14.Time < p15.Time
+20: 			end)
+21: 			local v16 = {
+22: 				["length"] = v13[#v13].Time,
+23: 				["times"] = {},
+24: 				["bones"] = {}
+25: 			}
+26: 			for v17, v18 in v13 do
+
+===== Players.Ranscripts.PlayerScripts.Controllers.FxController.VerityFx =====
+   ...
+668: 					end)
+669: 				end
+670: 			end
+671: 		else
+672: 			return
+673: 		end
+674: 	end
+675: end
+676: local v_u_216 = {}
+677: local v_u_217 = nil
+678: local v_u_218 = nil
+679: local function v_u_231(p219) -- name: bake
+680: 	if p219 and p219:IsA("KeyframeSequence") then
+681: 		local v220 = p219:GetKeyframes()
+682: 		if #v220 < 2 then
+683: 			return nil
+684: 		else
+685: 			table.sort(v220, function(p221, p222)
+686: 				return p221.Time < p222.Time
+687: 			end)
+688: 			local v223 = {
+689: 				["length"] = v220[#v220].Time,
+690: 				["times"] = {},
+691: 				["bones"] = {}
+692: 			}
+693: 			for v224, v225 in v220 do
+
+===== Players.Ranscripts.PlayerScripts.Controllers.FxController.DestructionFx =====
+   ...
+57: local v_u_40 = 0
+58: local v_u_41 = 0
+59: local v_u_42 = 0
+60: local v_u_43 = nil
+61: local v_u_44 = nil
+62: local v_u_45 = nil
+63: local v_u_46 = setmetatable({}, {
+64: 	["__mode"] = "k"
+65: })
+66: local v_u_47 = 0
+67: local function v_u_56(p48, p49) -- name: scaled
+68: 	local v50 = {}
+69: 	for _, v51 in p48.Keypoints do
+70: 		local v52 = NumberSequenceKeypoint.new
+71: 		local v53 = v51.Time
+72: 		local v54 = v51.Value * p49
+73: 		local v55 = v51.Envelope * p49
+74: 		table.insert(v50, v52(v53, v54, v55))
+75: 	end
+76: 	return NumberSequence.new(v50)
+77: end
+78: local function v_u_62() -- name: newPiece
+79: 	-- upvalues: (copy) v_u_11, (copy) v_u_8, (ref) v_u_14, (ref) v_u_13, (copy) v_u_17
+80: 	local v57 = Instance.new("Part")
+81: 	v57.Name = "DestructionPiece"
+82: 	v57.Anchored = true
+   ...
+1087: 	local v_u_347 = {}
+1088: 	local v_u_348 = nil
+1089: 	local v_u_349 = OverlapParams.new()
+1090: 	v_u_349.FilterType = Enum.RaycastFilterType.Exclude
+1091: 	v_u_349.RespectCanCollide = true
+1092: 	local v_u_350 = 0
+1093: 	local v_u_351 = 0
+1094: 	local v_u_352 = 0
+1095: 	local v_u_353 = 0
+1096: 	local v_u_354 = setmetatable({}, {
+1097: 		["__mode"] = "k"
+1098: 	})
+1099: 	local function v_u_372(p355, p356, p357, p358) -- name: restKeys
+1100: 		local v359 = (p355.X - p357) / 8
+1101: 		local v360 = math.floor(v359)
+1102: 		local v361 = (p356.X + p357) / 8
+1103: 		for v362 = v360, math.floor(v361) do
+1104: 			local v363 = (p355.Y - p357) / 8
+1105: 			local v364 = math.floor(v363)
+1106: 			local v365 = (p356.Y + p357) / 8
+1107: 			for v366 = v364, math.floor(v365) do
+1108: 				local v367 = (p355.Z - p357) / 8
+1109: 				local v368 = math.floor(v367)
+1110: 				local v369 = (p356.Z + p357) / 8
+1111: 				for v370 = v368, math.floor(v369) do
+
+===== Players.Ranscripts.PlayerScripts.Controllers.FxController.B2BomberFx =====
+   ...
+47: local v_u_31 = {}
+48: local v_u_32 = {}
+49: local v_u_33 = nil
+50: local v_u_34 = nil
+51: local v_u_35 = nil
+52: local v_u_36 = nil
+53: local v_u_37 = nil
+54: local v_u_38 = v2.LocalPlayer
+55: local v_u_39 = {}
+56: local v_u_40 = nil
+57: local function v_u_49(p41, p42) -- name: scaled
+58: 	local v43 = {}
+59: 	for _, v44 in p41.Keypoints do
+60: 		local v45 = NumberSequenceKeypoint.new
+61: 		local v46 = v44.Time
+62: 		local v47 = v44.Value * p42
+63: 		local v48 = v44.Envelope * p42
+64: 		table.insert(v43, v45(v46, v47, v48))
+65: 	end
+66: 	return NumberSequence.new(v43)
+67: end
+68: local function v_u_56(p_u_50, p51) -- name: nudgeZoom
+69: 	-- upvalues: (copy) v_u_39, (copy) v_u_38
+70: 	local v_u_52 = v_u_39[p_u_50]
+71: 	if not v_u_52 then
+72: 		v_u_52 = {
+
+===== Players.Ranscripts.PlayerScripts.Controllers.FxController.LightsaberFx =====
+   ...
+457: 						v_u_161.hum:Play()
+458: 					end
+459: 				end
+460: 			end
+461: 			v_u_166(p_u_156:GetAttribute("SaberOut") == true)
+462: 			local v167 = v_u_161.connections
+463: 			local v168 = p_u_156:GetAttributeChangedSignal("SaberOut")
+464: 			table.insert(v167, v168:Connect(function()
+465: 				-- upvalues: (copy) v_u_166, (copy) p_u_156
+466: 				v_u_166(p_u_156:GetAttribute("SaberOut") == true)
+467: 			end))
+468: 			local v169 = v_u_161.connections
+469: 			local v170 = p_u_157:GetAttributeChangedSignal("MeleeLockUntil")
+470: 			table.insert(v169, v170:Connect(function()
+471: 				-- upvalues: (copy) p_u_157, (copy) v_u_161
+472: 				local v_u_171 = p_u_157:GetAttribute("MeleeLockUntil")
+473: 				local v172 = typeof(v_u_171) ~= "number" and 0 or v_u_171 - workspace:GetServerTimeNow()
+474: 				if v_u_161.trail and (v172 > 0 and v172 <= 2) then
+475: 					v_u_161.trail.Enabled = true
+476: 					v_u_161.trailUntil = v_u_171
+477: 					task.delay(v172, function()
+478: 						-- upvalues: (ref) v_u_161, (copy) v_u_171
+479: 						if v_u_161.trailUntil == v_u_171 and v_u_161.trail then
+480: 							v_u_161.trail.Enabled = false
+481: 						end
+482: 					end)
+483: 				end
+484: 			end))
+
+===== Players.Ranscripts.PlayerScripts.Controllers.ShopController =====
+   ...
+157: local v_u_25 = Color3.fromRGB(10, 255, 116)
+158: local v_u_26 = {
+159: 	["Hover"] = 1.02,
+160: 	["Press"] = 0.97
+161: }
+162: local v_u_27 = TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+163: local v_u_28 = TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
+164: local v_u_29 = TweenInfo.new(3, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1)
+165: local v_u_30 = TweenInfo.new(2.6, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1)
+166: local v_u_31 = TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
+167: local v_u_32 = TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, false, 1.6)
+168: local v_u_33 = NumberSequence.new({
+169: 	NumberSequenceKeypoint.new(0, 1),
+170: 	NumberSequenceKeypoint.new(0.25, 1),
+171: 	NumberSequenceKeypoint.new(0.42, 0),
+172: 	NumberSequenceKeypoint.new(0.58, 0),
+173: 	NumberSequenceKeypoint.new(0.75, 1),
+174: 	NumberSequenceKeypoint.new(1, 1)
+175: })
+176: local v_u_34 = NumberRange.new(0.3, 0.6)
+177: local v_u_35 = NumberRange.new(0.1, 1.4)
+178: local v_u_36 = v_u_4.LocalPlayer
+179: local v_u_37 = v_u_10.ById(v11.Items)
+180: local v_u_38 = {}
+181: local v_u_39 = nil
+182: local v_u_40 = false
+183: local v_u_41 = false
+184: local v_u_42 = 0
+185: local v_u_43 = false
+186: local v_u_44 = false
+   ...
+243: 			end
+244: 			local v84 = v83 * 1.15 + 0.5
+245: 			v82:SetAttribute("DesignText", (math.floor(v84)))
+246: 		end
+247: 	end
+248: end
+249: local function v_u_92(p86) -- name: sequence
+250: 	if #p86 == 1 then
+251: 		return ColorSequence.new(p86[1])
+252: 	end
+253: 	local v87 = {}
+254: 	for v88, v89 in p86 do
+255: 		local v90 = ColorSequenceKeypoint.new
+256: 		local v91 = (v88 - 1) / (#p86 - 1)
+257: 		table.insert(v87, v90(v91, v89))
+258: 	end
+259: 	return ColorSequence.new(v87)
+260: end
+261: local function v_u_105(p93) -- name: kickerText
+262: 	-- upvalues: (copy) v_u_36, (copy) v_u_14, (copy) v_u_10, (copy) v_u_2, (copy) v_u_37
+263: 	if p93.Items and #p93.Items > 0 then
+264: 		if v_u_36:GetAttribute(v_u_14.OwnedAttribute(p93.Id)) ~= true then
+265: 			local v94 = v_u_36:GetAttribute(v_u_10.STATE_ATTRIBUTE)
+266: 			local v95 = v_u_2.JSONDecode
+267: 			local v96 = v_u_2
+   ...
+2280: 		v840.FocusLost:Connect(function(p841)
+2281: 			-- upvalues: (ref) v_u_752
+2282: 			if p841 then
+2283: 				v_u_752()
+2284: 			end
+2285: 		end)
+2286: 		v_u_36:GetAttributeChangedSignal(v_u_10.STATE_ATTRIBUTE):Connect(v_u_177)
+2287: 		for _, v842 in v_u_15.Products do
+2288: 			v_u_36:GetAttributeChangedSignal(v_u_14.OwnedAttribute(v842.Id)):Connect(v_u_177)
+2289: 		end
+2290: 		v_u_8.InputBegan:Connect(function(p843)
+2291: 			-- upvalues: (ref) v_u_43, (ref) v_u_61, (ref) v_u_766, (ref) v_u_38
+2292: 			if v_u_43 and p843.KeyCode == Enum.KeyCode.ButtonB then
+2293: 				if v_u_61 then
+2294: 					v_u_766()
+2295: 					return
+2296: 				end
+2297: 				v_u_38.Close()
+2298: 			end
+2299: 		end)
+2300: 		local function v846(p844) -- name: watchCharacter
+2301: 			-- upvalues: (ref) v_u_38
+2302: 			local v845 = p844:WaitForChild("Humanoid", 10)
+2303: 			if v845 and v845:IsA("Humanoid") then
+2304: 				v845.Died:Connect(v_u_38.Close)
+
+===== Players.Ranscripts.PlayerScripts.Controllers.InventoryController =====
+   ...
+332: 				local v148 = v145[v147.Gear] or {
+333: 					["Name"] = nil,
+334: 					["Icon"] = "",
+335: 					["Name"] = v_u_9.Spaced(v147.Gear)
+336: 				}
+337: 				local v149 = v_u_139(v141, v146, v148.Name, v148.Icon)
+338: 				local v_u_150 = v_u_36.Skins[v147.Gear]
+339: 				v_u_130(v141, 0, "Default", v148.Icon, "The gear as it is.", false, v_u_150 == nil, true, function()
+340: 					-- upvalues: (copy) v_u_150, (ref) v_u_33
+341: 					if v_u_150 then
+342: 						local v151 = v_u_150
+343: 						if v_u_33 then
+344: 							v_u_33:FireServer("Unequip", v151)
+345: 						end
+346: 					end
+347: 				end).Parent = v149
+348: 				for v152, v_u_153 in v147.Entries do
+349: 					local v154 = v_u_28[v_u_153.Id]
+350: 					if not v154 then
+351: 						continue
+352: 					end
+353: 					local v155 = v_u_130
+354: 					local v156 = v154.Name
+355: 					local v157 = v154.Image
+356: 					local v158 = v154.Description or ""
+357: 					if v_u_153.From then
+358: 						if v158 == "" then
+359: 							v158 = ("From: %*"):format(v_u_153.From)
+360: 						else
+361: 							v158 = ("%*\nFrom: %*"):format(v158, v_u_153.From)
+362: 						end
+363: 					end
+364: 					v155(v141, v152, v156, v157, v158, v_u_37[v_u_153.Id] == true and true or v_u_153.New, v_u_153.Equipped, true, function()
+365: 						-- upvalues: (copy) v_u_153, (ref) v_u_33
+366: 						if not v_u_153.Equipped then
+367: 							local v159 = v_u_153.Id
+368: 							if v_u_33 then
+369: 								v_u_33:FireServer("Equip", v159)
+370: 							end
+371: 						end
+372: 					end).Parent = v149
+373: 					v144 = v144 + 1
+374: 				end
+375: 			end
+376: 		elseif v_u_36.Ready then
+377: 			local v160 = v_u_139(v141, 1, nil, nil)
+378: 			for v161, v_u_162 in v_u_9.InTab(v_u_36, v_u_28, v_u_35) do
+379: 				local v163 = v_u_28[v_u_162.Id]
+380: 				if not v163 then
+381: 					continue
+   ...
+387: 				if v_u_162.From then
+388: 					if v167 == "" then
+389: 						v167 = ("From: %*"):format(v_u_162.From)
+390: 					else
+391: 						v167 = ("%*\nFrom: %*"):format(v167, v_u_162.From)
+392: 					end
+393: 				end
+394: 				v164(v141, v161, v165, v166, v167, v_u_37[v_u_162.Id] == true and true or v_u_162.New, v_u_162.Equipped, false, function()
+395: 					-- upvalues: (copy) v_u_162, (ref) v_u_33
+396: 					local v168 = v_u_162.Equipped and "Unequip" or "Equip"
+397: 					local v169 = v_u_162.Id
+398: 					if v_u_33 then
+399: 						v_u_33:FireServer(v168, v169)
+400: 					end
+401: 				end).Parent = v160
+402: 				v144 = v144 + 1
+403: 			end
+404: 		end
+405: 		local v170 = v141.Empty
+406: 		local v171 = v_u_36.Ready
+407: 		if v171 then
+408: 			v171 = v144 == 0
+409: 		end
+410: 		v170.Visible = v171
+411: 		v_u_92()
+   ...
+431: 			v_u_173()
+432: 		else
+433: 			v_u_34 = true
+434: 			v_u_12.Take(v175.Gui)
+435: 			table.clear(v_u_37)
+436: 			for _, v176 in v_u_36.Items do
+437: 				if not v176.New then
+438: 					continue
+439: 				end
+440: 				v_u_37[v176.Id] = true
+441: 			end
+442: 			if next(v_u_37) ~= nil and v_u_33 then
+443: 				v_u_33:FireServer("Seen", nil)
+444: 			end
+445: 			v175.Root.Visible = true
+446: 			v_u_173()
+447: 			v175.Scale.Scale = 0.9
+448: 			v_u_5:Create(v175.Scale, v_u_22, {
+449: 				["Scale"] = 1
+450: 			}):Play()
+451: 		end
+452: 	else
+453: 		return
+454: 	end
+455: end
+   ...
+640: 		for _, v_u_219 in v_u_9.TABS do
+641: 			local v220 = v215.Tabs:WaitForChild(v_u_219)
+642: 			v_u_7.Attach(v220, v220:FindFirstChild("Scale", true), function()
+643: 				-- upvalues: (ref) v_u_35, (copy) v_u_219, (ref) v_u_173
+644: 				v_u_35 = v_u_219
+645: 				v_u_173()
+646: 			end)
+647: 		end
+648: 		local v221 = v215.Empty:WaitForChild("Shop")
+649: 		v_u_7.Attach(v221, v221:FindFirstChild("Scale", true), v_u_180)
+650: 		v_u_6.InputBegan:Connect(function(p222)
+651: 			-- upvalues: (ref) v_u_34, (ref) v_u_29
+652: 			if v_u_34 and p222.KeyCode == Enum.KeyCode.ButtonB then
+653: 				v_u_29.Close()
+654: 			end
+655: 		end)
+656: 		local function v225(p223) -- name: watchCharacter
+657: 			-- upvalues: (ref) v_u_29
+658: 			local v224 = p223:WaitForChild("Humanoid", 
+
+===== Players.Ranscripts.PlayerScripts.Controllers.TitleController =====
+   ...
+79: 	p45.shine.Text = v47.Name
+80: 	p45.shine.Visible = v47.Style == "Band"
+81: 	if v47.Style == "Solid" then
+82: 		p45.gradient.Enabled = false
+83: 		p45.label.TextColor3 = v48[1]
+84: 		return
+85: 	else
+86: 		p45.label.TextColor3 = Color3.new(1, 1, 1)
+87: 		p45.gradient.Enabled = true
+88: 		if v47.Style == "Metal" then
+89: 			p45.gradient.Rotation = 90
+90: 			p45.gradient.Offset = Vector2.zero
+91: 			p45.gradient.Color = ColorSequence.new({ ColorSequenceKeypoint.new(0, v48[1]), ColorSequenceKeypoint.new(0.52, v48[2]), ColorSequenceKeypoint.new(1, v48[3]) })
+92: 		else
+93: 			p45.gradient.Rotation = 0
+94: 			p45.gradient.Color = ColorSequence.new({
+95: 				ColorSequenceKeypoint.new(0, v48[1]),
+96: 				ColorSequenceKeypoint.new(0.25, v48[2]),
+97: 				ColorSequenceKeypoint.new(0.5, v48[3]),
+98: 				ColorSequenceKeypoint.new(0.75, v48[2]),
+99: 				ColorSequenceKeypoint.new(1, v48[1])
+100: 			})
+101: 			p45.gradient.Offset = v_u_26
+102: 			local v51 = p45.tweens
+103: 			local v52 = {
+104: 				["Offset"] = v_u_27
+105: 			}
+106: 			local v53 = v_u_6:Create(p45.gradient, v_u_24, v52)
+107: 			v53:Play()
+108: 			table.insert(v51, v53)
+109: 			if v47.Style == "Band" then
+110: 				p45.band.Offset = v_u_28
+111: 				local v54 = p45.tweens
+
+===== Players.Ranscripts.PlayerScripts.Controllers.ShopWallController.PremiumViews =====
+1: local v_u_1 = game:GetService("ReplicatedStorage")
+2: local v_u_2 = game:GetService("RunService")
+3: local v3 = {}
+4: local v_u_4 = {}
+5: local v_u_5 = 0
+6: local v_u_6 = nil
+7: local v_u_7 = 0
+8: local v_u_8 = 0
+9: local v_u_9 = nil
+10: local function v_u_22(p10) -- name: bake
+11: 	local v11 = p10:GetKeyframes()
+12: 	table.sort(v11, function(p12, p13)
+13: 		return p12.Time < p13.Time
+14: 	end)
+15: 	local v14 = {
+16: 		["length"] = v11[#v11].Time,
+17: 		["times"] = {},
+18: 		["bones"] = {}
+19: 	}
+20: 	for v15, v16 in v11 do
+21: 		v14.times[v15] = v16.Time
+22: 		for _, v17 in v16:GetDescendants() do
+23: 			if not v17:IsA("Pose") then
+   ...
+49: 	if v23 then
+50: 		v23 = v23:FindFirstChild("Verity")
+51: 	end
+52: 	local v24
+53: 	if v23 then
+54: 		v24 = v23:FindFirstChild("Taunt")
+55: 	else
+56: 		v24 = v23
+57: 	end
+58: 	if v23 then
+59: 		v23 = v23:FindFirstChild("Idle")
+60: 	end
+61: 	if not (v24 and (v24:IsA("KeyframeSequence") and (v23 and v23:IsA("KeyframeSequence")))) then
+62: 		return false
+63: 	end
+64: 	v_u_9 = {
+65: 		["Taunt"] = v_u_22(v24),
+66: 		["Idle"] = v_u_22(v23)
+67: 	}
+68: 	return true
+69: end
+70: local function v_u_32(p26, p27) -- name: segment
+71: 	local v28 = p26.times
+72: 	local v29 = 1
+73: 	local v30 = #v28
+
+===== Players.Ranscripts.PlayerScripts.Controllers.PlaytimeRewardController =====
+   ...
+708: 			v289 = v282.Name
+709: 		else
+710: 			v289 = v281.Product
+711: 		end
+712: 		v288.Text = v289
+713: 		v287.icon.Image = v281.Image
+714: 		v283.Visible = true
+715: 		v283.Parent = v275
+716: 		v_u_8.Attach(v283, v284:WaitForChild("Scale"), function()
+717: 			-- upvalues: (copy) v_u_280, (ref) v_u_45, (ref) v_u_40, (ref) v_u_37, (ref) v_u_36, (ref) v_u_3, (ref) v_u_35
+718: 			local v290 = v_u_280
+719: 			if v_u_45[v290] == "Ready" and v_u_40 then
+720: 				v_u_40:FireServer("Claim", v290)
+721: 			elseif v_u_45[v290] == "Claimed" then
+722: 				local v291 = v_u_37[v_u_36[v290].Product]
+723: 				if v291 and (v_u_45[v290] == "Claimed" and v291.RobloxId > 0) then
+724: 					v_u_3:PromptGamePassPurchase(v_u_35, v291.RobloxId)
+725: 				end
+726: 			end
+727: 		end, v_u_32)
+728: 		v_u_8.Attach(v285, v285:WaitForChild("Body"):WaitForChild("Scale"), function()
+729: 			-- upvalues: (copy) v_u_280, (ref) v_u_37, (ref) v_u_36, (ref) v_u_45, (ref) v_u_3, (ref) v_u_35
+730: 			local v292 = v_u_280
+731: 			local v293 = v_u_37[v_u_36[v292].Product]
+732: 			if v293 and (v_u_45[v292] == "Claimed" and v293.RobloxId > 0) then
+   ...
+817: 	end
+818: 	task.spawn(function()
+819: 		-- upvalues: (copy) v_u_314, (ref) v_u_296
+820: 		local v317 = v_u_314:WaitForChild("PlaytimeRewards", 60)
+821: 		if v317 and v317:IsA("ScreenGui") then
+822: 			v_u_296(v317)
+823: 		else
+824: 			warn("[PlaytimeRewardController] the PlaytimeRewards ScreenGui never arrived")
+825: 		end
+826: 	end)
+827: 	v_u_7.InputBegan:Connect(function(p318)
+828: 		-- upvalues: (ref) v_u_41, (ref) v_u_83
+829: 		if v_u_41 and p318.KeyCode == Enum.KeyCode.ButtonB then
+830: 			v_u_83.Close()
+831: 		end
+832: 	end)
+833: 	local function v321(p319) -- name: watchCharacter
+834: 		-- upvalues: (ref) v_u_83
+835: 		local v320 = p319:WaitForChild("Humanoid", 10)
+836: 		if v320 and v320:IsA("Humanoid") then
+837: 			v320.Died:Connect(v_u_83.Close)
+838: 		end
+839: 	end
+840: 	v_u_35.CharacterAdded:Connect(v321)
+841: 	if v_u_35.Character then
+
+===== Players.Ranscripts.PlayerScripts.Controllers.GuildController =====
+   ...
+124: 		local v111 = v91 + v103 + v102.Y
+125: 		local v112 = v91 + v103 + v102.Y
+126: 		local v113 = p86.Y - 8 - v102.Y
+127: 		local v114 = math.max(v112, v113)
+128: 		local v115 = math.clamp(v110, v111, v114)
+129: 		return v100, p86 / v100, Vector2.new(v109, v115) / v100
+130: 	end,
+131: 	["Bevel"] = function(p116, p117, p118) -- name: Bevel
+132: 		local v119 = (p118 - 4 - 5) / p118
+133: 		local v120 = math.clamp(v119, 0.01, 0.98)
+134: 		local v121 = Color3.new(p117.R * 0.78, p117.G * 0.78, p117.B * 0.78)
+135: 		return ColorSequence.new({
+136: 			ColorSequenceKeypoint.new(0, p116),
+137: 			ColorSequenceKeypoint.new(v120, p117),
+138: 			ColorSequenceKeypoint.new(v120 + 0.001, v121),
+139: 			ColorSequenceKeypoint.new(1, v121)
+140: 		})
+141: 	end
+142: }
+143: local function v_u_127() -- name: guild
+144: 	-- upvalues: (copy) v_u_59, (copy) v_u_57
+145: 	local v123 = v_u_59:GetAttribute(v_u_57.Id)
+146: 	local v124 = v_u_59:GetAttribute(v_u_57.Name)
+147: 	local v125 = v_u_59:GetAttribute(v_u_57.Seed)
+148: 	local v126 = v_u_59:GetAttribute(v_u_57.Role)
+149: 	if typeof(v123) == "string" and (typeof(v124) == "string" and typeof(v125) == "number") then
+150: 		if typeof(v126) == "string" then
+151: 			return v123, v124, v125, v126
+   ...
+420: 	local v_u_221 = p217.templates:FindFirstChild("MemberRow"):Clone()
+421: 	v_u_221.Visible = true
+422: 	v_u_221.Parent = v220
+423: 	v_u_221.Name = "Member" .. p218
+424: 	v_u_221.LayoutOrder = p218
+425: 	local v222 = v_u_221:FindFirstChild("Kick")
+426: 	v_u_6.Attach(v222, v222:FindFirstChild("Body"):FindFirstChild("Scale"), function()
+427: 		-- upvalues: (copy) v_u_221, (ref) v_u_74, (ref) v_u_62
+428: 		local v223 = v_u_221:GetAttribute("UserId")
+429: 		if typeof(v223) == "number" then
+430: 			v_u_74 = "Kick"
+431: 			if v_u_62 then
+432: 				v_u_62:FireServer("Kick", v223, nil)
+433: 			end
+434: 		end
+435: 	end)
+436: 	v_u_78[p218] = v_u_221
+437: 	return v_u_221
+438: end
+439: local function v_u_258(p225) -- name: renderMine
+440: 	-- upvalues: (copy) v_u_127, (ref) v_u_61, (copy) v_u_7, (copy) v_u_59, (copy) v_u_57, (copy) v_u_8, (copy) v_u_54, (copy) v_u_46, (copy) v_u_36, (copy) v_u_55, (copy) v_u_56, (ref) v_u_69, (copy) v_u_12, (copy) v_u_27, (copy) v_u_26, (copy) v_u_29, (copy) v_u_28, (copy) v_u_23, (copy) v_u_22, (copy) v_u_25, (copy) v_u_24, (copy) v_u_14, (copy) v_u_58, (copy) v_u_224, (copy) v_u_78
+441: 	local _, v226, v227, v228 = v_u_127()
+442: 	if v226 and v227 then
+443: 		local v229 = v_u_127()
+444: 		local v230
+   ...
+588: 	v_u_269.Name = "Player" .. p266
+589: 	v_u_269.LayoutOrder = p266
+590: 	local v_u_270 = v_u_269:FindFirstChild("Invite")
+591: 	v_u_6.Attach(v_u_270, v_u_270:FindFirstChild("Body"):FindFirstChild("Scale"), function()
+592: 		-- upvalues: (copy) v_u_269, (ref) v_u_76, (copy) v_u_270, (ref) v_u_74, (ref) v_u_62
+593: 		local v271 = v_u_269:GetAttribute("UserId")
+594: 		if typeof(v271) == "number" then
+595: 			v_u_76[v271] = os.clock()
+596: 			v_u_270.Visible = false
+597: 			v_u_269:FindFirstChild("Invited").Visible = true
+598: 			v_u_74 = "Invite"
+599: 			if v_u_62 then
+600: 				v_u_62:FireServer("Invite", v271, nil)
+601: 			end
+602: 		end
+603: 	end)
+604: 	v_u_79[p266] = v_u_269
+605: 	return v_u_269
+606: end
+607: local function v_u_284(p273) -- name: renderInviteModal
+608: 	-- upvalues: (copy) v_u_2, (copy) v_u_59, (copy) v_u_57, (copy) v_u_272, (copy) v_u_76, (copy) v_u_7, (copy) v_u_79
+609: 	local v274 = {}
+610: 	for _, v275 in v_u_2:GetPlayers() do
+611: 		if v275 == v_u_59 or v275:GetAttribute(v_u_57.Id) ~= nil then
+612: 			continue
+   ...
+1422: 		if v451 and v_u_68 then
+1423: 			v_u_341(v451)
+1424: 			v_u_148()
+1425: 		end
+1426: 	end
+1427: 	local v453 = v450:WaitForChild("Body")
+1428: 	v_u_6.Attach(v450, v453:WaitForChild("Scale"), v452)
+1429: 	local v454 = v_u_433.leave
+1430: 	local function v455()
+1431: 		-- upvalues: (ref) v_u_74, (ref) v_u_62
+1432: 		v_u_74 = "Leave"
+1433: 		if v_u_62 then
+1434: 			v_u_62:FireServer("Leave", nil, nil)
+1435: 		end
+1436: 	end
+1437: 	l
+
+===== Players.Ranscripts.PlayerScripts.Controllers.TutorialController =====
+   ...
+324: 			local v130 = Instance.new("Attachment")
+325: 			v130.Name = "TutorialBeamEnd"
+326: 			v130.WorldPosition = v_u_12.BeamEnd(p121, v128.WorldPosition.Y)
+327: 			v130.Parent = workspace.Terrain
+328: 			local v_u_131 = v126:Clone()
+329: 			v_u_131.Name = "TutorialBeam"
+330: 			v_u_131.Attachment0 = v128
+331: 			v_u_131.Attachment1 = v130
+332: 			v_u_131.Parent = workspace.Terrain
+333: 			v_u_25 = v128
+334: 			v_u_26 = v130
+335: 			v_u_24 = v_u_131
+336: 			local v132 = v126.Transparency.Keypoints
+337: 			local v_u_133 = v132[1].Value
+338: 			local v_u_134 = v132[#v132].Value
+339: 			local v_u_135 = (-1 / 0)
+340: 			local function v_u_144(p136) -- name: fade
+341: 				-- upvalues: (ref) v_u_135, (copy) v_u_131, (copy) v_u_133, (copy) v_u_134
+342: 				local v137 = p136 - v_u_135
+343: 				if math.abs(v137) > 1 then
+344: 					v_u_135 = p136
+345: 					local v138 = v_u_131
+346: 					local v139 = NumberSequence.new
+347: 					local v140 = {}
+348: 					local v141 = NumberSequenceKeypoint.new(0, v_u_133)
+349: 					local v142 = NumberSequenceKeypoint.new
+350: 					local v143 = 1.5 / math.max(p136, 1.5)
+351: 					__set_list(v140, 1, {v141, v142(math.clamp(v143, 0.001, 0.999), v_u_134), NumberSequenceKeypoint.new(1, v_u_134)})
+352: 					v138.Transparency = v139(v140)
+353: 				end
+354: 			end
+355: 			v_u_144((v130.WorldPosition - v128.WorldPosition).Magnitude)
+356: 			v_u_28 = v_u_5.Heartbeat:Connect(function()
+357: 				-- upvalues: (ref) v_u_25, (ref) v_u_26, (ref) v_u_12, (ref) v_u_27, (copy) v_u_144
+358: 				local v145 = v_u_25
+359: 				local v146 = v_u_26
+360: 				if v145 and (v146 and v145.Parent) then
+361: 					local v147 = v_u_12.BeamEnd(v_u_27, v145.WorldPosition.Y)
+362: 					if (v146.WorldPosition - v147).Magnitude > 0.05 then
+363: 						v146.WorldPosition = v147
+   ...
+884: 			v300 = v299:FindFirstChild("HUD")
+885: 		else
+886: 			v300 = nil
+887: 		end
+888: 		if v300 and (v300:IsA("ScreenGui") and v298) then
+889: 			v300.Enabled = true
+890: 		end
+891: 		local v301 = v_u_20
+892: 		if v301 then
+893: 			v301.skip.Visible = false
+894: 		end
+895: 		if v_u_19 then
+896: 			v_u_19:FireServer("Skip")
+897: 		end
+898: 	end
+899: end
+900: local function v_u_311(p303) -- name: bind
+901: 	-- upvalues: (ref) v_u_20, (copy) v_u_8, (copy) v_u_302, (ref) v_u_21, (copy) v_u_111, (copy) v_u_2
+902: 	local v304 = p303:WaitForChild("Skip")
+903: 	local v305 = p303:WaitForChild("Finger")
+904: 	local v306 = p303:WaitForChild("Hint")
+905: 	local v307 = v306:WaitForChild("Mouse")
+906: 	local v308 = v306:WaitForChild("Tap")
+907: 	local v309 = v306:WaitForChild("Pad")
+908: 	local v310 = {
+
+===== Players.Ranscripts.PlayerScripts.Controllers.OutfitController =====
+   ...
+143: 				-- upvalues: (copy) p_u_45, (ref) v_u_16, (ref) v_u_15, (ref) v_u_12
+144: 				local v48 = os.clock()
+145: 				local v49 = p_u_45:FindFirstChild("Outfit")
+146: 				if v49 then
+147: 					v49 = v49:FindFirstChildOfClass("Humanoid")
+148: 				end
+149: 				if v49 then
+150: 					v49 = v49:FindFirstChildOfClass("HumanoidDescription")
+151: 				end
+152: 				if v48 - v_u_16 >= 2 and v49 then
+153: 					v_u_16 = v48
+154: 					v_u_15 = v49:Clone()
+155: 					v_u_12:FireServer("Buy", p_u_45)
+156: 				end
+157: 			end)
+158: 		end
+159: 	end
+160: end
+161: local function v_u_53(p51) -- name: detachStand
+162: 	-- upvalues: (copy) v_u_13
+163: 	local v52 = v_u_13[p51]
+164: 	if v52 then
+165: 		v_u_13[p51] = nil
+166: 		v52()
+167: 	end
+
+===== ReplicatedStorage.Shared.Net =====
+1: local v_u_1 = game:GetService("ReplicatedStorage")
+2: local v_u_2 = game:GetService("RunService")
+3: local v_u_11 = {
+4: 	["Declarations"] = {
+5: 		["Ping"] = "RemoteFunction",
+6: 		["GearDenied"] = "RemoteEvent",
+7: 		["GearClick"] = "RemoteEvent",
+8: 		["Fx"] = "RemoteEvent",
+9: 		["KillFeed"] = "RemoteEvent",
+10: 		["Inventory"] = "RemoteEvent",
+11: 		["Titles"] = "RemoteEvent",
+12: 		["PlaytimeRewards"] = "RemoteEvent",
+13: 		["Guilds"] = "RemoteEvent",
+14: 		["Tutorial"] = "RemoteEvent",
+15: 		["Outfits"] = "RemoteEvent"
+16: 	},
+17: 	["InitServer"] = function() -- name: InitServer
+18: 		-- upvalues: (copy) v_u_2, (copy) v_u_11, (copy) v_u_1
+19: 		local v3 = v_u_2:IsServer()
+20: 		assert(v3, "[Net] InitServer can only run on the server")
+21: 		local v4 = Instance.new("Folder")
+22: 		v4.Name = "Remotes"
+23: 		for v5, v6 in v_u_11.Declarations do
+24: 			local v7 = Instance.new(v6)
+25: 			v7.Name = v5
+26: 			v7.Parent = v4
+27: 		end
+28: 		v4.Parent = v_u_1
+29: 	end,
+30: 	["Get"] = function(p8) -- name: Get
+31: 		-- upvalues: (copy) v_u_11, (copy) v_u_2, (copy) v_u_1
+32: 		if not v_u_11.Declarations[p8] then
+33: 			error((("[Net] Remote \'%*\' is not declared in Net.Declarations"):format(p8)))
+34: 		end
+35: 		if not v_u_2:IsServer() then
+36: 			return v_u_1:WaitForChild("Remotes"):WaitForChild(p8)
+37: 		end
+38: 		local v9 = v_u_1:FindFirstChild("Remotes")
+39: 		if not v9 then
+40: 			error("[Net] InitServer must run before Net.Get on the server")
+41: 		end
+42: 		local v10 = v9:FindFirstChild(p8)
+43: 		if not v10 then
+44: 			error((("[Net] Remote \'%*\' is declared but was not created"):format(p8)))
+45: 		end
+46: 		return v10
+47: 	end
+48: }
+49: return v_u_11
+
+===== ReplicatedStorage.Shared.GuildCatalog =====
+   ...
+59: 	if typeof(p16) == "string" and not string.find(p16, "[\r\n\t\11\f]") then
+60: 		local v17 = string.match(p16, "^ *(.-) *$")
+61: 		local v18 = string.gsub(v17, " +", " ")
+62: 		if #v18 < v_u_2.NAME_MIN or (#v18 > v_u_2.NAME_MAX or not (string.find(v18, "^[%w _%-]+$") and string.find(v18, "%w"))) then
+63: 			return nil, v_u_2.NAME_RULE
+64: 		else
+65: 			return v18, nil
+66: 		end
+67: 	else
+68: 		return nil, v_u_2.NAME_RULE
+69: 	end
+70: end
+71: function v_u_2.NameKey(p19) -- name: NameKey
+72: 	return string.lower(p19)
+73: end
+74: function v_u_2.ValidSeed(p20) -- name: ValidSeed
+75: 	-- upvalues: (copy) v_u_2
+76: 	if typeof(p20) == "number" and (p20 == p20 and (p20 % 1 == 0 and (p20 >= 0 and p20 <= v_u_2.SEED_MAX))) then
+77: 		return p20
+78: 	else
+79: 		return nil
+80: 	end
+81: end
+82: function v_u_2.Crest(p21) -- name: Crest
+83: 	-- upvalues: (copy) v_u_3, (copy) v_u_15
+
+===== ReplicatedStorage.Shared.Configs.ToolSkills =====
+1: local v1 = {}
+2: local v2 = {
+3: 	["KineticGauntlet"] = {
+4: 		{
+5: 			["Id"] = "Shield",
+6: 			["DisplayName"] = "Kinetic Shield",
+7: 			["Key"] = nil,
+8: 			["Key"] = Enum.KeyCode.Q
+9: 		}
+10: 	},
+11: 	["SwordOfTheSeas"] = {
+12: 		{
+13: 			["Id"] = "Tsunami",
+14: 			["DisplayName"] = "Tsunami",
+15: 			["Key"] = nil,
+16: 			["Key"] = Enum.KeyCode.Q
+17: 		}
+18: 	},
+19: 	["SwordOfSwords"] = {
+20: 		{
+21: 			["Id"] = "Smash",
+22: 			["Key"] = nil,
+23: 			["Key"] = Enum.KeyCode.Q
+24: 		},
+25: 		{
+26: 			["Id"] = "Spin",
+27: 			["Key"] = nil,
+28: 			["Key"] = Enum.KeyCode.E
+29: 		}
+30: 	},
+31: 	["AzurePeriastron"] = {
+32: 		{
+33: 			["Id"] = "Counter",
+34: 			["Key"] = nil,
+35: 			["Key"] = Enum.KeyCode.E
+36: 		},
+37: 		{
+38: 			["Id"] = "Twirl",
+39: 			["Key"] = nil,
+40: 			["Key"] = Enum.KeyCode.Q
+41: 		},
+42: 		{
+43: 			["Id"] = "Lunge",
+44: 			["Key"] = nil,
+45: 			["Key"] = Enum.KeyCode.F
+46: 		}
+47: 	},
+48: 	["HalloweenSword"] = {
+49: 		{
+50: 			["Id"] = "Snare",
+51: 			["Key"] = nil,
+52: 			["Key"] = Enum.KeyCode.Q
+53: 		},
+54: 		{
+55: 			["Id"] = "Wall",
+56: 			["Key"] = nil,
+57: 			["Key"] = Enum.KeyCode.E
+58: 		},
+59: 		{
+60: 			["Id"] = "Shield",
+61: 			["Key"] = nil,
+62: 			["Key"] = Enum.KeyCode.F
+63: 		}
+64: 	},
+65: 	["BatKnightBatSword"] = {
+66: 		{
+67: 			["Id"] = "BatForm",
+68: 			["DisplayName"] = "Bat Form",
+69: 			["Key"] = nil,
+70: 			["Key"] = Enum.KeyCode.Q
+71: 		},
+72: 		{
+73: 			["Id"] = "Dash",
+74: 			["Key"] = nil,
+75: 			["Key"] = Enum.KeyCode.E
+76: 		}
+77: 	},
+78: 	["EnergyBomb"] = {
+79: 		{
+80: 			["Id"] = "Fly",
+81: 			["Key"] = nil,
+82: 			["Key"] = Enum.KeyCode.F
+83: 		}
+84: 	},
+85: 	["MurderKnife"] = {
+86: 		{
+87: 			["Id"] = "ShadowDash",
+88: 			["DisplayName"] = "Shadow Dash",
+89: 			["Key"] = nil,
+90: 			["Key"] = Enum.KeyCode.Q
+91: 		},
+92: 		{
+93: 			["Id"] = "Invisibility",
+94: 			["Key"] = nil,
+95: 			["Key"] = Enum.KeyCode.E
+96: 		},
+97: 		{
+98: 			["Id"] = "ChangeTarget",
+99: 			["DisplayName"] = "Change Target",
+100: 			["Key"] = nil,
+101: 			["Key"] = Enum.KeyCode.F
+102: 		}
+103: 	},
+104: 	["SwordOfDarkness"] = {
+105: 		{
+106: 			["Id"] = "Nightfall",
+107: 			["Key"] = nil,
+108: 			["Key"] = Enum.KeyCode.Q
+109: 		},
+110: 		{
+111: 			["Id"] = "DarkSeek",
+112: 			["DisplayName"] = "Dark Seek",
+113: 			["Key"] = nil,
+114: 			["Key"] = Enum.KeyCode.E
+115: 		}
+116: 	},
+117: 	["SwordOfLight"] = {
+118: 		{
+119: 			["Id"] = "Daybreak",
+120: 			["Key"] = nil,
+121: 			["Key"] = Enum.KeyCode.Q
+122: 		},
+123: 		{
+124: 			["Id"] = "LightWarp",
+125: 			["DisplayName"] = "Light Warp",
+126: 			["Key"] = nil,
+127: 			["Key"] = Enum.KeyCode.E
+128: 		}
+129: 	},
+130: 	["FallPeriastron"] = {
+131: 		{
+132: 			["Id"] = "Leafnado",
+133: 			["Key"] = nil,
+134: 			["Key"] = Enum.KeyCode.Q
+135: 		},
+136: 		{
+137: 			["Id"] = "Lunge",
+138: 			["Key"] = nil,
+139: 			["Key"] = Enum.KeyCode.F
+140: 		}
+141: 	},
+142: 	["DeflectPeriastron"] = {
+143: 		{
+144: 			["Id"] = "Shield",
+145: 			["Key"] = nil,
+146: 			["Key"] = Enum.KeyCode.Q
+147: 		}
+148: 	},
+149: 	["VampireVanquisher"] = {
+150: 		{
+151: 			["Id"] = "Vanquish",
+152: 			["Key"] = nil,
+153: 			["Key"] = Enum.KeyCode.Q
+154: 		}
+155: 	},
+156: 	["UnicornSword"] = {
+157: 		{
+158: 			["Id"] = "Orb",
+159: 			["Key"] = nil,
+160: 			["Key"] = Enum.KeyCode.Q
+161: 		},
+162: 		{
+163: 			["Id"] = "Wrath",
+164: 			["Key"] = nil,
+165: 			["Key"] = Enum.KeyCode.E
+166: 		},
+167: 		{
+168: 			["Id"] = "Fly",
+169: 			["Key"] = nil,
+170: 			["Key"] = Enum.KeyCode.F
+171: 		}
+172: 	},
+173: 	["Thunderbolt"] = {
+174: 		{
+175: 			["Id"] = "WrathOfGod",
+176: 			["DisplayName"] = "Wrath",
+177: 			["Key"] = nil,
+178: 			["Key"] = Enum.KeyCode.Q
+179: 		},
+180: 		{
+181: 			["Id"] = "LightningElbow",
+182: 			["DisplayName"] = "Elbow",
+183: 			["Key"] = nil,
+184: 			["Key"] = Enum.KeyCode.E
+185: 		}
+186: 	},
+187: 	["StaffOfSparks"] = {
+188: 		{
+189: 			["Id"] = "SparkOrb",
+190: 			["DisplayName"] = "Spark Orb",
+191: 			["Key"] = nil,
+192: 			["Key"] = Enum.KeyCode.Q
+193: 		},
+194: 		{
+195: 
+
+===== ReplicatedStorage.Packages.Purse.Packages.purse =====
+   ...
+18: v_u_6.KeepVRTopbarOpen = true
+19: v_u_6.VRIsExclusive = true
+20: v_u_6.VRClosesNonExclusive = true
+21: local v_u_8 = 60
+22: local v_u_9 = Enum.FontSize.Size14
+23: local v_u_10 = 0.5 * v_u_1.PreferredTransparency
+24: local v_u_11 = Color3.new(0.12156862745098039, 0.12156862745098039, 0.12156862745098039)
+25: local v_u_12 = Color3.new(0.19215686274509805, 0.19215686274509805, 0.19215686274509805)
+26: local v_u_13 = Color3.new(0.35294117647058826, 0.5568627450980392, 0.9137254901960784)
+27: local v_u_14 = 0.5 * v_u_1.PreferredTransparency
+28: local v_u_15 = Color3.new(1, 1, 1)
+29: UDim2.fromOffset(14, 9)
+30: local _ = Enum.KeyCode.Backquote.Value
+31: local v_u_16 = Color3.new(0, 0.6352941176470588, 1)
+32: local v_u_17 = "Search"
+33: local v18 = Color3.new(0.37, 0.37, 0.37)
+34: local v_u_19 = 0.15 * v_u_1.PreferredTransparency
+35: local v_u_20 = Enum.KeyCode.Zero.Value
+36: local v21 = Enum.KeyCode.Backspace.Value
+37: local v_u_22 = {
+38: 	[Enum.UserInputType.Gamepad1] = true,
+39: 	[Enum.UserInputType.Gamepad2] = true,
+40: 	[Enum.UserInputType.Gamepad3] = true,
+41: 	[Enum.UserInputType.Gamepad4] = true,
+42: 	[Enum.UserInputType.Gamepad5] = true,
+43: 	[Enum.UserInputType.Gamepad6] = true,
+44: 	[Enum.UserInputType.Gamepad7] = true,
+45: 	[Enum.UserInputType.Gamepad8] = true
+46: }
+47: local v_u_23 = game:GetService("ContextActionService")
+48: local v_u_24 = game:GetService("GamepadService")
+   ...
+337: 				v_u_136()
+338: 			end
+339: 		end)
+340: 		local v138 = p132.Index <= v_u_59
+341: 		if not v138 or v_u_38.Visible then
+342: 			v_u_119.Draggable = true
+343: 		end
+344: 		p132:UpdateEquipView()
+345: 		if v138 then
+346: 			v_u_50 = v_u_50 + 1
+347: 			if v_u_50 >= 1 and not v_u_32 then
+348: 				v_u_32 = true
+349: 				v_u_23:BindAction("BackpackHotbarEquip", changeToolFunc, false, Enum.KeyCode.ButtonL1, Enum.KeyCode.ButtonR1)
+350: 			end
+351: 		end
+352: 		v_u_47[p_u_133] = p132
+353: 		for v139 = 1, v_u_59 do
+354: 			v140 = v_u_45[v139]
+355: 			if v140.Tool then
+356: 				continue
+357: 			end
+358: 		end
+359: 		local v140 = nil
+360: 		v_u_46 = v140
+361: 	end
+   ...
+583: 	v_u_119.Draggable = false
+584: 	v_u_119.BackgroundTransparency = v_u_14
+585: 	v_u_119.MouseButton1Click:connect(function()
+586: 		-- upvalues: (copy) v_u_118
+587: 		changeSlot(v_u_118)
+588: 	end)
+589: 	v_u_118.Frame = v_u_119
+590: 	local v177 = v_u_83("Frame", "SelectionObjectClipper")
+591: 	v177.Visible = false
+592: 	v177.Parent = v_u_119
+593: 	local v178 = v_u_83("ImageLabel", "Selector")
+594: 	v178.Size = UDim2.fromScale(1, 1)
+595: 	v178.Image = "rbxasset://textures/ui/Keyboard/key_selection_9slice.png"
+596: 	v178.ScaleType = Enum.ScaleType.Slice
+597: 	v178.SliceCenter = Rect.new(12, 12, 52, 52)
+598: 	v178.Parent = v177
+599: 	v_u_121 = v_u_83("ImageLabel", "Icon")
+600: 	v_u_121.Size = UDim2.fromScale(0.8, 0.8)
+601: 	v_u_121.Position = UDim2.fromScale(0.1, 0.1)
+602: 	v_u_121.Parent = v_u_119
+603: 	v_u_122 = v_u_83("TextLabel", "ToolName")
+604: 	v_u_122.Size = UDim2.new(1, -2, 1, -2)
+605: 	v_u_122.Position = UDim2.fromOffset(1, 1)
+606: 	v_u_122.Parent = v_u_119
+607: 	v_u_118.Frame.LayoutOrder = v_u_118.Index
+   ...
+1028: 	table.insert(v264, v265:connect(v266))
+1029: 	local v267 = v_u_56
+1030: 	local v268 = v_u_44.ChildAdded
+1031: 	local v269 = v_u_245
+1032: 	table.insert(v267, v268:connect(v269))
+1033: 	for _, v270 in pairs(v_u_44:GetChildren()) do
+1034: 		v_u_245(v270)
+1035: 	end
+1036: 	v_u_97()
+1037: end
+1038: local function v276(p272, p273) -- name: OnInputBegan
+1039: 	-- upvalues: (ref) v_u_53, (copy) v_u_48, (ref) v_u_38, (copy) v_u_6
+1040: 	local v274 = p272.UserInputType == Enum.UserInputType.Keyboard and not v_u_53 and v_u_48[p272.KeyCode.Value]
+1041: 	if v274 then
+1042: 		v274(p273)
+1043: 	end
+1044: 	local v275 = p272.UserInputType
+1045: 	if not p273 and (v275 == Enum.UserInputType.MouseButton1 or v275 == Enum.UserInputType.Touch) and v_u_38.Visible then
+1046: 		v_u_6.OpenClose()
+1047: 	end
+1048: end
+1049: local function v280(p277) -- name: OnUISChanged
+1
+
+===== ReplicatedStorage.Packages.Purse.Packages._Index.ryanlua_topbarplus@1.0.1.topbarplus =====
+   ...
+25: local v13 = require(v_u_5.Features.Gamepad)
+26: local v14 = require(v_u_5.Features.Overflow)
+27: local v_u_15 = {}
+28: v_u_15.__index = v_u_15
+29: local v_u_16 = v4.LocalPlayer
+30: local v17 = v_u_5.Features.Themes
+31: local v_u_18 = {}
+32: local v_u_19 = v_u_9.new()
+33: local v_u_20 = v_u_5.Elements
+34: local v_u_21 = 0
+35: local v_u_22 = {
+36: 	["mobile"] = Enum.PreferredInput.Touch,
+37: 	["desktop"] = Enum.PreferredInput.KeyboardAndMouse,
+38: 	["console"] = Enum.PreferredInput.Gamepad
+39: }
+40: v_u_15.baseDisplayOrderChanged = v_u_9.new()
+41: v_u_15.baseDisplayOrder = 10
+42: v_u_15.baseTheme = require(v17.Default)
+43: v_u_15.isOldTopbar = false
+44: v_u_15.iconsDictionary = v_u_18
+45: v_u_15.insetHeightChanged = v_u_9.new()
+46: v_u_15.container = require(v_u_20.Container)(v_u_15)
+47: v_u_15.topbarEnabled = true
+48: v_u_15.iconAdded = v_u_9.new()
+49: v_u_15.iconRemoved = v_u_9.new()
+   ...
+129: 		v_u_18[v_u_41] = nil
+130: 	end)
+131: 	v_u_38.selected = v40:add(v_u_9.new())
+132: 	v_u_38.deselected = v40:add(v_u_9.new())
+133: 	v_u_38.toggled = v40:add(v_u_9.new())
+134: 	v_u_38.viewingStarted = v40:add(v_u_9.new())
+135: 	v_u_38.viewingEnded = v40:add(v_u_9.new())
+136: 	v_u_38.stateChanged = v40:add(v_u_9.new())
+137: 	v_u_38.notified = v40:add(v_u_9.new())
+138: 	v_u_38.noticeStarted = v40:add(v_u_9.new())
+139: 	v_u_38.noticeChanged = v40:add(v_u_9.new())
+140: 	v_u_38.endNotices = v40:add(v_u_9.new())
+141: 	v_u_38.toggleKeyAdded = v40:add(v_u_9.new())
+142: 	v_u_38.fakeToggleKeyChanged = v40:add(v_u_9.new())
+143: 	v_u_38.alignmentChanged = v40:add(v_u_9.new())
+144: 	v_u_38.updateSize = v40:add(v_u_9.new())
+145: 	v_u_38.resizingComplete = v40:add(v_u_9.new())
+146: 	v_u_38.joinedParent = v40:add(v_u_9.new())
+147: 	v_u_38.menuSet = v40:add(v_u_9.new())
+148: 	v_u_38.dropdownSet = v40:add(v_u_9.new())
+149: 	v_u_38.updateMenu = v40:add(v_u_9.new())
+150: 	v_u_38.startMenuUpdate = v40:add(v_u_9.new())
+151: 	v_u_38.childThemeModified = v40:add(v_u_9.new())
+152: 	v_u_38.indicatorSet = v40:add(v_u_9.new())
+153: 	v_u_38.dropdownChildAdded = v40:add(v_u_9.new())
+154: 	v_u_38.menuChildAdded = v40:add(v_u_9.new())
+   ...
+161: 	v_u_38.joinedFrame = false
+162: 	v_u_38.parentIconUID = false
+163: 	v_u_38.deselectWhenOtherIconSelected = true
+164: 	v_u_38.totalNotices = 0
+165: 	v_u_38.activeState = "Deselected"
+166: 	v_u_38.alignment = ""
+167: 	v_u_38.originalAlignment = ""
+168: 	v_u_38.appliedTheme = {}
+169: 	v_u_38.appearance = {}
+170: 	v_u_38.cachedInstances = {}
+171: 	v_u_38.cachedNamesToInstances = {}
+172: 	v_u_38.cachedCollectives = {}
+173: 	v_u_38.bindedToggleKeys = {}
+174: 	v_u_38.customBehaviours = {}
+175: 	v_u_38.toggleItems = {}
+176: 	v_u_38.bindedEvents = {}
+177: 	v_u_38.notices = {}
+178: 	v_u_38.menuIcons = {}
+179: 	v_u_38.dropdownIcons = {}
+180: 	v_u_38.childIconsDict = {}
+181: 	v_u_38.creationTime = os.clock()
+182: 	v_u_38.widget = v40:add(require(v_u_20.Widget)(v_u_38, v_u_15))
+183: 	v_u_38:setAlignment()
+184: 	v_u_21 = v_u_21 + 1
+185: 	local v42 = v_u_21 * 0.01 + 1
+   ...
+220: 			end
+221: 			v_u_45 = v47
+222: 			if v_u_38.isSelected then
+223: 				v_u_38:deselect("User", v_u_38)
+224: 				return
+225: 			end
+226: 			v_u_38:select("User", v_u_38)
+227: 		end
+228: 	end)
+229: 	v40:add(v_u_1.InputBegan:Connect(function(p48, p49)
+230: 		-- upvalues: (copy) v_u_38, (ref) v_u_45
+231: 		if not v_u_38.locked then
+232: 			if v_u_38.bindedToggleKeys[p48.KeyCode] and not p49 then
+233: 				if v_u_38.locked then
+234: 					return
+235: 				end
+236: 				local v50 = tick()
+237: 				if v50 - v_u_45 < 0.1 then
+238: 					return
+239: 				end
+240: 				v_u_45 = v50
+241: 				if v_u_38.isSelected then
+242: 					v_u_38:deselect("User", v_u_38)
+243: 					return
+244: 				end
+   ...
+823: 		p_u_215(p_u_213, ...)
+824: 	end)
+825: 	return p_u_213
+826: end
+827: function v_u_15.unbindEvent(p219, p220) -- name: unbindEvent
+828: 	local v221 = p219.bindedEvents[p220]
+829: 	if v221 then
+830: 		v221:Disconnect()
+831: 		p219.bindedEvents[p220] = nil
+832: 	end
+833: 	retur
+
+===== ReplicatedStorage.Packages.Purse.Packages._Index.ryanlua_topbarplus@1.0.1.topbarplus.Elements.Caption =====
+   ...
+59: 	v_u_10.Parent = v_u_5
+60: 	local v11 = Instance.new("UIListLayout")
+61: 	v11.Name = "Layout1"
+62: 	v11.Padding = UDim.new(0, 6)
+63: 	v11.FillDirection = Enum.FillDirection.Vertical
+64: 	v11.HorizontalAlignment = Enum.HorizontalAlignment.Center
+65: 	v11.HorizontalFlex = Enum.UIFlexAlignment.None
+66: 	v11.ItemLineAlignment = Enum.ItemLineAlignment.Automatic
+67: 	v11.VerticalFlex = Enum.UIFlexAlignment.None
+68: 	v11.SortOrder = Enum.SortOrder.LayoutOrder
+69: 	v11.Parent = v_u_10
+70: 	local v12 = Instance.new("ImageLabel")
+71: 	v12.Name = "Key1"
+72: 	v12.Image = "rbxasset://textures/ui/Controls/key_single.png"
+73: 	v12.ImageTransparency = 0.7
+74: 	v12.ScaleType = Enum.ScaleType.Slice
+75: 	v12.SliceCenter = Rect.new(5, 5, 23, 24)
+76: 	v12.AutomaticSize = Enum.AutomaticSize.X
+77: 	v12.BackgroundTransparency = 1
+78: 	v12.LayoutOrder = 1
+79: 	v12.Size = UDim2.fromOffset(0, 30)
+80: 	v12.ZIndex = 15
+81: 	v12.Parent = v_u_10
+82: 	local v13 = Instance.new("UIPadding")
+83: 	v13.Name = "Inset"
+   ...
+129: 	v17:add(v_u_4:GetPropertyChangedSignal("AbsoluteSize"):Connect(function() -- name: matchSize
+130: 		-- upvalues: (copy) v_u_4, (copy) v_u_18
+131: 		local v19 = v_u_4.AbsoluteSize
+132: 		v_u_18.Size = UDim2.fromOffset(v19.X, v19.Y)
+133: 	end))
+134: 	local v20 = v_u_4.AbsoluteSize
+135: 	v_u_18.Size = UDim2.fromOffset(v20.X, v20.Y)
+136: 	local v_u_21 = false
+137: 	local v_u_22 = v_u_4.Box.Header
+138: 	local v_u_23 = game:GetService("UserInputService")
+139: 	local function v28(p24) -- name: updateHotkey
+140: 		-- upvalues: (copy) v_u_23, (copy) v_u_4, (copy) p_u_2, (copy) v_u_22, (copy) v_u_14, (copy) v_u_10
+141: 		local v25 = v_u_23.KeyboardEnabled
+142: 		local v26 = v_u_4:GetAttribute("CaptionText") or ""
+143: 		local v27 = v26 == "_hotkey_"
+144: 		if v25 or not v27 then
+145: 			v_u_22.Text = v26
+146: 			v_u_22.Visible = not v27
+147: 			if p24 then
+148: 				v_u_14.Text = p24.Name
+149: 				v_u_10.Visible = true
+150: 			end
+151: 			if not v25 then
+152: 				v_u_10.Visible = false
+153: 			end
+   ...
+211: 			v46:Play()
+212: 			v46.Completed:Once(function()
+213: 				-- upvalues: (copy) v_u_47
+214: 				v_u_47:Disconnect()
+215: 			end)
+216: 		end
+217: 	end
+218: 	v17:add(v_u_3:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+219: 		-- upvalues: (copy) v_u_48
+220: 		v_u_48()
+221: 	end))
+222: 	v_u_48(false)
+223: 	v17:add(p_u_2.toggleKeyAdded:Connect(v28))
+224: 	for v49, _ in pairs(p_u_2.bindedToggleKeys) do
+225: 		local v50 = v_u_23.KeyboardEnabled
+226: 		local v51 = v_u_4:GetAttribute("CaptionText") or ""
+227: 		local v52 = v51 == "_hotkey_"
+228: 		if v50 or not v52 then
+229: 			v_u_22.Text = v51
+230: 			v_u_22.Visible = not v52
+231: 			if v49 then
+232: 				v_u_14.Text = v49.Name
+233: 				v_u_10.Visible = true
+234: 			end
+235: 			if not v50 then
+236: 				v_u_10.Visible = false
+237: 			end
+238: 		else
+239: 			p_u_2:setCaption()
+240: 		end
+241: 	end
+242: 	v17:add(p_u_2.fakeToggleKeyChanged:Connect(v28))
+243: 	local v53 = p_u_2.fakeToggleKey
+244: 	if v53 then
+245: 		local v54 = v_u_23.KeyboardEnabled
+246: 		local v55 = v_u_4:GetAttribute("CaptionText") or ""
+247: 		local v56 = v55 == "_hotkey_"
+248: 		if v54 or not v56 then
+249: 			v_u_22.Text = v55
+250: 			v_u_22.Visible = not v56
+251: 			if v53 then
+252: 				v_u_14.Text = v53.Name
+253: 				v_u_10.Visible = true
+254: 			end
+255: 			if not v54 then
+256: 				v_u_10.Visible = false
+257: 			end
+   ...
+267: 			local v58 = p_u_2.joinedFrame
+268: 			if v58 and string.match(v58.Name, "Dropdown") then
+269: 				p57 = false
+270: 			end
+271: 			v_u_21 = p57
+272: 			v_u_32:Create(v_u_4, p57 and v_u_30 or v_u_31, {
+273: 				["GroupTransparency"] = p57 and 0 or 1
+274: 			}):Play()
+275: 			if p57 then
+276: 				v_u_18:SetAttribute("ForceUpdate", true)
+277: 			end
+278: 			v_u_48()
+279: 			local v59 = v_u_23.KeyboardEnabled
+280: 			local v60 = v_u_4:GetAttribute("CaptionText") or ""
+281: 			local v61 = v60 == "_hotkey_"
+282: 			if v59 or not v61 then
+283: 				v_u_22.Text = v60
+284: 				v_u_22.Visib
+
+===== ReplicatedStorage.Packages.Purse.Packages._Index.ryanlua_topbarplus@1.0.1.topbarplus.Elements.Indicator =====
+   ...
+61: 			p_u_1:modifyTheme({ "PaddingRight", "Size", UDim2.new(0, 0, 1, 0) }, "IndicatorPadding")
+62: 		elseif v_u_4.Visible then
+63: 			p_u_1:removeModification("IndicatorPadding")
+64: 		end
+65: 		p_u_1:modifyTheme({ "Indicator", "Visible", p13 })
+66: 		p_u_1.updateSize:Fire()
+67: 	end
+68: 	p_u_1.janitor:add(v_u_7:GetPropertyChangedSignal("GamepadCursorEnabled"):Connect(v_u_14))
+69: 	p_u_1.indicatorSet:Connect(function(p15)
+70: 		-- upvalues: (copy) v_u_10, (copy) v_u_12, (copy) v_u_14
+71: 		local v16
+72: 		if p15 then
+73: 			v_u_10.Image = v_u_12:GetImageForKeyCode(p15)
+74: 			v16 = true
+75: 		else
+76: 			v16 = false
+77: 		end
+78: 		v_u_14(v16)
+79: 	end)
+80: 	v_u_2:GetPropertyChangedSignal("AbsoluteSize"):Connect(function() -- name: updateSize
+81: 		-- upvalues: (copy) v_u_2, (copy) v_u_4
+82: 		local v17 = v_u_2.AbsoluteSize.Y * 0.96
+83: 		v_u_4.Size = UDim2.new(0, v17, 0, v17)
+84: 	end)
+85: 	local v18 = v_u_2.AbsoluteSize.Y * 0.96
+
+===== ReplicatedStorage.Packages.Purse.Packages._Index.ryanlua_topbarplus@1.0.1.topbarplus.Features.Gamepad =====
+1: local v_u_1 = game:GetService("GamepadService")
+2: local v_u_2 = game:GetService("UserInputService")
+3: local v_u_3 = game:GetService("GuiService")
+4: local v_u_4 = Enum.KeyCode.DPadUp
+5: local v_u_5 = Enum.PreferredInput.Gamepad
+6: local v_u_6 = {}
+7: local v_u_7 = nil
+8: function v_u_6.start(p8) -- name: start
+9: 	-- upvalues: (ref) v_u_7, (copy) v_u_4, (copy) v_u_3, (copy) v_u_2, (copy) v_u_5, (copy) v_u_6, (copy) v_u_1
+10: 	v_u_7 = p8
+11: 	local v9 = v_u_7
+12: 	local v10
+13: 	if v_u_7.highlightKey == nil then
+14: 		v10 = v_u_4
+15: 	else
+16: 		v10 = v_u_7.highlightKey
+17: 	end
+18: 	v9.highlightKey = v10
+19: 	v_u_7.highlightIcon = false
+20: 	task.delay(1, function()
+21: 		-- upvalues: (ref) v_u_7, (ref) v_u_3, (ref) v_u_4, (ref) v_u_2, (ref) v_u_5, (ref) v_u_6, (ref) v_u_1
+22: 		local v_u_11 = v_u_7.iconsDictionary
+23: 		local v_u_12 = nil
+24: 		local v_u_13 = v_u_4 ~= v_u_7.highlightKey
+25: 		local v_u_14 = v_u_4 ~= v_u_7.highlightKey
+26: 		local v_u_15 = require(script.Parent.Parent.Elements.Selection)
+27: 		local function v_u_22() -- name: updateSelectedObject
+28: 			-- upvalues: (ref) v_u_3, (copy) v_u_11, (ref) v_u_2, (ref) v_u_5, (copy) v_u_15, (ref) v_u_7, (ref) v_u_12, (ref) v_u_14, (ref) v_u_13, (ref) v_u_6
+29: 			local v16 = v_u_3.SelectedObject
+30: 			if v16 then
+31: 				v16 = v16:GetAttribute("CorrespondingIconUID")
+32: 			end
+33: 			if v16 then
+34: 				v16 = v_u_11[v16]
+35: 			end
+36: 			local v17 = v_u_2.PreferredInput == v_u_5
+37: 			if v16 then
+   ...
+43: 						v19:SetAttribute("IgnoreVisibilityUpdater", true)
+44: 						v19.Parent = v16.widget
+45: 						v16.selection = v19
+46: 						v16:refreshAppearance(v19)
+47: 					end
+48: 					v18.SelectionImageObject = v19.Selection
+49: 				end
+50: 				if v_u_12 and v_u_12 ~= v16 then
+51: 					v_u_12:setIndicator()
+52: 				end
+53: 				local v20
+54: 				if v17 and not (v_u_14 or v16.parentIconUID) then
+55: 					v20 = Enum.KeyCode.ButtonB
+56: 				else
+57: 					v20 = nil
+58: 				end
+59: 				v_u_12 = v16
+60: 				v_u_7.lastHighlightedIcon = v16
+61: 				v16:setIndicator(v20)
+62: 			else
+63: 				local v21
+64: 				if v17 and not v_u_13 then
+65: 					v21 = v_u_7.highlightKey
+66: 				else
+67: 					v21 = nil
+68: 				end
+69: 				if not v_u_12 then
+70: 					v_u_12 = v_u_6.getIconToHighlight()
+71: 				end
+72: 				if v21 == v_u_7.highlightKey then
+73: 					v_u_13 = true
+74: 				end
+75: 				if v_u_12 then
+76: 					v_u_12:setIndicator(v21)
+77: 				end
+78: 			end
+79: 		end
+80: 		v_u_3:GetPropertyChangedSignal("SelectedObject"):Connect(v_u_22)
+81: 		local function v23() -- name: preferredInputChanged
+82: 			-- upvalues: (ref) v_u_2, (ref) v_u_5, (ref) v_u_13, (ref) v_u_14, (copy) v_u_22
+83: 			if v_u_2.PreferredInput ~= v_u_5 then
+84: 				v_u_13 = false
+   ...
+97: 			if p24.UserInputType == Enum.UserInputType.MouseButton1 then
+98: 				local v25 = v_u_3.SelectedObject
+99: 				if v25 then
+100: 					v25 = v25:GetAttribute("CorrespondingIconUID")
+101: 				end
+102: 				if v25 then
+103: 					v25 = v_u_11[v25]
+104: 				end
+105: 				if v25 then
+106: 					v_u_3.SelectedObject = nil
+107: 				end
+108: 				return
+109: 			elseif p24.KeyCode == v_u_7.highlightKey then
+110: 				local v26 = v_u_6.getIconToHighlight()
+111: 				if v26 then
+112: 					if v_u_1.GamepadCursorEnabled then
+113: 						task.wait(0.2)
+114: 						v_u_1:DisableGamepadCursor()
+115: 					end
+116: 					v_u_3.SelectedObject = v26:getInstance("ClickRegion")
+117: 				end
+118: 			end
+119: 		end)
+120: 	end)
+121: end
+   ...
+139: 	-- upvalues: (copy) v_u_2, (copy) v_u_1, (copy) v_u_3
+140: 	local v_u_32 = false
+141: 	p_u_31.InputBegan:Connect(function(_)
+142: 		-- upvalues: (ref) v_u_32
+143: 		v_u_32 = true
+144: 		task.wait()
+145: 		task.wait()
+146: 		v_u_32 = false
+147: 	end)
+148: 	local v_u_36 = v_u_2.InputBegan:Connect(function(p33)
+149: 		-- upvalues: (ref) v_u_32, (ref) v_u_1, (ref) v_u_3, (copy) p_u_31
+150: 		task.wait()
+151: 		if p33.KeyCode == Enum.KeyCode.ButtonA and v_u_32 then
+152: 			task.wait(0.2)
+153: 			v_u_1:DisableGamepadCurs
+
+===== ReplicatedStorage.Packages.Purse.Packages._Index.ryanlua_topbarplus@1.0.1.topbarplus.Features.Themes.Default =====
+1: return {
+2: 	{ "IconCorners", "CornerRadius", UDim.new(1, 0) },
+3: 	{ "Selection", "RotationSpeed", 1 },
+4: 	{ "Selection", "Size", UDim2.new(1, 0, 1, 1) },
+5: 	{ "Selection", "Position", UDim2.new(0, 0, 0, 0) },
+6: 	{ "SelectionGradient", "Color", ColorSequence.new({ ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(1, Color3.fromRGB(86, 86, 86)) }) },
+7: 	{
+8: 		"IconImage",
+9: 		"Image",
+10: 		"",
+11: 		"Deselected"
+12: 	},
+13: 	{
+14: 		"IconLabel",
+15: 		"Text",
+16: 		"",
+17: 		"Deselected"
+18: 	},
+
+===== ReplicatedStorage.Packages.RagdollService =====
+   ...
+73: 					local v28 = v_u_23.AnimationPlayed
+74: 					local function v30(p29)
+75: 						-- upvalues: (ref) v_u_4, (ref) v_u_22
+76: 						v_u_4.SaveTrack(v_u_22.SavedTracks, p29)
+77: 					end
+78: 					table.insert(v27, v28:Connect(v30))
+79: 				end
+80: 				table.insert(v24, v25:Once(v31))
+81: 			end
+82: 		end
+83: 	end
+84: end
+85: local function v_u_38(_) -- name: DeactivateLocalPlayerRagdoll
+86: 	-- upvalues: (ref) v_u_13, (copy) v_u_12, (copy) v_u_4, (copy) v_u_10
+87: 	if v_u_13 and v_u_12.Character ~= v_u_13.Character then
+88: 		v_u_13 = nil
+89: 	end
+90: 	if v_u_13 then
+91: 		local v33 = v_u_13
+92: 		v_u_13 = nil
+93: 		for _, v34 in v33.Connections do
+94: 			v34:Disconnect()
+95: 		end
+96: 		if v33.Humanoid then
+97: 			v_u_4.ToggleHumanoidRagdoll(false, v33.Humanoid)
+   ...
+222: 	v_u_4.ToggleRagdollComponents(true, v69)
+223: 	if v69.Animator and not (v_u_8 and v_u_2:GetPlayerFromCharacter(p67)) then
+224: 		for _, v71 in v69.Animator:GetPlayingAnimationTracks() do
+225: 			v71:Stop()
+226: 		end
+227: 	end
+228: 	local v72 = v69.RootPart
+229: 	if v72 and (v_u_9 or v72:CanSetNetworkOwnership() and v72:GetNetworkOwner() == nil) then
+230: 		v72:ApplyAngularImpulse(v72.CFrame.RightVector * 50)
+231: 	end
+232: 	return true
+233: end
+234: local function v_u_78(p74) -- name: DeactivateRagdoll
+235: 	-- upvalues: (copy) v_u_4, (copy) v_u_11, (copy) v_u_8, (copy) v_u_2, (ref) v_u_14
+236: 	local v75 = v_u_4.IsModel(p74)
+237: 	assert(v75, "Character is not model.")
+238: 	local v76 = v_u_11[p74]
+239: 	if not (v76 and v76.Ragdolled) then
+240: 		return false
+241: 	end
+242: 	v76.Ragdolled = false
+243: 	if v76.Humanoid then
+244: 		v_u_4.ToggleHumanoidRagdoll(false, v76.Humanoid)
+245: 	end
+246: 	v_u_4.ToggleRagdollComponents(false, v76)
+   ...
+269: 	assert(v84, "Character is not model.")
+270: 	if v_u_7.Handles(p83) then
+271: 		return v_u_7.Up(p83)
+272: 	end
+273: 	if not v_u_11[p83] then
+274: 		return false
+275: 	end
+276: 	v_u_78(p83)
+277: 	v_u_59(p83)
+278: 	return true
+279: end
+280: if v_u_8 then
+281: 	v_u_14 = Instance.new("RemoteEvent")
+282: 	v_u_14.Name = "LocalPlayerRagdollRemote"
+283: 	v_u_14.Parent = script
+284: else
+285: 	v_u_14 = script:FindFirstChild("LocalPlayerRagdollRemote")
+286: 	if v_u_14 then
+287: 		v_u_14.OnClientEvent:Connect(function(p86, p87)
+288: 			-- upvalues: (copy) v_u_32, (copy) v_u_38
+289: 			if p86 then
+290: 				v_u_32(p87)
+291: 			else
+292: 				v_u_38(p87)
+293: 			end
+294: 		end)
+295: 	end
+296: 	local v_u_88 = nil
+297: 	v_u_88 = script.ChildAdded:Connect(function(p89)
+298: 		-- upvalues: (ref) v_u_88, (copy) v_u_32, (copy) v_u_38
+299: 		if p89:IsA("RemoteEvent") and p89.Name == "LocalPlayerRagdollRemote" then
+300: 			v_u_88:Disconnect()
+301: 			p89.OnClientEvent:Connect(function(p90, p91)
+302: 				-- upvalues: (ref) v_u_32, (ref) v_u_38
+303: 				if p90 then
+304: 					v_u_32(p91)
+305: 				else
+306: 					v_u_38(p91)
+307: 				end
+308: 			end)
+309: 		end
+310: 	end)
+311: end
+312: v1.IsPlayerRagdolled = v45
+313: v1.IsRagdolled = v41
+314: v1.SetupRagdoll = v_u_66
+315: v1.DestroyRagdoll = v_u_59
+316: v1.ActivateRagdoll = v_u_73
+317: v1.DeactivateRagdoll = v_u_78
+318: v1.Ragdoll = v_u_82
+319: v1.Unragdoll = v_u_85
+320: local v_u_92
+321: if v_u_8 then
+322: 	v_u_92 = Instance.new("BindableEvent")
+323: 	v_u_92.Event:Connect(function(p_u_93, p94)
+324: 		-- upvalues: (copy) v_u_82, (copy) v_u_85
+325: 		if v_u_82(p_u_93) then
+326: 			task.delay(p94, function()
+327: 				-- upvalues: (ref) v_u_85, (copy) p_u_93
+328: 				v_u_85(p_u_93)
+329: 			end)
+
+===== ReplicatedStorage.Packages.BowClient =====
+1: local v_u_1 = game:GetService("Players")
+2: return {
+3: 	["Attach"] = function(p_u_2) -- name: Attach
+4: 		-- upvalues: (copy) v_u_1
+5: 		local v_u_3 = p_u_2:WaitForChild("Remote")
+6: 		local v_u_4 = v_u_1.LocalPlayer
+7: 		local v_u_5 = nil
+8: 		local v_u_6 = false
+9: 		local v_u_7 = false
+10: 		local v_u_8 = Vector3.new(0, 0, 0)
+11: 		local function v_u_30() -- name: startFlying
+12: 			-- upvalues: (copy) v_u_4, (ref) v_u_7, (copy) v_u_3, (copy) p_u_2, (ref) v_u_8, (ref) v_u_6
+13: 			local v9 = v_u_4.Character
+14: 			local v10
+15: 			if v9 then
+16: 				v10 = v9:FindFirstChild("Torso")
+17: 			else
+18: 				v10 = v9
+19: 			end
+20: 			if v9 then
+21: 				v9 = v9:FindFirstChildOfClass("Humanoid")
+22: 			end
+23: 			if not v_u_7 and (v10 and (v9 and v9.Health > 0)) then
+24: 				v_u_7 = true
+25: 				v_u_3:FireServer("FlyState", true)
+26: 				local v11 = p_u_2:FindFirstChild("Stats")
+27: 				if v11 then
+28: 					v11 = v11:GetAttribute("FlyTopSpeed")
+29: 				end
+30: 				local v12 = typeof(v11) ~= "number" and 50 or v11
+31: 				local v13 = 1 - 2 / v12
+32: 				v_u_8 = v10.AssemblyLinearVelocity + v10.CFrame.LookVector * 3 + Vector3.new(0, 10, 0)
+33: 				v9.PlatformStand = true
+34: 				v9.AutoRotate = false
+35: 				local v14 = Instance.new("BodyGyro")
+36: 				v14.Name = "BowFlightGyro"
+37: 				v14.P = 1000000
+   ...
+83: 				end
+84: 				v14:Destroy()
+85: 				v15:Destroy()
+86: 				v_u_7 = false
+87: 				if v9.Parent then
+88: 					v9.PlatformStand = false
+89: 					v9.AutoRotate = true
+90: 					v9:ChangeState(Enum.HumanoidStateType.Freefall)
+91: 				end
+92: 				if v10.Parent then
+93: 					v10.AssemblyLinearVelocity = v_u_8
+94: 				end
+95: 				v_u_3:FireServer("FlyState", false)
+96: 			end
+97: 		end
+98: 		v_u_3.OnClientEvent:Connect(function(p31)
+99: 			-- upvalues: (ref) v_u_7, (copy) v_u_30
+100: 			if p31 == "Fly" then
+101: 				if v_u_7 then
+102: 					v_u_7 = false
+103: 				else
+104: 					task.spawn(v_u_30)
+105: 				end
+106: 			else
+107: 				return
+108: 			end
+109: 		end)
+110: 		p_u_2.Activated:Connect(function()
+111: 			-- upvalues: (ref) v_u_5, (copy) v_u_3
+112: 			if v_u_5 then
+113: 				v_u_3:FireServer("Fire", v_u_5.Hit.Position)
+114: 			end
+115: 		end)
+116: 		p_u_2.Equipped:Connect(function(p32)
+117: 			-- upvalues: (ref) v_u_5, (ref) v_u_6
+118: 			v_u_5 = p32
+119: 			v_u_6 = true
+120: 		end)
+121: 		p_u_2.Unequipped:Connect(function()
+122: 			-- upvalues: (ref) v_u_6, (ref) v_u_7
+123: 			v_u_6 = false
+124: 			v_u_7 = false
+125: 		end)
+
+===== StarterPlayer.PlayerModule.CameraModule.MouseLockController =====
+   ...
+46: function v_u_8.GetBindableToggleEvent(p13) -- name: GetBindableToggleEvent
+47: 	return p13.mouseLockToggledEvent.Event
+48: end
+49: function v_u_8.GetMouseLockOffset(_) -- name: GetMouseLockOffset
+50: 	return Vector3.new(1.75, 0, 0)
+51: end
+52: function v_u_8.UpdateMouseLockAvailability(p14) -- name: UpdateMouseLockAvailability
+53: 	-- upvalues: (copy) v_u_3, (copy) v_u_5, (copy) v_u_4
+54: 	local v15 = v_u_3.LocalPlayer.DevEnableMouseLock
+55: 	local v16 = v_u_3.LocalPlayer.DevComputerMovementMode == Enum.DevComputerMovementMode.Scriptable
+56: 	local v17 = v_u_5.ControlMode == Enum.ControlMode.MouseLockSwitch
+57: 	local v18 = v_u_5.ComputerMovementMode == Enum.ComputerMovementMode.ClickToMove
+58: 	local v19 = v_u_4.PreferredInput == Enum.PreferredInput.KeyboardAndMouse and (v15 and (v17 and not v18))
+59: 	if v19 then
+60: 		v19 = not v16
+61: 	end
+62: 	if v19 ~= p14.enabled then
+63: 		p14:EnableMouseLock(v19)
+64: 	end
+65: end
+66: function v_u_8.OnMouseLockToggled(p20) -- name: OnMouseLockToggled
+67: 	-- upvalues: (copy) v_u_6
+68: 	p20.isMouseLocked = not p20.isMouseLocked
+69: 	if p20.isMouseLocked then
+70: 		local v21 = script:FindFirstChild("CursorImage")
+
+===== StarterPlayer.PlayerModule.CameraModule.BaseCamera =====
+   ...
+33: 	local v17 = v_u_13.CameraMinZoomDistance
+34: 	local v18 = v_u_13.CameraMaxZoomDistance
+35: 	v_u_16.currentSubjectDistance = math.clamp(12.5, v17, v18)
+36: 	v_u_16.inFirstPerson = false
+37: 	v_u_16.inMouseLockedMode = false
+38: 	v_u_16.resetCameraAngle = true
+39: 	v_u_16.enabled = false
+40: 	v_u_16.cameraChangedConn = nil
+41: 	v_u_16.shouldUseVRRotation = false
+42: 	v_u_16.VRRotationIntensityAvailable = false
+43: 	v_u_16.lastVRRotationIntensityCheckTime = 0
+44: 	v_u_16.lastVRRotationTime = 0
+45: 	v_u_16.vrRotateKeyCooldown = {}
+46: 	v_u_16.cameraTranslationConstraints = Vector3.new(1, 1, 1)
+47: 	v_u_16.humanoidJumpOrigin = nil
+48: 	v_u_16.trackingHumanoid = nil
+49: 	v_u_16.cameraFrozen = false
+50: 	v_u_16.subjectStateChangedConn = nil
+51: 	v_u_16.gamepadZoomPressConnection = v_u_12.Pressed:Connect(function()
+52: 		-- upvalues: (copy) v_u_16
+53: 		v_u_16:GamepadZoomPress()
+54: 	end)
+55: 	v_u_16.mouseLockOffset = Vector3.new(0, 0, 0)
+56: 	v_u_4:SetCameraYInvertVisible()
+57: 	v_u_4:SetGamepadCameraSensitivityVisible()
+
+===== StarterPlayer.PlayerModule.CameraModule.CameraInput =====
+1: game:GetService("ContextActionService")
+2: local v_u_1 = game:GetService("UserInputService")
+3: game:GetService("Players")
+4: local v_u_2 = UserSettings():GetService("UserGameSettings")
+5: game:GetService("VRService")
+6: local v3 = game:GetService("GuiService")
+7: local v4 = require(script.Parent.Parent:WaitForChild("CommonUtils")).get("FlagUtil")
+8: local v5 = v4.getUserFlag("UserPSTextboxResetCameraInput")
+9: local v_u_6 = v4.getUserFlag("UserPlayerScriptsSupportTVRemoteKeycodes")
+10: local v7 = script.Parent.Parent:WaitForChild("InputContexts"):WaitForChild("CameraContext")
+11: local v_u_8 = v7:WaitForChild("CameraRotationAction")
+12: local v_u_9 = v7:WaitForChild("CameraZoomAction")
+13: local v_u_10 = v_u_8:WaitForChild("GamepadBinding")
+14: local v_u_11
+15: if v_u_6 then
+16: 	v_u_11 = v_u_8:WaitForChild("MicroGamepadBinding")
+17: else
+18: 	v_u_11 = nil
+19: end
+20: local v_u_12 = v_u_8:WaitForChild("MouseBinding")
+21: local v_u_13 = v_u_8:WaitForChild("TrackpadBinding")
+
+===== StarterPlayer.PlayerModule.ControlModule.DynamicThumbstick =====
+   ...
+81: 	return v26
+82: end
+83: local function v_u_30(p27) -- name: setupThumbstickInput
+84: 	-- upvalues: (copy) v_u_15
+85: 	for _, v28 in v_u_15:GetChildren() do
+86: 		if v28.Name ~= "DynamicTouchBinding" and v28.Name ~= "ClassicTouchBinding" then
+87: 			continue
+88: 		end
+89: 		v28:Destroy()
+90: 	end
+91: 	local v29 = Instance.new("InputBinding")
+92: 	v29.Name = "DynamicTouchBinding"
+93: 	v29.KeyCode = Enum.KeyCode.TouchPosition
+94: 	v29.UIModifier = p27.thumbstickButton
+95: 	v29.Parent = v_u_15
+96: end
+97: function v_u_20.Enable(p_u_31, p32, p_u_33) -- name: Enable
+98: 	-- upvalues: (copy) v_u_19, (copy) v_u_7, (copy) v_u_17, (copy) v_u_10, (copy) v_u_30, (copy) v_u_15
+99: 	if p32 == nil then
+100: 		return false
+101: 	end
+102: 	local v34 = p32 and true or false
+103: 	if p_u_31.enabled == v34 then
+104: 		return true
+105: 	end
+   ...
+417: 	p_u_76.thumbstickButton.Active = false
+418: 	p_u_76.thumbstickButton.Parent = p_u_76.thumbstickFrame
+419: 	if not v_u_10 then
+420: 		local v81
+421: 		if v_u_9 then
+422: 			v81 = v_u_15:FindFirstChild("DynamicTouchBinding")
+423: 		else
+424: 			v81 = nil
+425: 		end
+426: 		if not v81 then
+427: 			v81 = Instance.new("InputBinding")
+428: 			v81.Name = "DynamicTouchBinding"
+429: 			v81.KeyCode = Enum.KeyCode.TouchPosition
+430: 			v81.Parent = v_u_15
+431: 		end
+432: 		v81.UIModifier = p_u_76.thumbstickButton
+433: 	end
+434: 	if v_u_7 and p_u_76.newStyle then
+435: 		p_u_76.startImage = Instance.new("Frame")
+436: 		p_u_76.startImage.Name = "ThumbstickStart"
+437: 		p_u_76.startImage.BackgroundColor3 = Color3.fromRGB(18, 18, 21)
+438: 		p_u_76.startImage.BackgroundTransparency = 0.4
+439: 		p_u_76.startImage.AnchorPoint = Vector2.new(0.5, 0.5)
+440: 		p_u_76.startImage.ZIndex = 10
+441: 		p_u_76.startImage.Parent = p_u_76.thumbstickFrame
+
+===== StarterPlayer.PlayerModule.ControlModule.ClassicThumbstick =====
+   ...
+33: 	return v17
+34: end
+35: local function v_u_21(p18) -- name: setupThumbstickInput
+36: 	-- upvalues: (copy) v_u_8
+37: 	for _, v19 in v_u_8:GetChildren() do
+38: 		if v19.Name ~= "DynamicTouchBinding" and v19.Name ~= "ClassicTouchBinding" then
+39: 			continue
+40: 		end
+41: 		v19:Destroy()
+42: 	end
+43: 	local v20 = Instance.new("InputBinding")
+44: 	v20.Name = "ClassicTouchBinding"
+45: 	v20.KeyCode = Enum.KeyCode.TouchPosition
+46: 	v20.UIModifier = p18.thumbstickButton
+47: 	v20.Parent = v_u_8
+48: end
+49: function v_u_13.Enable(p22, p23, p24) -- name: Enable
+50: 	-- upvalues: (copy) v_u_12, (copy) v_u_7, (copy) v_u_21, (copy) v_u_8
+51: 	if p23 == nil then
+52: 		return false
+53: 	end
+54: 	local v25 = p23 and true or false
+55: 	if p22.enabled == v25 then
+56: 		return true
+57: 	end
+   ...
+175: 	p_u_28.thumbstickButton.Name = "ClassicThumbstickUIModifier"
+176: 	p_u_28.thumbstickButton.BackgroundTransparency = 1
+177: 	p_u_28.thumbstickButton.ImageTransparency = 1
+178: 	p_u_28.thumbstickButton.AutoButtonColor = false
+179: 	p_u_28.thumbstickButton.Size = UDim2.new(1, 0, 1, 0)
+180: 	p_u_28.thumbstickButton.ZIndex = p_u_28.thumbstickFrame.ZIndex
+181: 	p_u_28.thumbstickButton.Visible = true
+182: 	p_u_28.thumbstickButton.Active = false
+183: 	p_u_28.thumbstickButton.Parent = p_u_28.thumbstickFrame
+184: 	if not v_u_7 then
+185: 		local v36 = Instance.new("InputBinding")
+186: 		v36.Name = "ClassicTouchBinding"
+187: 		v36.KeyCode = Enum.KeyCode.TouchPosition
+188: 		v36.UIModifier = p_u_28.thumbstickButton
+189: 		v36.Parent = v_u_8
+190: 	end
+191: 	local v_u_37 = nil
+192: 	local function v_u_46(p38) -- name: DoMove
+193: 		-- upvalues: (copy) p_u_28
+194: 		local v39 = p38 / (p_u_28.thumbstickSize / 2)
+195: 		local v40 = v39.magnitude
+196: 		local v41
+197: 		if v40 < 0.05 then
+198: 			v41 = Vector2.new()
+199: 		else
+
+===== StarterPlayer.PlayerModule.ControlModule =====
+   ...
+66: 	[Enum.TouchMovementMode.DPad] = v_u_27,
+67: 	[Enum.DevTouchMovementMode.DPad] = v_u_27,
+68: 	[Enum.TouchMovementMode.Thumbpad] = v_u_27,
+69: 	[Enum.DevTouchMovementMode.Thumbpad] = v_u_27,
+70: 	[Enum.TouchMovementMode.Thumbstick] = v_u_28,
+71: 	[Enum.DevTouchMovementMode.Thumbstick] = v_u_28,
+72: 	[Enum.TouchMovementMode.DynamicThumbstick] = v_u_27,
+73: 	[Enum.DevTouchMovementMode.DynamicThumbstick] = v_u_27,
+74: 	[Enum.TouchMovementMode.ClickToMove] = v_u_29,
+75: 	[Enum.DevTouchMovementMode.ClickToMove] = v_u_29,
+76: 	[Enum.TouchMovementMode.Default] = v_u_27,
+77: 	[Enum.ComputerMovementMode.Default] = v_u_24,
+78: 	[Enum.ComputerMovementMode.KeyboardMouse] = v_u_24,
+79: 	[Enum.DevComputerMovementMode.KeyboardMouse] = v_u_24,
+80: 	[Enum.DevComputerMovementMode.Scriptable] = nil,
+81: 	[Enum.ComputerMovementMode.ClickToMove] = v_u_29,
+82: 	[Enum.DevComputerMovementMode.ClickToMove] = v_u_29
+83: }
+84: function v_u_1.new() -- name: new
+85: 	-- upvalues: (copy) v_u_1, (copy) v_u_3, (copy) v_u_2, (copy) v_u_32, (copy) v_u_8, (copy) v_u_14, (ref) v_u_34, (copy) v_u_5, (copy) v_u_4, (copy) v_u_15, (copy) v_u_10
+86: 	local v38 = v_u_1
+87: 	local v_u_39 = setmetatable({}, v38)
+88: 	if v_u_3:IsServer() then
+89: 		return v_u_39
+90: 	end
+91: 	v_u_39.controllers = {}
+   ...
+153: 	if not v_u_39.playerGui then
+154: 		v_u_39.playerGuiAddedConn = v_u_2.LocalPlayer.ChildAdded:Connect(function(p42)
+155: 			-- upvalues: (copy) v_u_39
+156: 			if p42:IsA("PlayerGui") then
+157: 				v_u_39.playerGui = p42
+158: 				v_u_39.playerGuiAddedConn:Disconnect()
+159: 				v_u_39.playerGuiAddedConn = nil
+160: 				v_u_39:UpdateMovementMode()
+161: 			end
+162: 		end)
+163: 	end
+164: 	if v_u_15 then
+165: 		v_u_10:BindActivate(Enum.UserInputType.Gamepad1, Enum.KeyCode.ButtonR2)
+166: 	end
+167: 	return v_u_39
+168: end
+169: local function v_u_48(p43) -- name: _fireCustomInputs
+170: 	-- upvalues: (copy) v_u_8
+171: 	local v44 = p43:FindFirstChild("InputContexts")
+172: 	if v44 == nil then
+173: 		return
+174: 	else
+175: 		local v45 = v44:FindFirstChild("CharacterContext")
+176: 		if v45 ~= nil then
+177: 			local v46 = v45:FindFirstChild("RotationAction")
+   ...
+482: 	p107:Enable(false)
+483: end
+484: function v_u_1.SelectComputerMovementModule(_) -- name: SelectComputerMovementModule
+485: 	-- upvalues: (copy) v_u_19, (copy) v_u_4, (copy) v_u_24, (copy) v_u_2, (copy) v_u_8, (copy) v_u_29, (copy) v_u_37
+486: 	local v_u_108 = false
+487: 	if v_u_19 then
+488: 		local function v109()
+489: 			-- upvalues: (ref) v_u_108, (ref) v_u_4
+490: 			v_u_108 = v_u_4.PreferredInput == Enum.PreferredInput.MicroGamepad
+491: 		end
+492: 		pcall(v109)
+493: 	end
+494: 	if v_u_4.PreferredInput == Enum.PreferredInput.KeyboardAndMouse or (v_u_4.PreferredInput == Enum.PreferredInput.Gamepad or v_u_108) then
+495: 		local v110 = v_u_24
+496: 		local v111 = v_u_2.LocalPlayer.DevComputerMovementMode
+497: 		if v111 == Enum.DevComputerMovementMode.UserChoice then
+498: 			if v_u_8.ComputerMovementMode == Enum.ComputerMovementMode.ClickToMove then
+499: 				v110 = v_u_29
+500: 			end
+501: 		else
+502: 			v110 = v_u_37[v111]
+503: 			if not v110 and v111 ~= Enum.DevComputerMovementMode.Scriptable then
+504: 				warn("No character control module is associated with DevComputerMovementMode ", v111)
+505: 			end
+506: 		end
+
+===== Players.Ranscripts.Backpack.MagicCarpet.LocalScript =====
+   ...
+7: LocalObjects = {}
+8: ServerControl = Tool:WaitForChild("ServerControl")
+9: ClientControl = Tool:WaitForChild("ClientControl")
+10: Rate = 0.016666666666666666
+11: SpeedMultiplier = 1.8
+12: CameraSpeed = {
+13: 	["X"] = 40 * SpeedMultiplier,
+14: 	["Z"] = 60 * SpeedMultiplier
+15: }
+16: local v1 = {
+17: 	["Forward"] = {
+18: 		["Mode"] = false,
+19: 		["Keys"] = nil,
+20: 		["Keys"] = {
+21: 			["Key"] = "w",
+22: 			["ByteKey"] = 17
+23: 		}
+24: 	},
+25: 	["Backward"] = {
+26: 		["Mode"] = false,
+27: 		["Keys"] = nil,
+28: 		["Keys"] = {
+29: 			["Key"] = "s",
+30: 			["ByteKey"] = 18
+31: 		}
+32: 	},
+33: 	["Left"] = {
+34: 		["Mode"] = false,
+35: 		["Keys"] = nil,
+36: 		["Keys"] = {
+37: 			["Key"] = "a",
+38: 			["ByteKey"] = 20
+39: 		}
+40: 	},
+41: 	["Right"] = {
+42: 		["Mode"] = false,
+43: 		["Keys"] = nil,
+44: 		["Keys"] = {
+45: 			["Key"] = "d",
+46: 			["ByteKey"] = 19
+47: 		}
+48: 	}
+49: }
+50: Controls = v1
+51: ToolEquipped = false
+52: function HandleFlightControl() -- name: HandleFlightControl
+53: 	if CheckIfAlive() then
+54: 		if FightMonitor then
+55: 			FightMonitor:disconnect()
+56: 		end
+57: 		FightMonitor = Torso.ChildAdded:connect(function(p2)
+58: 			if not Flying then
+   ...
+145: 	end
+146: 	if p29 then
+147: 		PreventJump = Humanoid.Changed:connect(function(p30)
+148: 			if p30 == "Jump" then
+149: 				Humanoid.Jump = false
+150: 			end
+151: 		end)
+152: 	end
+153: end
+154: function CheckIfAlive() -- name: CheckIfAlive
+155: 	return Character and (Character.Parent and (Humanoid and (Humanoid.Parent and (Humanoid.Health > 0 and (Torso and (Torso.Parent and (Player and Player.Parent))))))) and true or false
+156: end
+157: function KeyPress(p31, p32) -- name: KeyPress
+158: 	local v33 = string.lower(p31)
+159: 	local v34 = string.byte(v33)
+160: 	for v35, v36 in pairs(Controls) do
+161: 		if v33 ~= v36.Keys.Key and v34 ~= v36.Keys.ByteKey then
+162: 			continue
+163: 		end
+164: 		Controls[v35].Mode = p32
+165: 	end
+166: end
+167: function Equipped(_) -- name: Equipped
+168: 	Character = Tool.Parent
+169: 	Player = Players:GetPlayerFromCharacter(Character)
+170: 	Humanoid = Character:FindFirstChild("Humanoid")
+171: 	Torso = Character:FindFirstChild("HumanoidRootPart")
+172: 	ToolEquipped = true
+173: 	if CheckIfAlive() then
+
+===== Workspace.Ranscripts.Animate =====
+   ...
+295: 			v_u_14:Stop(p54)
+296: 			v_u_14:Destroy()
+297: 		end
+298: 		v_u_16 = 1
+299: 		v_u_14 = p55:LoadAnimation(v58)
+300: 		v_u_14.Priority = Enum.AnimationPriority.Core
+301: 		v_u_14:Play(p54)
+302: 		v_u_12 = p53
+303: 		v_u_13 = v58
+304: 		if v_u_15 ~= nil then
+305: 			v_u_15:disconnect()
+306: 		end
+307: 		v_u_15 = v_u_14.KeyframeReached:connect(keyFrameReachedFunc)
+308: 	end
+309: end
+310: local v_u_59 = ""
+311: local v_u_60 = nil
+312: local v_u_61 = nil
+313: local v_u_62 = nil
+314: function toolKeyFrameReachedFunc(p63) -- name: toolKeyFrameReachedFunc
+315: 	-- upvalues: (ref) v_u_59, (copy) v_u_7
+316: 	if p63 == "End" then
+317: 		playToolAnimation(v_u_59, 0, v_u_7)
+318: 	end
+319: end
+320: function playToolAnimation(p64, p65, p66, p67) -- name: playToolAnimation
+321: 	-- upvalues: (copy) v_u_17, (ref) v_u_61, (ref) v_u_60, (ref) v_u_59, (ref) v_u_62
+322: 	local v68 = math.random(1, v_u_17[p64].totalWeight)
+323: 	local v69 = 1
+324: 	while v_u_17[p64][v69].weight < v68 do
+325: 		v68 = v68 - v_u_17[p64][v69].weight
+326: 		v69 = v69 + 1
+   ...
+330: 		if v_u_60 ~= nil then
+331: 			v_u_60:Stop()
+332: 			v_u_60:Destroy()
+333: 			p65 = 0
+334: 		end
+335: 		v_u_60 = p66:LoadAnimation(v70)
+336: 		if p67 then
+337: 			v_u_60.Priority = p67
+338: 		end
+339: 		v_u_60:Play(p65)
+340: 		v_u_59 = p64
+341: 		v_u_61 = v70
+342: 		v_u_62 = v_u_60.KeyframeReached:connect(toolKeyFrameReachedFunc)
+343: 	end
+344: end
+345: function stopToolAnimations() -- name: stopToolAnimations
+346: 	-- upvalues: (ref) v_u_59, (ref) v_u_62, (ref) v_u_61, (ref) v_u_60
+347: 	local v71 = v_u_59
+348: 	if v_u_62 ~= nil then
+349: 		v_u_62:disconnect()
+350: 	end
+351: 	v_u_59 = ""
+352: 	v_u_61 = nil
+353: 	if v_u_60 ~= nil then
+354: 		v_u_60:Stop()
+   ...
+434: 		if v79.Name ~= "toolanim" or v79.className ~= "StringValue" then
+435: 			continue
+436: 		end
+437: 		return v79
+438: 	end
+439: 	return nil
+440: end
+441: function animateTool() -- name: animateTool
+442: 	-- upvalues: (ref) v_u_43, (copy) v_u_7
+443: 	if v_u_43 == "None" then
+444: 		playToolAnimation("toolnone", 0.1, v_u_7, Enum.AnimationPriority.Idle)
+445: 		return
+446: 	elseif v_u_43 == "Slash" then
+447: 		playToolAnimation("toolslash", 0, v_u_7, Enum.AnimationPriority.Action)
+448: 		return
+449: 	elseif v_u_43 == "Lunge" then
+450: 		playToolAnimation("toollunge", 0, v_u_7, Enum.AnimationPriority.Action)
+451: 	end
+452: end
+453: function moveSit() -- name: moveSit
+454: 	-- upvalues: (copy) v_u_3, (copy) v_u_4, (copy) v_u_5, (copy) v_u_6
+455: 	v_u_3.MaxVelocity = 0.15
+456: 	v_u_4.MaxVelocity = 0.15
+457: 	v_u_3:SetDesiredAngle(1.57)
+458: 	v_u_4:SetDesiredAngle(-1.57)
