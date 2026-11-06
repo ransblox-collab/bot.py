@@ -1,0 +1,311 @@
+keys: AimAssist, GetTarget, TeamCheck, Team, FireRate, GetClosest
+scripts scanned: 394
+
+===== Players.Gorannss.PlayerScripts.CameraClient =====
+1: local v_u_1 = require(game:GetService("ReplicatedStorage"):WaitForChild("WorldRefs"))
+2: local v2 = game:GetService("Players")
+3: local v3 = game:GetService("ReplicatedStorage")
+4: local v_u_4 = game:GetService("UserInputService")
+5: local v5 = game:GetService("RunService")
+6: local v_u_6 = v5:IsStudio()
+7: local v_u_7 = UserSettings():GetService("UserGameSettings")
+8: local v8 = v3:WaitForChild("Weapons")
+9: local v_u_9 = require(v8:WaitForChild("Config"))
+10: local v_u_10 = require(v8:WaitForChild("ClientState"))
+11: local v_u_11 = require(v3:WaitForChild("Controls"))
+12: local v_u_12 = require(v8:WaitForChild("AimAssist"))
+13: local v_u_13 = v_u_9.Global.Camera
+14: local v_u_14 = v2.LocalPlayer
+15: local v_u_15 = workspace.CurrentCamera
+16: local v_u_16 = Vector2.new(0.006283185307179587, 0.00471238898038469)
+17: local v_u_17 = Vector2.new(4.725, 2.25)
+18: local v_u_18 = Vector2.new(0.008727, 0.00672)
+19: local v_u_19 = Vector2.zero
+20: v_u_4.InputChanged:Connect(function(p20)
+21: 	-- upvalues: (ref) v_u_19
+22: 	if p20.UserInputType == Enum.UserInputType.MouseMovement then
+23: 		v_u_19 = v_u_19 + Vector2.new(p20.Delta.X, p20.Delta.Y)
+24: 	end
+
+===== Players.Gorannss.PlayerScripts.CaseClient =====
+   ...
+1886: local v_u_628 = {
+1887: 	{ "Damage", function(p616)
+1888: 			local v617 = p616.Damage
+1889: 			local v618
+1890: 			if type(v617) == "table" then
+1891: 				local v619 = p616.Damage.Base
+1892: 				v618 = tonumber(v619)
+1893: 			else
+1894: 				v618 = false
+1895: 			end
+1896: 			return v618
+1897: 		end },
+1898: 	{ "FireRate", function(p620)
+1899: 			local v621 = p620.Fire
+1900: 			local v622
+1901: 			if type(v621) == "table" then
+1902: 				local v623 = p620.Fire.RPM
+1903: 				v622 = tonumber(v623)
+1904: 			else
+1905: 				v622 = false
+1906: 			end
+1907: 			return v622
+1908: 		end },
+1909: 	{ "Magazine", function(p624)
+1910: 			local v625 = p624.Ammo
+
+===== Players.Gorannss.PlayerScripts.NetBeatClient =====
+   ...
+1116: 					end
+1117: 				else
+1118: 					return
+1119: 				end
+1120: 			else
+1121: 				return
+1122: 			end
+1123: 		end
+1124: 	end
+1125: end)
+1126: local v_u_452 = {
+1127: 	{
+1128: 		["FireRate"] = 600,
+1129: 		["RPM"] = 600,
+1130: 		["Recoil"] = 1.2,
+1131: 		["RecoilX"] = 0.6,
+1132: 		["RecoilY"] = 1.1,
+1133: 		["Spread"] = 1.5,
+1134: 		["BulletSpread"] = 1.5,
+1135: 		["Damage"] = 28,
+1136: 		["HeadshotMultiplier"] = 2,
+1137: 		["MagSize"] = 30,
+1138: 		["Ammo"] = 30,
+1139: 		["MaxAmmo"] = 30,
+1140: 		["ClipSize"] = 30,
+
+===== ReplicatedStorage.Controls.Spec =====
+1: local v_u_1 = {
+2: 	["Order"] = {
+3: 		"LookSens",
+4: 		"AimSens",
+5: 		"InvertY",
+6: 		"AimAssist",
+7: 		"Vibration",
+8: 		"Deadzone"
+9: 	},
+10: 	["Tabs"] = {
+11: 		{
+12: 			["name"] = "Camera",
+13: 			["keys"] = nil,
+14: 			["keys"] = { "LookSens", "AimSens" }
+15: 		},
+16: 		{
+17: 			["name"] = "Keyboard",
+18: 			["keys"] = nil,
+19: 			["keybinds"] = "kbm",
+20: 			["keys"] = {}
+21: 		},
+22: 		{
+23: 			["name"] = "Controller",
+24: 			["keys"] = nil,
+25: 			["bindings"] = true,
+26: 			["keybinds"] = "pad",
+27: 			["keys"] = {
+28: 				"InvertY",
+29: 				"AimAssist",
+30: 				"AimAssistStrength",
+31: 				"Vibration",
+32: 				"Deadzone",
+33: 				"PadSprint"
+34: 			}
+35: 		},
+36: 		{
+37: 			["name"] = "Touch",
+38: 			["keys"] = nil,
+39: 			["touch"] = true,
+40: 			["keys"] = {
+41: 				"ButtonsMoveCamera",
+42: 				"TouchOpacity",
+   ...
+118: 		["min"] = 0.3,
+119: 		["max"] = 1,
+120: 		["step"] = 0.05,
+121: 		["default"] = 0.7,
+122: 		["label"] = "Aim Sensitivity",
+123: 		["percent"] = true
+124: 	},
+125: 	["InvertY"] = {
+126: 		["kind"] = "bool",
+127: 		["default"] = false,
+128: 		["label"] = "Invert Vertical Axis"
+129: 	},
+130: 	["AimAssist"] = {
+131: 		["kind"] = "bool",
+132: 		["default"] = true,
+133: 		["label"] = "Aim Assist"
+134: 	},
+135: 	["AimAssistStrength"] = {
+136: 		["kind"] = "num",
+137: 		["min"] = 0,
+138: 		["max"] = 1,
+139: 		["step"] = 0.05,
+140: 		["default"] = 1,
+141: 		["label"] = "Aim Assist Strength",
+142: 		["percent"] = true
+143: 	},
+144: 	["Vibration"] = {
+145: 		["kind"] = "bool",
+146: 		["default"] = true,
+147: 		["label"] = "Vibration"
+
+===== ReplicatedStorage.ClanShared =====
+1: local v_u_1 = game:GetService("RunService")
+2: local v_u_7 = {
+3: 	["LIVE"] = true,
+4: 	["TeamTest"] = function() -- name: TeamTest
+5: 		-- upvalues: (copy) v_u_7, (copy) v_u_1
+6: 		if v_u_7.LIVE == true then
+7: 			return false
+8: 		end
+9: 		if v_u_1:IsStudio() or not v_u_1:IsServer() then
+10: 			return false
+11: 		end
+12: 		local v2 = script:GetAttribute("TeamTestUntil")
+13: 		local v3
+14: 		if typeof(v2) == "number" then
+15: 			v3 = os.time() < v2
+16: 		else
+17: 			v3 = false
+18: 		end
+19: 		return v3
+20: 	end,
+21: 	["Enabled"] = function() -- name: Enabled
+22: 		-- upvalues: (copy) v_u_7, (copy) v_u_1
+23: 		if v_u_7.LIVE == true then
+24: 			return true
+25: 		elseif v_u_7.TeamTest() then
+26: 			return true
+27: 		elseif v_u_1:IsStudio() then
+28: 			return workspace:GetAttribute("ClansOff") ~= true
+29: 		else
+30: 			return false
+31: 		end
+32: 	end,
+33: 	["MAX_MEMBERS"] = 10,
+34: 	["TAG_LEN"] = 3,
+35: 	["NAME_MIN"] = 3,
+36: 	["NAME_MAX"] = 20,
+37: 	["INVITE_DAYS"] = 7,
+
+===== ReplicatedStorage.LimitedPacks =====
+   ...
+153: 	return p5.EndsAt
+154: end
+155: function v_u_2.IsOn(p7) -- name: IsOn
+156: 	-- upvalues: (copy) v_u_2, (copy) v_u_1
+157: 	if type(p7) == "string" then
+158: 		p7 = v_u_2.ById[p7]
+159: 	end
+160: 	if p7 then
+161: 		local v8 = p7.Event
+162: 		if type(v8) == "string" then
+163: 			return game:GetService("ReplicatedStorage"):GetAttribute(p7.Event) == true
+164: 		else
+165: 			return workspace:GetAttribute("TestPacksOn") == true and (v_u_1 or game:GetService("ReplicatedStorage"):GetAttribute("TeamTestOn") == true) and true or p7.Enabled ~= false
+166: 		end
+167: 	else
+168: 		return false
+169: 	end
+170: end
+171: function v_u_2.Active(p9) -- name: Active
+172: 	-- upvalues: (copy) v_u_2
+173: 	if type(p9) == "string" then
+174: 		p9 = v_u_2.ById[p9]
+175: 	end
+176: 	local v10 = p9 ~= nil and v_u_2.IsOn(p9)
+177: 	if v10 then
+
+===== ReplicatedStorage.Weapons.AimAssist =====
+   ...
+230: 		v59 = v58
+231: 	end
+232: 	local v60
+233: 	if v58 then
+234: 		v60 = v58:FindFirstChild("Head")
+235: 	else
+236: 		v60 = v58
+237: 	end
+238: 	local v61 = v_u_4.TouchMode()
+239: 	if v61 then
+240: 		v61 = not v_u_4.IsGamepad
+241: 	end
+242: 	if (v_u_4.IsGamepad or v61) and (v_u_4.Settings.AimAssist and (v_u_5.Equipped and (v59 and (v60 and v59.Health > 0)))) then
+243: 		local v62 = v58:FindFirstChildOfClass("Tool")
+244: 		if v62 then
+245: 			v62 = v_u_9[v62:GetAttribute("Weapon") or ""]
+246: 		end
+247: 		local v63
+248: 		if v62 == nil or v62.Fire == nil then
+249: 			v63 = false
+250: 		else
+251: 			v63 = v62.Fire.Mode == "Rocket"
+252: 		end
+253: 		if not v63 and (not v_u_5.CursorFree and (not v_u_5.Rolling and (v59.SeatPart == nil and (v_u_5.Vehicle == nil and (v61 or os.clock() - v_u_4.LastMouseMove > v_u_6.MouseCooldown))))) then
+254: 			local v64 = v61 and v_u_6.Touch or v_u_6
+   ...
+275: 			local v69 = v_u_11.CFrame
+276: 			local v70 = v69.Position
+277: 			local v71 = v69.LookVector
+278: 			local v72 = v58:FindFirstChildOfClass("Tool")
+279: 			if v72 then
+280: 				v72 = v_u_9[v72:GetAttribute("Weapon") or ""]
+281: 			end
+282: 			local v73 = v72 and (v72.Damage and v72.Damage.Range) or v_u_6.DefaultRange
+283: 			local v74 = v_u_6.MaxRange
+284: 			local v75 = math.min(v73, v74)
+285: 			local v76 = v75 * v_u_6.FullPart
+286: 			local v77 = v61 and v_u_6.Touch.Scale or v_u_6.Scale
+287: 			local v78 = v_u_4.Settings.AimAssistStrength or 1
+288: 			local v79 = math.clamp(v78, 0, 1) * v77
+289: 			if v61 and (v57 and (not v65 and (v79 > 0 and os.clock() - v_u_17 >= v64.SnapCooldown))) then
+290: 				local v80 = nil
+291: 				local v81 = nil
+292: 				for _, v82 in v_u_27() do
+293: 					local v83, v84 = v_u_33(v82)
+294: 					if not v83 or (v83 - v60.Position).Magnitude > v75 then
+295: 						continue
+296: 					end
+297: 					local v85 = v83 - v70
+298: 					local v86 = v85.Magnitude
+299: 					local v87
+
+===== ReplicatedStorage.Weapons.GunTuning =====
+   ...
+19: 	for _ = 1, 3 do
+20: 		local v7 = v_u_1.FireServer
+21: 		local v8 = v_u_1
+22: 		local v9 = v_u_5
+23: 		local v10 = {
+24: 			["p"] = v_u_4,
+25: 			["v"] = v_u_6
+26: 		}
+27: 		pcall(v7, v8, v9, v10)
+28: 		task.wait(0.25)
+29: 	end
+30: end)
+31: function v_u_2.SetFireRate(p11) -- name: SetFireRate
+32: 	-- upvalues: (copy) v_u_3, (copy) v_u_1, (copy) v_u_2
+33: 	local v_u_12 = v_u_3()
+34: 	local v_u_13 = 7401
+35: 	local v_u_14 = nil
+36: 	task.spawn(function()
+37: 		-- upvalues: (ref) v_u_1, (copy) v_u_13, (copy) v_u_12, (copy) v_u_14
+38: 		for _ = 1, 3 do
+39: 			local v15 = v_u_1.FireServer
+40: 			local v16 = v_u_1
+41: 			local v17 = v_u_13
+42: 			local v18 = {
+43: 				["p"] = v_u_12,
+
+===== REMOTES =====
+RemoteEvent  ReplicatedStorage.Weapons.Remotes.SetFireRate
