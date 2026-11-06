@@ -1,0 +1,834 @@
+===== Players.Gorannss.PlayerScripts.WeaponClient =====
+   ...
+19: 	-- upvalues: (ref) v_u_14, (copy) v_u_13
+20: 	v_u_14 = v_u_13.RecoilKey()
+21: end)
+22: local v_u_17 = require(v10:WaitForChild("Effects"))
+23: local v_u_18 = require(v10:WaitForChild("HitboxModel"))
+24: local v_u_19 = require(v10:WaitForChild("ClientHitboxes"))
+25: local v_u_20 = require(v10:WaitForChild("HitAudio"))
+26: local v_u_21 = require(v10:WaitForChild("GunAudio"))
+27: local v_u_22 = require(v10:WaitForChild("BoltAction"))
+28: local v_u_23 = require(v10:WaitForChild("Rocket"))
+29: local v_u_24 = require(v10:WaitForChild("VehicleSurface"))
+30: local v_u_25 = require(v10:WaitForChild("ModCatalog"))
+31: local v_u_26 = {
+32: 	["text"] = nil,
+33: 	["mods"] = nil,
+34: 	["mods"] = {}
+35: }
+36: local v_u_27 = setmetatable({}, {
+37: 	["__mode"] = "k"
+38: })
+39: local v_u_28 = v4:WaitForChild("Remotes")
+40: local v_u_29 = require(v4:WaitForChild("Controls"))
+41: local v_u_30 = require(v4:WaitForChild("NetLag"))
+42: local v_u_31 = v_u_3.LocalPlayer
+43: local v_u_32 = workspace.CurrentCamera
+44: local v_u_33 = workspace:WaitForChild("FX")
+45: local v_u_34 = v_u_11.Global
+46: local v_u_35 = Random.new()
+47: local v36 = nil
+48: local v_u_37 = Random.new():NextInteger(1, 1073741824)
+49: local v_u_38 = Vector2.zero
+50: local v_u_39 = Vector2.zero
+51: local v_u_40 = RaycastParams.new()
+52: v_u_40.IgnoreWater = true
+53: v_u_40.FilterType = Enum.RaycastFilterType.Exclude
+54: v_u_40.CollisionGroup = "Bullet"
+55: local v41 = v_u_31:WaitForChild("PlayerGui"):WaitForChild("WeaponHUD", (1 / 0))
+56: local v_u_42 = v41:WaitForChild("Hitmarker")
+57: local v_u_43 = v_u_42:FindFirstChildOfClass("UIScale")
+58: local v_u_44 = v_u_14
+59: local v_u_45 = v36
+60: local v_u_46 = {}
+61: local v_u_47 = {}
+   ...
+84: local v_u_70 = nil
+85: for _, v71 in v_u_42:GetChildren() do
+86: 	if not v71:IsA("GuiObject") then
+87: 		continue
+88: 	end
+89: 	table.insert(v_u_46, v71)
+90: end
+91: table.sort(v_u_46, function(p72, p73)
+92: 	return p72.Name < p73.Name
+93: end)
+94: local v_u_74 = 0.3
+95: for v75, v76 in v_u_46 do
+96: 	v_u_47[v75] = v76:FindFirstChildOfClass("UIStroke")
+97: 	if v_u_47[v75] then
+98: 		v_u_74 = v_u_47[v75].Transparency
+99: 		v_u_47[v75].Transparency = 1
+100: 	end
+101: 	v76.BackgroundTransparency = 1
+102: end
+103: local v_u_77 = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.In, 0, false, 0.12)
+104: local v_u_78 = TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+105: local v79 = v41:WaitForChild("AmmoPanel")
+106: local v_u_80 = v79:WaitForChild("Ammo")
+107: local v_u_81 = v79:WaitForChild("WeaponName")
+108: local v_u_82 = v41:WaitForChild("Reload")
+109: require(v4:WaitForChild("ScaleUI")).Convert(v41)
+110: local v83 = v41:WaitForChild("DamageVignette")
+111: local v_u_84 = v83:GetAttribute("HealthColor") or Color3.fromRGB(110, 0, 0)
+112: local v_u_85 = v83:GetAttribute("ArmorColor") or Color3.fromRGB(0, 70, 175)
+113: local v_u_86 = {}
+114: for _, v87 in v83:GetChildren() do
+115: 	if not v87:IsA("GuiObject") then
+116: 		continue
+117: 	end
+118: 	v87.BackgroundTransparency = 1
+119: 	table.insert(v_u_86, v87)
+120: end
+121: local v_u_88 = 0
+122: local v_u_89 = 0
+123: local v_u_90 = 0
+124: local v_u_91 = {
+   ...
+181: 			v114 = true
+182: 		elseif v_u_45 == nil then
+183: 			v114 = false
+184: 		else
+185: 			v114 = v_u_45:GetAttribute("InFarmZone") == true
+186: 		end
+187: 		local v115
+188: 		if v114 then
+189: 			v115 = "\226\136\158"
+190: 		else
+191: 			local v116 = v_u_58
+192: 			v115 = tostring(v116)
+193: 		end
+194: 		v109.Text = v110(v111, v107, v112, v113, v115)
+195: 		v_u_81.Text = v_u_68.Name
+196: 	end
+197: end
+198: local v118 = v41:WaitForChild("Effets"):WaitForChild("KillFlash")
+199: v_u_13.KillFlash = v_u_13.KillFlash or {
+200: 	["In"] = v118:GetAttribute("In") or 0.05,
+201: 	["Out"] = v118:GetAttribute("Out") or 0.53,
+202: 	["Brightness"] = v118.Brightness,
+203: 	["Contrast"] = v118.Contrast,
+204: 	["Saturation"] = v118.Saturation,
+205: 	["Tint"] = v118.TintColor
+206: }
+207: local v_u_119 = v118:Clone()
+208: v_u_119.Enabled = false
+209: local v120 = Color3.new(1, 1, 1)
+210: v_u_119.Brightness = 0
+211: v_u_119.Contrast = 0
+212: v_u_119.Saturation = 0
+213: v_u_119.TintColor = v120
+214: v_u_119.Parent = game:GetService("Lighting")
+215: local v_u_121 = 0
+216: local function v_u_126() -- name: flashKill
+217: 	-- upvalues: (ref) v_u_121, (copy) v_u_13, (copy) v_u_119, (copy) v_u_8
+218: 	v_u_121 = v_u_121 + 1
+219: 	local v_u_122 = v_u_121
+220: 	local v_u_123 = v_u_13.KillFlash
+221: 	v_u_119.Enabled = true
+222: 	local v124 = v_u_8:Create(v_u_119, TweenInfo.new(v_u_123.In, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+223: 		["Brightness"] = v_u_123.Brightness,
+224: 		["Contrast"] = v_u_123.Contrast,
+225: 		["Saturation"] = v_u_123.Saturation,
+226: 		["TintColor"] = v_u_123.Tint
+227: 	})
+228: 	v124.Completed:Connect(function()
+229: 		-- upvalues: (copy) v_u_122, (ref) v_u_121, (ref) v_u_8, (ref) v_u_119, (copy) v_u_123
+230: 		if v_u_122 == v_u_121 then
+231: 			local v125 = v_u_8:Create(v_u_119, TweenInfo.new(v_u_123.Out, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+232: 				["Brightness"] = 0,
+233: 				["Contrast"] = 0,
+234: 				["Saturation"] = 0,
+235: 				["TintColor"] = nil,
+236: 				["TintColor"] = Color3.new(1, 1, 1)
+237: 			})
+238: 			v125.Completed:Connect(function()
+239: 				-- upvalues: (ref) v_u_122, (ref) v_u_121, (ref) v_u_119
+240: 				if v_u_122 == v_u_121 then
+241: 					v_u_119.Enabled = false
+242: 				end
+243: 			end)
+244: 			v125:Play()
+245: 		end
+246: 	end)
+247: 	v124:Play()
+248: end
+249: v_u_13.FlashKill = v_u_126
+250: local function v_u_132(p127) -- name: showHitmarker
+251: 	-- upvalues: (copy) v_u_13, (copy) v_u_42, (copy) v_u_46, (copy) v_u_8, (copy) v_u_77, (copy) v_u_47, (ref) v_u_74, (copy) v_u_43, (copy) v_u_78, (copy) v_u_126
+252: 	if v_u_13.HitmarkerOn ~= false then
+253: 		local v128 = p127.Killed and v_u_42:GetAttribute("KillColor") or p127.Headshot and v_u_42:GetAttribute("HeadshotColor") or (v_u_42:GetAttribute("HitColor") or Color3.new(1, 1, 1))
+254: 		for v129, v130 in v_u_46 do
+255: 			v130.BackgroundColor3 = v128
+256: 			v130.BackgroundTransparency = 0
+257: 			v_u_8:Create(v130, v_u_77, {
+258: 				["BackgroundTransparency"] = 1
+259: 			}):Play()
+260: 			if not v_u_47[v129] then
+261: 				continue
+262: 			end
+263: 			v_u_47[v129].Transparency = v_u_74
+264: 			v_u_8:Create(v_u_47[v129], v_u_77, {
+265: 				["Transparency"] = 1
+266: 			}):Play()
+267: 		end
+268: 		local v131 = v_u_13.HitmarkerScale or 1
+269: 		v_u_43.Scale = (p127.Killed and 1.6 or 1.3) * v131
+270: 		v_u_8:Create(v_u_43, v_u_78, {
+271: 			["Scale"] = (p127.Killed and 1.2 or 1) * v131
+272: 		}):Play()
+273: 	end
+274: 	if p127.Downed or p127.Killed and p127.Downable == false then
+275: 		v_u_126()
+276: 	end
+277: end
+278: v_u_13.ShowHitmarker = v_u_132
+279: local function v145(p133) -- name: onServerHit
+280: 	-- upvalues: (copy) v_u_20, (copy) v_u_17, (copy) v_u_32, (copy) v_u_132, (copy) v_u_126
+281: 	if workspace:GetAttribute("DebugHits") then
+282: 		local v134 = print
+283: 		local v135 = p133.Headshot
+284: 		local v136 = tostring(v135)
+285: 		local v137 = p133.Killed
+286: 		local v138 = tostring(v137)
+287: 		local v139 = p133.Damage
+288: 		v134(("[SERVEUR] t\195\170te=%s tue=%s d\195\169g\195\162ts=%s"):format(v136, v138, (tostring(v139))))
+289: 	end
+290: 	if p133.Friendly then
+291: 		v_u_20.Play("Flesh")
+292: 		local v140 = p133.Target
+293: 		if typeof(v140) == "Instance" then
+294: 			local v141 = p133.HitPos
+295: 			if typeof(v141) == "Vector3" then
+296: 				v_u_17.Blood(p133.Target, p133.HitPos, p133.HitPos - v_u_32.CFrame.Position)
+297: 			end
+298: 		end
+299: 		return
+300: 	else
+301: 		v_u_20.OnConfirm(p133)
+302: 		local v142 = p133.Target
+303: 		if typeof(v142) == "Instance" then
+   ...
+363: 	end
+364: 	if v162 and (v161 ~= v_u_45 and v162.Health > 0) then
+365: 		local v163 = os.clock()
+366: 		local v164 = v_u_152[v162]
+367: 		local v165 = v162.Health
+368: 		if v164 and v163 - v164.t < 0.5 then
+369: 			local v166 = v164.h
+370: 			v165 = math.min(v165, v166)
+371: 		end
+372: 		if v165 <= 0 then
+373: 			return
+374: 		else
+375: 			local v167 = 1
+376: 			local v168
+377: 			if v_u_68.Damage.Curve then
+378: 				v168 = v_u_158(v_u_68.Damage.Curve, p160)
+379: 			else
+380: 				v168 = v_u_68.Damage.FalloffStart < p160 and (v_u_34.FarDamageScale or 0.9) or v167
+381: 			end
+382: 			local v169 = v_u_18.HEAD[p159.name] == true
+383: 			local v170 = v169 and v_u_68.Damage.Headshot or 1
+384: 			local v171 = v_u_68.Damage.Base * v168 * v170 + 0.5
+385: 			local v172 = math.floor(v171)
+386: 			if v_u_68.Damage.BodyNoKillChance and not v169 then
+387: 				local v173 = v_u_68.Damage.BodyNoKill
+388: 				v172 = math.min(v172, v173)
+389: 			end
+390: 			local v174 = v165 - v172
+391: 			local v175 = v174 <= 0
+392: 			local v176 = v_u_3:GetPlayerFromCharacter(v161)
+393: 			local v177 = v176 ~= nil and true or v161:GetAttribute("Downable") == true
+394: 			local v178
+395: 			if v161:GetAttribute("Downed") == true then
+396: 				v178 = true
+397: 			elseif v164 == nil or v163 - v164.t >= 0.5 then
+398: 				v178 = false
+399: 			else
+400: 				v178 = v164.downed == true
+401: 			end
+402: 			local v179 = v161:GetAttribute("DownedAt")
+403: 			local v180 = v161:GetAttribute("DownedGrace") or 0.7
+   ...
+429: 				if v164 then
+430: 					v164 = v164.downedT
+431: 				end
+432: 				v185.downedT = v164
+433: 				v184[v162] = v185
+434: 			else
+435: 				if v175 and (v177 and not v178) then
+436: 					v183 = v163
+437: 					v182 = true
+438: 					v174 = 1
+439: 					v178 = true
+440: 					v175 = false
+441: 				end
+442: 				v_u_152[v162] = {
+443: 					["h"] = v174,
+444: 					["t"] = v163,
+445: 					["downed"] = v178,
+446: 					["downedT"] = v183
+447: 				}
+448: 				({
+449: 					["Headshot"] = v169,
+450: 					["Killed"] = v175,
+451: 					["Downed"] = v182,
+452: 					["Downable"] = v177
+453: 				}).Victim = v176 and v176.DisplayName or v161.Name
+454: 				if workspace:GetAttribute("DebugHits") then
+455: 					print(("[PR\195\137DIT] %s t\195\170te=%s tue=%s vie pr\195\169vue=%.0f"):format(p159.name, tostring(v169), tostring(v175), v174))
+456: 				end
+457: 			end
+458: 		end
+459: 	else
+460: 		return
+461: 	end
+462: end
+463: local v_u_187 = nil
+464: local function v_u_201() -- name: startShellReload
+465: 	-- upvalues: (ref) v_u_68, (ref) v_u_69, (copy) v_u_13, (copy) v_u_22, (copy) v_u_21, (ref) v_u_49, (ref) v_u_66, (ref) v_u_53, (copy) v_u_30, (copy) v_u_28, (ref) v_u_187, (copy) v_u_82, (copy) v_u_17, (ref) v_u_56, (ref) v_u_58, (copy) v_u_34, (ref) v_u_45, (copy) v_u_117
+466: 	local v_u_188 = v_u_68.Ammo.Shell
+467: 	local v_u_189 = v_u_69
+468: 	v_u_13.Reloading = true
+469: 	v_u_13.ReloadStart = os.clock()
+470: 	v_u_22.Cancel(v_u_69)
+471: 	v_u_21.StopBolt(v_u_69)
+472: 	v_u_49 = 0
+473: 	v_u_66 = v_u_66 + 1
+474: 	local v_u_190 = v_u_66
+475: 	local v_u_191 = v_u_53 <= 0
+476: 	local v_u_192 = 0
+477: 	v_u_30.Out(v_u_28.Reload.FireServer, v_u_28.Reload)
+478: 	local v_u_193 = os.clock()
+479: 	local function v_u_195(p194) -- name: finish
+480: 		-- upvalues: (copy) v_u_190, (ref) v_u_66, (ref) v_u_69, (copy) v_u_189, (ref) v_u_187, (ref) v_u_13, (ref) v_u_82, (ref) v_u_30, (ref) v_u_28, (copy) v_u_191, (ref) v_u_192, (ref) v_u_22, (ref) v_u_21, (ref) v_u_17, (ref) v_u_49, (ref) v_u_68, (copy) v_u_188
+481: 		if v_u_190 == v_u_66 and v_u_69 == v_u_189 then
+482: 			v_u_66 = v_u_66 + 1
+483: 			v_u_187 = nil
+484: 			v_u_13.Reloading = false
+485: 			v_u_82.Visible = false
+486: 			v_u_30.Out(v_u_28.Reload.FireServer, v_u_28.Reload, "done")
+487: 			if v_u_191 and v_u_192 > 0 then
+488: 				v_u_22.Start(v_u_189)
+489: 				v_u_21.Bolt(v_u_189, v_u_189:FindFirstChild("Handle"), true, v_u_17.IsSilenced(v_u_189), true)
+490: 				v_u_49 = os.clock() + v_u_68.Fire.BoltTime
+491: 				v_u_189:SetAttribute("BoltReadyAt", v_u_49)
+492: 			elseif p194 then
+493: 				v_u_49 = os.clock() + (v_u_188.Interrupt or 0.15)
+494: 			end
+495: 		else
+496: 			return
+497: 		end
+498: 	end
+499: 	v_u_187 = function()
+500: 		-- upvalues: (copy) v_u_195
+501: 		v_u_195(true)
+502: 	end
+503: 	task.spawn(function()
+504: 		-- upvalues: (ref) v_u_53, (ref) v_u_56, (ref) v_u_58, (ref) v_u_34, (ref) v_u_45, (copy) v_u_193, (copy) v_u_188, (copy) v_u_190, (ref) v_u_66, (ref) v_u_69, (copy) v_u_189, (ref) v_u_21, (ref) v_u_192, (ref) v_u_30, (ref) v_u_28, (ref) v_u_117, (copy) v_u_195
+505: 		local v196 = 0
+506: 		while v_u_53 < v_u_56 do
+507: 			if v_u_58 <= 0 then
+508: 				local v197
+509: 				if v_u_34.InfiniteAmmo == true then
+510: 					v197 = true
+511: 				elseif v_u_45 == nil then
+512: 					v197 = false
+513: 				else
+514: 					v197 = v_u_45:GetAttribute("InFarmZone") == true
+515: 				end
+516: 				if not v197 then
+517: 					break
+518: 				end
+519: 			end
+520: 			local v198 = task.wait
+521: 			local v199 = v_u_193 + v_u_188.Start + (v196 + v_u_188.InsertAt) * v_u_188.Each - os.clock()
+522: 			v198((math.max(0, v199)))
+523: 			if v_u_190 ~= v_u_66 or v_u_69 ~= v_u_189 then
+524: 				return
+525: 			end
+526: 			v_u_21.Shell(v_u_189)
+527: 			v_u_53 = v_u_53 + 1
+528: 			local v200
+529: 			if v_u_34.InfiniteAmmo == true then
+530: 				v200 = true
+531: 			elseif v_u_45 == nil then
+532: 				v200 = false
+533: 			else
+534: 				v200 = v_u_45:GetAttribute("InFarmZone") == true
+535: 			end
+536: 			if not v200 then
+537: 				v_u_58 = v_u_58 - 1
+538: 			end
+539: 			v_u_192 = v_u_192 + 1
+540: 			v196 = v196 + 1
+541: 			v_u_30.Out(v_u_28.Reload.FireServer, v_u_28.Reload, "shell")
+542: 			v_u_117()
+543: 		end
+544: 		task.wait(v_u_188.End or 0.25)
+545: 		v_u_195(false)
+546: 	end)
+547: end
+548: local function v_u_213() -- name: startReload
+549: 	-- upvalues: (ref) v_u_69, (copy) v_u_13, (ref) v_u_53, (ref) v_u_56, (ref) v_u_58, (copy) v_u_34, (ref) v_u_45, (ref) v_u_68, (copy) v_u_201, (copy) v_u_22, (copy) v_u_21, (ref) v_u_49, (ref) v_u_66, (copy) v_u_30, (copy) v_u_28, (copy) v_u_82, (copy) v_u_117
+550: 	if v_u_69 and (not v_u_13.Reloading and v_u_56 > v_u_53) then
+551: 		if v_u_58 <= 0 then
+552: 			local v202
+553: 			if v_u_34.InfiniteAmmo == true then
+554: 				v202 = true
+555: 			elseif v_u_45 == nil then
+556: 				v202 = false
+557: 			else
+558: 				v202 = v_u_45:GetAttribute("InFarmZone") == true
+559: 			end
+560: 			if not v202 then
+561: 				return
+562: 			end
+563: 		end
+564: 		if v_u_68.Ammo.Shell then
+565: 			v_u_201()
+566: 		else
+567: 			v_u_13.Reloading = true
+568: 			v_u_13.ReloadStart = os.clock()
+569: 			v_u_22.Cancel(v_u_69)
+570: 			v_u_21.StopBolt(v_u_69)
+571: 			v_u_49 = 0
+572: 			v_u_66 = v_u_66 + 1
+573: 			local v_u_203 = v_u_66
+574: 			v_u_30.Out(v_u_28.Reload.FireServer, v_u_28.Reload)
+575: 			local v204 = v_u_69:GetAttribute("ReloadTime") or v_u_68.Ammo.ReloadTime
+576: 			local v205 = not v_u_21.Reload(v_u_69, v204) and v_u_69.Handle:FindFirstChild("Reload")
+577: 			if v205 then
+578: 				if v205:GetAttribute("BaseSpeed") == nil then
+579: 					v205:SetAttribute("BaseSpeed", v205.PlaybackSpeed)
+580: 				end
+581: 				v205.PlaybackSpeed = v205:GetAttribute("BaseSpeed") * v_u_68.Ammo.ReloadTime / v204
+582: 				v205:Play()
+583: 			end
+584: 			task.delay(v204, function()
+585: 				-- upvalues: (copy) v_u_203, (ref) v_u_66, (ref) v_u_69, (ref) v_u_34, (ref) v_u_45, (ref) v_u_56, (ref) v_u_53, (ref) v_u_58, (ref) v_u_68, (ref) v_u_13, (ref) v_u_82, (ref) v_u_117
+586: 				if v_u_203 == v_u_66 and v_u_69 then
+587: 					local v206 = 0
+588: 					local v207
+589: 					if v_u_34.InfiniteAmmo == true then
+590: 						v207 = true
+591: 					elseif v_u_45 == nil then
+592: 						v207 = false
+593: 					else
+594: 						v207 = v_u_45:GetAttribute("InFarmZone") == true
+   ...
+805: 	-- upvalues: (copy) v_u_268
+806: 	local v273 = table.clone(p272)
+807: 	local v274 = {}
+808: 	local v275 = nil
+809: 	for _ = 1, 16 do
+810: 		v_u_268.FilterDescendantsInstances = v273
+811: 		local v276 = workspace:Raycast(p269, p270 * p271, v_u_268)
+812: 		if not v276 then
+813: 			break
+814: 		end
+815: 		if v276.Instance.Name:sub(1, 6) == "Glass_" then
+816: 			local v277 = v276.Instance
+817: 			table.insert(v274, v277)
+818: 			v275 = v275 or v276.Position
+819: 		end
+820: 		local v278 = v276.Instance
+821: 		table.insert(v273, v278)
+822: 	end
+823: 	return v274, v275
+824: end
+825: local v_u_280 = setmetatable({}, {
+826: 	["__mode"] = "k"
+827: })
+828: local function v_u_290(p281, p282, p283, p284, p285) -- name: firstIntactGlass
+829: 	-- upvalues: (copy) v_u_268, (copy) v_u_280, (copy) v_u_229
+830: 	local v286 = table.clone(p284)
+831: 	for _ = 1, 16 do
+832: 		v_u_268.FilterDescendantsInstances = v286
+833: 		local v287 = workspace:Raycast(p281, p282 * p283, v_u_268)
+834: 		if not v287 then
+835: 			return nil
+836: 		end
+837: 		local v288 = v287.Instance
+838: 		if v288.Name:sub(1, 6) == "Glass_" and (v288.Transparency < 1 and (v288:IsDescendantOf(p285) and (not v_u_280[v288] or os.clock() - v_u_280[v288] >= 2))) then
+839: 			local v289 = v_u_229(v288)
+840: 			if v289 and not (v289:GetAttribute("Destroyed") or v289:GetAttribute("Noyee")) then
+841: 				return v287
+842: 			end
+843: 		end
+844: 		table.insert(v286, v288)
+845: 	end
+846: 	return nil
+847: end
+848: local v_u_291 = 0
+849: local function v_u_305(p292, p293) -- name: pelletDirs
+850: 	-- upvalues: (ref) v_u_68, (copy) v_u_35
+851: 	local v294 = v_u_68 and v_u_68.Fire
+852: 	if v294 then
+853: 		v294 = v_u_68.Fire.Pellets
+854: 	end
+855: 	if not v294 then
+856: 		return { p292 }
+857: 	end
+858: 	local v295 = CFrame.lookAt(Vector3.new(0, 0, 0), p292)
+859: 	local v296 = {}
+860: 	for v297, v298 in v294.Pattern do
+861: 		local v299 = v298 + (v297 == 1 and p293 and Vector2.zero or Vector2.new(v_u_35:NextNumber(-1, 1), v_u_35:NextNumber(-1, 1)) * (v294.Jitter or 0))
+862: 		local v300 = CFrame.Angles
+863: 		local v301 = v299.Y
+864: 		local v302 = math.rad(v301)
+865: 		local v303 = v299.X
+866: 		local v304 = (v295 * v300(v302, -math.rad(v303), 0)).LookVector
+867: 		table.insert(v296, v304)
+868: 	end
+869: 	return v296
+870: end
+871: local function v_u_437(p306) -- name: fire
+872: 	-- upvalues: (ref) v_u_68, (copy) v_u_19, (ref) v_u_50, (ref) v_u_51, (ref) v_u_48, (copy) v_u_34, (copy) v_u_13, (ref) v_u_53, (copy) v_u_29, (copy) v_u_151, (ref) v_u_67, (ref) v_u_59, (ref) v_u_61, (copy) v_u_32, (copy) v_u_7, (ref) v_u_45, (copy) v_u_223, (copy) v_u_33, (copy) v_u_40, (copy) v_u_267, (copy) v_u_1, (copy) v_u_279, (ref) v_u_69, (ref) v_u_291, (ref) v_u_37, (copy) v_u_30, (copy) v_u_28, (copy) v_u_23, (copy) v_u_31, (ref) v_u_38, (copy) v_u_35, (copy) v_u_117, (copy) v_u_213, (copy) v_u_24, (copy) v_u_290, (copy) v_u_17, (copy) v_u_280, (copy) v_u_186, (copy) v_u_305, (ref) v_u_49, (copy) v_u_21
+873: 	if v_u_68 and v_u_68.Fire then
+874: 		if v_u_19.Refresh then
+875: 			v_u_19.Refresh()
+876: 		end
+877: 		local v307 = 60 / v_u_68.Fire.RPM
+878: 		local v308
+879: 		if p306 - v_u_50 < v307 + 0.03333333333333333 then
+880: 			v308 = v_u_50 + v307 or p306
+881: 		else
+882: 			v308 = p306
+883: 		end
+884: 		v_u_50 = v308
+885: 		v_u_51 = p306 + (v_u_48 and v_u_34.CombatLinger or 0.2)
+886: 		v_u_13.LastShot = p306
+887: 		v_u_53 = v_u_53 - 1
+888: 		v_u_29.RumbleShot(v_u_68.Fire)
+889: 		local v309 = v_u_151()
+890: 		local v310 = v_u_67.AssemblyLinearVelocity
+891: 		local v311
+892: 		if v_u_59 < 0.05 then
+   ...
+902: 		end
+903: 		local v314 = v_u_59 + v_u_68.Bloom.PerShot
+904: 		local v315 = v_u_68.Bloom.Max
+905: 		v_u_59 = math.min(v314, v315)
+906: 		local v316 = v_u_32.ViewportSize
+907: 		local v_u_317 = v_u_32:ViewportPointToRay(v316.X / 2, v316.Y / 2)
+908: 		local v_u_318 = v_u_317
+909: 		local v319 = v_u_7 and v_u_13.ShotRedirect or nil
+910: 		if v319 then
+911: 			local v320 = v_u_317.Origin
+912: 			local v321 = v_u_317.Direction.Unit
+913: 			local v322, v323 = pcall(v319, v320, v321)
+914: 			if v322 and (typeof(v323) == "Vector3" and v323.Magnitude > 0.5) then
+915: 				v_u_317 = Ray.new(v_u_317.Origin, v323.Unit)
+916: 			end
+917: 		end
+918: 		local v_u_324 = v_u_45:FindFirstChild("Head")
+919: 		local v_u_325 = v_u_324 and v_u_324.Position or v_u_67.Position + Vector3.new(0, 1.5, 0)
+920: 		local v326 = v311 and v_u_317.Direction.Unit or v_u_223(v_u_317.Direction.Unit, v309)
+921: 		local function v432(p327, p328) -- name: shoot
+922: 			-- upvalues: (ref) v_u_317, (ref) v_u_325, (ref) v_u_13, (ref) v_u_19, (ref) v_u_45, (ref) v_u_33, (ref) v_u_40, (ref) v_u_267, (ref) v_u_68, (ref) v_u_1, (ref) v_u_279, (ref) v_u_69, (ref) v_u_291, (ref) v_u_37, (ref) v_u_30, (ref) v_u_28, (copy) v_u_318, (ref) v_u_23, (ref) v_u_31, (ref) v_u_53, (ref) v_u_38, (ref) v_u_35, (ref) v_u_117, (ref) v_u_213, (ref) v_u_61, (copy) v_u_324, (ref) v_u_24, (ref) v_u_290, (ref) v_u_17, (ref) v_u_280, (ref) v_u_186
+923: 			local v329 = v_u_317.Origin
+924: 			local v330 = v_u_325 - v_u_317.Origin
+925: 			local v331 = v329 + p327 * math.max(0, v330:Dot(p327))
+926: 			if v_u_13.Scoped then
+927: 				v_u_325 = v331
+928: 			end
+929: 			local v332 = v_u_19.folders[v_u_45]
+930: 			local v333 = v_u_13.Vehicle and v_u_13.Vehicle.Model or nil
+931: 			local v334 = v_u_13.Carrying
+932: 			local v335
+933: 			if typeof(v334) == "Instance" then
+934: 				v335 = v_u_13.Carrying or nil
+935: 			else
+936: 				v335 = nil
+937: 			end
+938: 			local v336
+939: 			if v335 then
+940: 				v336 = v_u_19.folders[v335] or nil
+941: 			else
+942: 				v336 = nil
+   ...
+975: 			v_u_40.FilterDescendantsInstances = table.clone(v337)
+976: 			local v342 = v_u_267(v331, p327 * v_u_68.Damage.Range, v_u_40)
+977: 			local v343 = v342 and v342.Position or v331 + p327 * v_u_68.Damage.Range
+978: 			if v_u_1.Find("Cars") then
+979: 				local _, v344 = v_u_279(v331, p327, (v343 - v331).Magnitude, table.clone(v337))
+980: 				v343 = v344 or v343
+981: 			end
+982: 			if v_u_68.Fire.Mode == "Rocket" then
+983: 				local v345 = v_u_69:FindFirstChild("Handle")
+984: 				if v345 then
+985: 					v345 = v_u_69.Handle:FindFirstChild("Muzzle")
+986: 				end
+987: 				local v346 = v345 and v345.WorldPosition or v_u_325
+988: 				local v347 = v343 - v346
+989: 				if v347.Magnitude > 1 then
+990: 					p327 = v347.Unit or p327
+991: 				end
+992: 				v_u_291 = v_u_291 + 1
+993: 				v_u_37 = v_u_37 + 1
+994: 				local v348 = v_u_291
+995: 				v_u_30.Out(v_u_28.Fire.FireServer, v_u_28.Fire, v346, p327, tostring(v348), nil, nil, nil, nil, nil, nil, v_u_37, v_u_318.Origin, v_u_318.Direction.Unit, v343)
+996: 				v_u_23.Launch(v_u_31.UserId .. ":" .. v_u_291, v_u_45, v346, p327, v_u_68.Fire.Rocket, v_u_68.RocketSounds)
+997: 				v_u_69:SetAttribute("Ammo", v_u_53)
+998: 				v_u_69:SetAttribute("ShotFX", os.clock())
+999: 				local v349 = v_u_13.Aiming and v_u_68.Recoil.AimScale or 1
+1000: 				v_u_38 = v_u_38 + Vector2.new(v_u_68.Recoil.Up * v349 * v_u_35:NextNumber(0.85, 1.15), v_u_68.Recoil.Side * v349 * v_u_35:NextNumber(-1, 1))
+1001: 				v_u_117()
+1002: 				if v_u_53 <= 0 then
+1003: 					task.delay(0.35, v_u_213)
+1004: 				end
+1005: 				return "rocket"
+1006: 			end
+1007: 			local v350 = false
+1008: 			if v_u_61.SeatPart and (not v_u_13.Scoped and v_u_324) then
+1009: 				local v351 = v_u_324.Position
+1010: 				local v352 = v331 - v351
+1011: 				local v353 = v352.X
+1012: 				local v354 = v352.Y - 2.9
+1013: 				local v355 = math.max(0, v354)
+1014: 				local v356 = v352.Z
+1015: 				local v357
+   ...
+1209: 				v393 = nil
+1210: 			end
+1211: 			if v386 and v383 then
+1212: 				local v406 = v_u_279
+1213: 				local v407 = v_u_325
+1214: 				local v408 = (v392 - v_u_325).Magnitude
+1215: 				v387 = {}
+1216: 				for _, v409 in v406(v407, v367, math.max(v384, v408) + 0.05, table.clone(v337)) do
+1217: 					if not v409:IsDescendantOf(v383) then
+1218: 						continue
+1219: 					end
+1220: 					table.insert(v387, v409)
+1221: 				end
+1222: 			end
+1223: 			if v_u_17.OnGlass then
+1224: 				for _, v410 in v387 do
+1225: 					v_u_17.OnGlass(v410, v367)
+1226: 				end
+1227: 			end
+1228: 			for _, v411 in v387 do
+1229: 				v_u_280[v411] = os.clock()
+1230: 			end
+1231: 			v_u_13.ShotCount = (v_u_13.ShotCount or 0) + 1
+1232: 			v_u_37 = v_u_37 + 1
+1233: 			local v412 = v_u_30.Out
+1234: 			local v413 = v_u_28.Fire.FireServer
+1235: 			local v414 = v_u_28.Fire
+1236: 			local v415 = v_u_325
+1237: 			local v416
+1238: 			if v389 then
+1239: 				v416 = v389.char
+1240: 			else
+1241: 				v416 = v389
+1242: 			end
+1243: 			local v417
+1244: 			if v389 then
+1245: 				v417 = v389.name
+1246: 			else
+1247: 				v417 = v389
+1248: 			end
+1249: 			v412(v413, v414, v415, v367, v416, v417, v388 and v382, v390, v387, v393, p328, v_u_37, v_u_318.Origin, v_u_318.Direction.Unit, v343)
+1250: 			if not v389 and v_u_13.HoodShot then
+1251: 				local v418
+1252: 				if v342 then
+1253: 					v418 = v342.Instance
+1254: 				else
+1255: 					v418 = v342
+   ...
+1561: 				v484 = false
+1562: 			else
+1563: 				v484 = p476.KeyCode == Enum.KeyCode.ButtonR2 and true or p476.KeyCode == Enum.KeyCode.ButtonL2
+1564: 			end
+1565: 			if v484 then
+1566: 				return
+1567: 			end
+1568: 		end
+1569: 		if v_u_29.Is("Fire", p476) or v_u_29.Is("DriveFire", p476) and (v_u_48 and (v482 or not v_u_29.IsDown("Fire"))) then
+1570: 			v_u_48 = false
+1571: 			v_u_21.Release(v_u_69)
+1572: 			v_u_51 = 0
+1573: 		elseif v_u_29.Is("Aim", p476) or v_u_29.Is("DriveAim", p476) and (v_u_13.Aiming and (v482 or not v_u_29.IsDown("Aim"))) then
+1574: 			v_u_13.Aiming = false
+1575: 			v_u_21.Release(v_u_69)
+1576: 			v_u_51 = 0
+1577: 		end
+1578: 	end
+1579: end)
+1580: local function v_u_500(p485) -- name: sendStance
+1581: 	-- upvalues: (copy) v_u_11, (copy) v_u_13, (ref) v_u_61, (copy) v_u_32, (ref) v_u_70, (ref) v_u_55, (ref) v_u_64, (ref) v_u_65, (copy) v_u_30, (copy) v_u_28
+1582: 	local v486 = v_u_11.StanceIds[v_u_13.Stance] or 0
+1583: 	local v487 = v_u_13.CamPitch
+1584: 	local v488 = math.deg(v487) + 0.5
+1585: 	local v489 = math.floor(v488)
+1586: 	local v490 = nil
+1587: 	local v491 = v_u_61 and (v_u_61.SeatPart and v_u_61.Parent)
+1588: 	if v491 then
+1589: 		v491 = v_u_61.Parent:FindFirstChild("HumanoidRootPart")
+1590: 	end
+1591: 	if v491 then
+1592: 		local v492 = v491.CFrame:VectorToObjectSpace(v_u_32.CFrame.LookVector)
+1593: 		local v493 = -v492.X
+1594: 		local v494 = -v492.Z
+1595: 		local v495 = math.atan2(v493, v494)
+1596: 		local v496 = math.deg(v495) + 0.5
+1597: 		v490 = math.floor(v496)
+1598: 	end
+1599: 	local v497
+1600: 	if v490 == v_u_70 then
+1601: 		v497 = true
+1602: 	elseif v490 == nil or v_u_70 == nil then
+1603: 		v497 = false
+1604: 	else
+1605: 		local v498 = v490 - v_u_70
+1606: 		v497 = math.abs(v498) < 3
+1607: 	end
+1608: 	if v486 == v_u_55 then
+1609: 		local v499 = v489 - v_u_64
+1610: 		if math.abs(v499) < 2 and (v497 and p485 - v_u_65 < 0.5) then
+1611: 			return
+1612: 		end
+1613: 	end
+1614: 	if p485 - v_u_65 >= 0.06666666666666667 then
+1615: 		v_u_65 = p485
+1616: 		v_u_55 = v486
+1617: 		v_u_64 = v489
+1618: 		v_u_70 = v490
+1619: 		v_u_30.Out(v_u_28.AimState.FireServer, v_u_28.AimState, v486, v489, v490)
+1620: 	end
+1621: end
+1622: local v_u_501 = false
+1623: local function v_u_503(_, p502) -- name: onAltZoom
+1624: 	-- upvalues: (ref) v_u_69, (copy) v_u_27, (copy) v_u_20
+1625: 	if p502 == Enum.UserInputState.Begin and v_u_69 then
+1626: 		v_u_27[v_u_69] = not v_u_27[v_u_69] or nil
+1627: 		v_u_20.Play("SightZoom")
+1628: 	end
+1629: 	return Enum.ContextActionResult.Sink
+1630: end
+1631: local function v_u_505(p504) -- name: bindAltZoom
+1632: 	-- upvalues: (ref) v_u_501, (copy) v_u_9, (copy) v_u_503
+1633: 	if p504 == v_u_501 then
+1634: 		return
+1635: 	else
+1636: 		v_u_501 = p504
+1637: 		if p504 then
+1638: 			v_u_9:BindActionAtPriority("OpticAltZoom", v_u_503, false, Enum.ContextActionPriority.High.Value + 100, Enum.KeyCode.F, Enum.KeyCode.ButtonL3)
+1639: 		else
+   ...
+1913: 		p_u_557.ChildAdded:Connect(v560)
+1914: 		for _, v_u_561 in p_u_557:GetChildren() do
+1915: 			if not (v_u_561:IsA("Tool") and v_u_561:GetAttribute("Weapon")) then
+1916: 				continue
+1917: 			end
+1918: 			task.defer(function()
+1919: 				-- upvalues: (copy) v_u_561, (copy) p_u_557, (ref) v_u_21, (ref) v_u_17
+1920: 				local v562 = v_u_561:FindFirstChild("Handle")
+1921: 				if v562 and v_u_561.Parent == p_u_557 then
+1922: 					v_u_21.Prepare(v_u_561, v562, false, v_u_17.IsSilenced(v_u_561))
+1923: 				end
+1924: 			end)
+1925: 		end
+1926: 	end
+1927: 	v556.CharacterAdded:Connect(v563)
+1928: 	if not v556.Character then
+1929: 		continue
+1930: 	end
+1931: 	v563(v556.Character)
+1932: end
+1933: v_u_28.Hit.OnClientEvent:Connect(v_u_30.Wrap(v145))
+1934: local v564 = v_u_28:WaitForChild("HitFX", 10)
+1935: if v564 then
+1936: 	v564.OnClientEvent:Connect(v_u_30.Wrap(function(p565, p566, p567)
+1937: 		-- upvalues: (copy) v_u_17
+1938: 		if typeof(p565) == "Instance" and (typeof(p566) == "Vector3" and typeof(p567) == "Vector3") then
+1939: 			v_u_17.Blood(p565, p567, p567 - p566)
+1940: 		end
+1941: 	end))
+1942: end
+1943: local v_u_568 = RaycastParams.new()
+1944: v_u_568.IgnoreWater = true
+1945: v_u_568.FilterType = Enum.RaycastFilterType.Exclude
+1946: v_u_568.CollisionGroup = "Bullet"
+1947: v_u_28.FX.OnClientEvent:Connect(v_u_30.Wrap(function(p569, p570, p571, p572, p573)
+1948: 	-- upvalues: (copy) v_u_17, (copy) v_u_33, (copy) v_u_568, (copy) v_u_24
+1949: 	if p572 and (typeof(p570) == "Vector3" and typeof(p571) == "Vector3") then
+1950: 		v_u_17.Blood(p572, p571, p571 - p570)
+1951: 	end
+1952: 	if p569 and p569:IsA("Player") then
+1953: 		p569 = p569.Character or p569
+1954: 	end
+1955: 	local v574
+1956: 	if p569 then
+1957: 		v574 = p569:FindFirstChildOfClass("Tool") or p569:FindFirstChild("GunFX")
+1958: 	else
+1959: 		v574 = p569
+1960: 	end
+1961: 	local v575 = nil
+1962: 	if typeof(p570) == "Vector3" and (typeof(p571) == "Vector3" and (p571 - p570).Magnitude > 0.1) then
+1963: 		local v576 = p571 - p570
+1964: 		local v577 = { p569, v_u_33, workspace:FindFirstChild("ClientHitboxes") }
+1965: 		for _ = 1, 16 do
+1966: 			v_u_568.FilterDescendantsInstances = v577
+1967: 			local v578 = workspace:Raycast(p570, v576 + v576.Unit * 0.5, v_u_568)
+   ...
+1992: 		end
+1993: 		if v575 and (v575.Position - p570).Magnitude < v576.Magnitude - 0.3 then
+1994: 			p571 = v575.Position
+1995: 		end
+1996: 	end
+1997: 	local v585 = v_u_17.Shot
+1998: 	local v586
+1999: 	if v575 then
+2000: 		v586 = v575.Normal
+2001: 	else
+2002: 		v586 = v575
+2003: 	end
+2004: 	local v587 = true
+2005: 	local v588 = nil
+2006: 	if v575 then
+2007: 		v575 = v575.Instance
+2008: 	end
+2009: 	v585(v574, p570, p571, v586, v587, v588, v575, p573 == true)
+2010: end))
+2011: task.spawn(function()
+2012: 	-- upvalues: (copy) v_u_28
+2013: 	local v589 = v_u_28:WaitForChild("FXReady", 30)
+2014: 	if v589 then
+2015: 		v589:FireServer()
+2016: 	end
+2017: end)
+2018: v_u_28:WaitForChild("Hurt").OnClientEvent:Connect(v_u_30.Wrap(function()
+2019: 	-- upvalues: (copy) v_u_13, (copy) v_u_20, (copy) v_u_91, (ref) v_u_45, (ref) v_u_555, (ref) v_u_554
+2020: 	if not v_u_13.Spectating then
+2021: 		v_u_20.OnHurt()
+2022: 		task.delay(0.12, function()
+2023: 			-- upvalues: (ref) v_u_91, (ref) v_u_45, (ref) v_u_13, (ref) v_u_555, (ref) v_u_554
+2024: 			local v590 = os.clock()
+2025: 			if v590 - v_u_91.health < 0.3 or v590 - v_u_91.armor < 0.3 then
+2026: 				return
+2027: 			else
+2028: 				local v591 = (v_u_45 and v_u_45:GetAttribute("Armor") or 0) > 0 and "armor" or "health"
+2029: 				if v_u_13.Spectating then
+2030: 					return
+2031: 				else
+2032: 					local v592 = v591 or "health"
+2033: 					local v593 = os.clock()
+2034: 					if v593 - v_u_91[v592] < 0.05 then
+2035: 						return
+2036: 					else
+2037: 						v_u_91[v592] = v593
+2038: 						if v592 == "armor" then
+
+===== REMOTES LIST =====
+RemoteEvent  Shoot
+RemoteEvent  InstantReload
+RemoteEvent  SetSpread
+RemoteEvent  SetFireRate
+RemoteEvent  SetRecoil
+RemoteEvent  Headshot
+RemoteEvent  Explode
