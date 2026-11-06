@@ -1,0 +1,2825 @@
+keys: v_u_27, GetClosest, sameTeam, TeamColor, Neutral, v_u_33, SnapCooldown, enemies
+scripts scanned: 382
+
+===== Players.Gorannss.PlayerScripts.WeaponClient =====
+   ...
+21: end)
+22: local v_u_17 = require(v10:WaitForChild("Effects"))
+23: local v_u_18 = require(v10:WaitForChild("HitboxModel"))
+24: local v_u_19 = require(v10:WaitForChild("ClientHitboxes"))
+25: local v_u_20 = require(v10:WaitForChild("HitAudio"))
+26: local v_u_21 = require(v10:WaitForChild("GunAudio"))
+27: local v_u_22 = require(v10:WaitForChild("BoltAction"))
+28: local v_u_23 = require(v10:WaitForChild("Rocket"))
+29: local v_u_24 = require(v10:WaitForChild("VehicleSurface"))
+30: local v_u_25 = require(v10:WaitForChild("ModCatalog"))
+31: local v_u_26 = {
+32: 	["text"] = nil,
+33: 	["mods"] = nil,
+34: 	["mods"] = {}
+35: }
+36: local v_u_27 = setmetatable({}, {
+37: 	["__mode"] = "k"
+38: })
+39: local v_u_28 = v4:WaitForChild("Remotes")
+40: local v_u_29 = require(v4:WaitForChild("Controls"))
+41: local v_u_30 = require(v4:WaitForChild("NetLag"))
+42: local v_u_31 = v_u_3.LocalPlayer
+43: local v_u_32 = workspace.CurrentCamera
+44: local v_u_33 = workspace:WaitForChild("FX")
+45: local v_u_34 = v_u_11.Global
+46: local v_u_35 = Random.new()
+47: local v36 = nil
+48: local v_u_37 = Random.new():NextInteger(1, 1073741824)
+49: local v_u_38 = Vector2.zero
+50: local v_u_39 = Vector2.zero
+51: local v_u_40 = RaycastParams.new()
+52: v_u_40.IgnoreWater = true
+53: v_u_40.FilterType = Enum.RaycastFilterType.Exclude
+54: v_u_40.CollisionGroup = "Bullet"
+55: local v41 = v_u_31:WaitForChild("PlayerGui"):WaitForChild("WeaponHUD", (1 / 0))
+56: local v_u_42 = v41:WaitForChild("Hitmarker")
+57: local v_u_43 = v_u_42:FindFirstChildOfClass("UIScale")
+58: local v_u_44 = v36
+59: local v_u_45 = v_u_14
+   ...
+789: 	local v263, v264, v265, v266 = v_u_24.Raycast(p_u_248, p_u_249, v261, v262)
+790: 	if v263 then
+791: 		v257 = v265 < v261 - 0.05 and {
+792: 			["Instance"] = v264,
+793: 			["Position"] = v263,
+794: 			["Normal"] = v266,
+795: 			["Distance"] = v265
+796: 		} or v257
+797: 	end
+798: 	return v_u_247(v257, p_u_248, p_u_249) or v257
+799: end
+800: local v_u_268 = RaycastParams.new()
+801: v_u_268.IgnoreWater = true
+802: v_u_268.FilterType = Enum.RaycastFilterType.Exclude
+803: v_u_268.CollisionGroup = "Bullet"
+804: local function v_u_279(p269, p270, p271, p272) -- name: glassAlong
+805: 	-- upvalues: (copy) v_u_268
+806: 	local v273 = table.clone(p272)
+807: 	local v274 = {}
+808: 	local v275 = nil
+809: 	for _ = 1, 16 do
+810: 		v_u_268.FilterDescendantsInstances = v273
+811: 		local v276 = workspace:Raycast(p269, p270 * p271, v_u_268)
+812: 		if not v276 then
+813: 			break
+814: 		end
+815: 		if v276.Instance.Name:sub(1, 6) == "Glass_" then
+816: 			local v277 = v276.Instance
+817: 			table.insert(v274, v277)
+818: 			v275 = v275 or v276.Position
+819: 		end
+   ...
+857: 	end
+858: 	local v295 = CFrame.lookAt(Vector3.new(0, 0, 0), p292)
+859: 	local v296 = {}
+860: 	for v297, v298 in v294.Pattern do
+861: 		local v299 = v298 + (v297 == 1 and p293 and Vector2.zero or Vector2.new(v_u_35:NextNumber(-1, 1), v_u_35:NextNumber(-1, 1)) * (v294.Jitter or 0))
+862: 		local v300 = CFrame.Angles
+863: 		local v301 = v299.Y
+864: 		local v302 = math.rad(v301)
+865: 		local v303 = v299.X
+866: 		local v304 = (v295 * v300(v302, -math.rad(v303), 0)).LookVector
+867: 		table.insert(v296, v304)
+868: 	end
+869: 	return v296
+870: end
+871: local function v_u_437(p306) -- name: fire
+872: 	-- upvalues: (ref) v_u_69, (copy) v_u_19, (ref) v_u_48, (ref) v_u_60, (ref) v_u_61, (copy) v_u_34, (copy) v_u_13, (ref) v_u_56, (copy) v_u_29, (copy) v_u_151, (ref) v_u_52, (ref) v_u_58, (ref) v_u_67, (copy) v_u_32, (copy) v_u_7, (ref) v_u_44, (copy) v_u_223, (copy) v_u_33, (copy) v_u_40, (copy) v_u_267, (copy) v_u_1, (copy) v_u_279, (ref) v_u_62, (ref) v_u_291, (ref) v_u_37, (copy) v_u_30, (copy) v_u_28, (copy) v_u_23, (copy) v_u_31, (ref) v_u_38, (copy) v_u_35, (copy) v_u_117, (copy) v_u_213, (copy) v_u_24, (copy) v_u_290, (copy) v_u_17, (copy) v_u_280, (copy) v_u_186, (copy) v_u_305, (ref) v_u_54, (copy) v_u_21
+873: 	if v_u_69 and v_u_69.Fire then
+874: 		if v_u_19.Refresh then
+875: 			v_u_19.Refresh()
+876: 		end
+877: 	
+
+===== Players.Gorannss.PlayerScripts.CameraClient =====
+   ...
+26: local v21 = v_u_13.MinPitch
+27: local v_u_22 = math.rad(v21)
+28: local v23 = v_u_13.MaxPitch
+29: local v_u_24 = math.rad(v23)
+30: local v_u_719 = v_u_13.Distance
+31: local v_u_572 = v_u_13.Side
+32: local v_u_573 = v_u_13.Height
+33: local v_u_788 = v_u_9.Global.HipFOV
+34: local v_u_29 = require(v8:WaitForChild("ScopeEye"))
+35: local v_u_30 = require(v8:WaitForChild("ClientHitboxes"))
+36: local v_u_31 = require(v8:WaitForChild("VehicleSurface"))
+37: local v_u_32 = RaycastParams.new()
+38: v_u_32.IgnoreWater = true
+39: v_u_32.FilterType = Enum.RaycastFilterType.Exclude
+40: v_u_32.CollisionGroup = "Default"
+41: local v_u_33 = RaycastParams.new()
+42: v_u_33.IgnoreWater = true
+43: v_u_33.FilterType = Enum.RaycastFilterType.Exclude
+44: v_u_33.RespectCanCollide = true
+45: local v_u_34 = {
+46: 	"BetaNotice",
+47: 	"GenderChoice",
+48: 	"ModNotice",
+49: 	"Armory",
+50: 	"Inventory",
+51: 	"SettingsMenu",
+52: 	"EffectsMenu",
+53: 	"ModEditor",
+54: 	"Wardrobe",
+55: 	"PlayerProfile",
+56: 	"ControlsMenu",
+57: 	"CaseMenu",
+58: 	"VehicleCrateMenu",
+59: 	"VehicleCrateFXLive",
+   ...
+279: 	if math.abs(v110) < v109.X then
+280: 		local v111 = v108.Z
+281: 		if math.abs(v111) < v109.Z and (v108.Y < v109.Y and v108.Y > -v109.Y - 4) then
+282: 			local v112 = v108.X
+283: 			local v113 = v109.Y
+284: 			local v114 = v108.Z
+285: 			return v107:PointToWorldSpace((Vector3.new(v112, v113, v114)))
+286: 		end
+287: 	end
+288: 	return p102
+289: end
+290: local v_u_688 = 0
+291: local v_u_517 = 1
+292: local v_u_118 = {}
+293: local function v_u_133(p119, p120, p121) -- name: clearDistance
+294: 	-- upvalues: (copy) v_u_118, (copy) v_u_33
+295: 	local v122 = p119.X
+296: 	local v123
+297: 	if v122 == v122 and v122 ~= (1 / 0) then
+298: 		v123 = v122 ~= (-1 / 0)
+299: 	else
+300: 		v123 = false
+301: 	end
+302: 	if v123 then
+303: 		local v124 = p119.Y
+304: 		if v124 == v124 and v124 ~= (1 / 0) then
+305: 			v123 = v124 ~= (-1 / 0)
+306: 		else
+307: 			v123 = false
+308: 		end
+309: 		if v123 then
+   ...
+335: 				if v129 == v129 and v129 ~= (1 / 0) then
+336: 					v127 = v129 ~= (-1 / 0)
+337: 				else
+338: 					v127 = false
+339: 				end
+340: 			end
+341: 		end
+342: 		if v127 then
+343: 			local v130
+344: 			if p121 == p121 and p121 ~= (1 / 0) then
+345: 				v130 = p121 ~= (-1 / 0)
+346: 			else
+347: 				v130 = false
+348: 			end
+349: 			if v130 then
+350: 				local v131 = workspace:Spherecast(p119, 0.35, p120 * p121, v_u_33)
+351: 				if v131 then
+352: 					local v132 = v131.Distance - 0.1
+353: 					p121 = math.max(v132, 0) or p121
+354: 				end
+355: 				return p121
+356: 			end
+357: 		end
+358: 	end
+359: 	if not v_u_118.clearDistance then
+360: 		v_u_118.clearDistance = true
+361: 		warn("[CameraClient] valeur non finie (NaN) venant de : clearDistance -> ignor\195\169e, cam\195\169ra conserv\195\169e")
+362: 	end
+363: 	return 0
+364: end
+365: local function v136(p134) -- name: onCharacter
+   ...
+393: 	-- upvalues: (ref) v_u_568, (ref) v_u_526
+394: 	if type(p144) == "number" and (type(p145) == "number" and (p144 == p144 and p145 == p145)) then
+395: 		v_u_568 = v_u_568 + p144
+396: 		v_u_526 = v_u_526 + p145
+397: 	end
+398: 	return true
+399: end
+400: task.spawn(function()
+401: 	-- upvalues: (copy) v_u_10, (copy) v_u_146
+402: 	local v147 = v_u_10
+403: 	local v148 = v_u_10.RecoilKey()
+404: 	local v149 = v_u_146
+405: 	rawset(v147, v148, v149)
+406: end)
+407: v5:BindToRenderStep("GTACamera", Enum.RenderPriority.Camera.Value, function(p150)
+408: 	-- upvalues: (copy) v_u_10, (ref) v_u_545, (copy) v_u_15, (copy) v_u_4, (copy) v_u_14, (ref) v_u_762, (copy) v_u_11, (ref) v_u_815, (ref) v_u_816, (copy) v_u_22, (copy) v_u_24, (ref) v_u_533, (ref) v_u_38, (ref) v_u_548, (ref) v_u_536, (ref) v_u_537, (copy) v_u_118, (ref) v_u_719, (ref) v_u_572, (ref) v_u_573, (ref) v_u_788, (copy) v_u_13, (copy) v_u_9, (copy) v_u_89, (ref) v_u_571, (ref) v_u_535, (copy) v_u_17, (copy) v_u_16, (copy) v_u_7, (copy) v_u_18, (ref) v_u_760, (ref) v_u_801, (ref) v_u_802, (ref) v_u_841, (ref) v_u_579, (ref) v_u_561, (ref) v_u_483,
+
+===== Players.Gorannss.PlayerScripts.GunAnimator =====
+   ...
+18: local v_u_13 = require(v_u_4:WaitForChild("BoltAction"))
+19: local v_u_14 = require(v_u_4:WaitForChild("CrouchAnim"))
+20: local v_u_15 = require(v_u_4:WaitForChild("Holds"))
+21: local v_u_16 = require(v_u_4:WaitForChild("SeatedArms"))
+22: local v_u_17 = require(v_u_4:WaitForChild("FistAnim"))
+23: local v_u_18 = require(v_u_4:WaitForChild("SwimTilt"))
+24: local v_u_19 = require(v_u_4:WaitForChild("FrameCache"))
+25: local v_u_20 = require(v_u_4:WaitForChild("AnimWorkers"))
+26: v_u_20.Init(script)
+27: local v_u_21 = nil
+28: local v_u_22 = nil
+29: local v_u_23 = nil
+30: local v_u_24 = v_u_1.LocalPlayer
+31: local v_u_25 = v_u_24.Character
+32: local v_u_26 = workspace.CurrentCamera
+33: local v_u_27 = { 80, 180, 350 }
+34: local v_u_28 = false
+35: local v_u_29 = 0
+36: local v_u_30 = setmetatable({}, {
+37: 	["__mode"] = "k"
+38: })
+39: local v_u_31 = { 30, 20 }
+40: local v_u_32 = true
+41: local v_u_33 = (-1 / 0)
+42: local v_u_34 = 0
+43: local v_u_35 = 0
+44: local v_u_36 = 0
+45: local v_u_37 = 0
+46: local v_u_38 = require(v_u_4:WaitForChild("OnScreen"))
+47: local v_u_39 = v_u_38.list
+48: local v_u_40 = 0
+49: local v_u_41 = nil
+50: local v_u_42 = nil
+51: local function v_u_80(p43) -- name: updateOnScreen
+52: 	-- upvalues: (copy) v_u_26, (ref) v_u_41, (ref) v_u_42, (ref) v_u_40, (ref) v_u_25, (copy) v_u_38, (copy) v_u_39
+53: 	local v44 = v_u_26.CFrame
+54: 	local v45 = os.clock()
+55: 	if v_u_41 then
+56: 		local v46 = v45 - v_u_42
+   ...
+595: 			v252 = true
+596: 		end
+597: 	end
+598: 	if not v250 then
+599: 		v_u_246[p247] = { v_u_218, v252 }
+600: 		return v252
+601: 	end
+602: 	v250[1] = v_u_218
+603: 	v250[2] = v252
+604: 	return v252
+605: end
+606: local v_u_255 = setmetatable({}, {
+607: 	["__mode"] = "k"
+608: })
+609: local v_u_256 = {}
+610: local function v_u_275(p257, p258, p259, p260) -- name: updateBare
+611: 	-- upvalues: (copy) v_u_255, (copy) v_u_88, (copy) v_u_94, (copy) v_u_103, (copy) v_u_245, (copy) v_u_256, (copy) v_u_237, (copy) v_u_184, (copy) v_u_254, (copy) v_u_18, (copy) v_u_14, (ref) v_u_114, (copy) v_u_7
+612: 	local v261 = v_u_255[p257] or {
+613: 		["runW"] = 0,
+614: 		["phase"] = 0
+615: 	}
+616: 	v_u_255[p257] = v261
+617: 	local v262 = v_u_88[p257] or v_u_94(p257)
+618: 	local v263 = v262[v_u_103]
+619: 	if not v263 then
+620: 		v263 = {}
+621: 		v262[v_u_103] = v263
+622: 	end
+623: 	local v264 = v263["@Humanoid"]
+624: 	if not v264 or v264.Parent ~= p257 then
+625: 		v264 = p257:FindFirstChildOfClass("Humanoid")
+   ...
+772: 		if v321 then
+773: 			v_u_9.Solve(p314, "Left", p315, p316, v321)
+774: 			if p317 < 0.999 then
+775: 				for v322, v323 in v318 do
+776: 					v_u_20.setT(v322, v323:Lerp(v_u_20.getT(v322), p317))
+777: 				end
+778: 			end
+779: 		end
+780: 	end
+781: end
+782: local v_u_325 = v2:WaitForChild("WeaponVisuals")
+783: local v_u_326 = require(v_u_4:WaitForChild("VisualRegistry"))
+784: local v_u_327 = require(v_u_4:WaitForChild("ModCatalog"))
+785: local v_u_328 = workspace:WaitForChild("FX")
+786: local v_u_329 = CFrame.new(0, -5000, 0)
+787: local v_u_330 = true
+788: local v_u_331 = setmetatable({}, {
+789: 	["__mode"] = "k"
+790: })
+791: local v_u_332 = v_u_5.Poses.Aim.LeftHand
+792: local v_u_333 = {}
+793: local v_u_334 = {}
+794: local function v_u_344(p335) -- name: barrelDir
+795: 	-- upvalues: (copy) v_u_334, (copy) v_u_325
+796: 	local v336 = p335 or ""
+797: 	if v_u_334[v336] then
+798: 		return v_u_334[v336]
+799: 	end
+800: 	local v337 = Vector3.new(0, 0, -1)
+801: 	if p335 then
+802: 		p335 = v_u_325:FindFirstChild(p335)
+803: 	end
+804: 	if p335 and p335.PrimaryPart then
+805: 		local v338 = p335.PrimaryPart.CFrame
+806: 		local v339 = 0
+807: 		for _, v340 in p335:GetDescendants() do
+808: 			if not (v340:IsA("BasePart") and v340.Name:lower():find("barrel")) then
+809: 				continue
+810: 			end
+811: 			local v341 = v340.Size
+812: 			local v342 = v340.CFrame.RightVector
+813: 			local v343 = v341.X
+   ...
+819: 				v342 = v340.CFrame.LookVector
+820: 				v343 = v341.Z
+821: 			end
+822: 			if v339 >= v343 then
+823: 				continue
+8
+
+===== Players.Gorannss.PlayerScripts.WardrobeClient =====
+   ...
+69: for _, v30 in v_u_9.Categories do
+70: 	if v22[v30.name] then
+71: 		continue
+72: 	end
+73: 	local v31 = {
+74: 		["name"] = nil,
+75: 		["items"] = nil,
+76: 		["group"] = 99,
+77: 		["name"] = v30.name,
+78: 		["items"] = v30.items
+79: 	}
+80: 	table.insert(v_u_23, v31)
+81: end
+82: game:GetService("TweenService")
+83: local v_u_32 = game:GetService("RunService")
+84: local v_u_33 = {
+85: 	["bg"] = Color3.fromRGB(18, 18, 22),
+86: 	["panel"] = Color3.fromRGB(28, 28, 34),
+87: 	["card"] = Color3.fromRGB(38, 38, 46),
+88: 	["accent"] = Color3.fromRGB(255, 170, 60),
+89: 	["text"] = Color3.fromRGB(235, 235, 240),
+90: 	["dim"] = Color3.fromRGB(150, 150, 160),
+91: 	["equipped"] = Color3.fromRGB(80, 220, 120),
+92: 	["edge"] = Color3.fromRGB(14, 14, 18),
+93: 	["cardTop"] = Color3.fromRGB(112, 116, 125),
+94: 	["cardBottom"] = Color3.fromRGB(50, 53, 60),
+95: 	["finish"] = Color3.fromRGB(70, 200, 40),
+96: 	["cancel"] = Color3.fromRGB(200, 55, 55),
+97: 	["dev"] = Color3.fromRGB(215, 40, 40),
+98: 	["eventTop"] = Color3.fromRGB(128, 76, 214),
+99: 	["eventBottom"] = Color3.fromRGB(46, 22, 86)
+   ...
+223: end
+224: if v_u_89 then
+225: 	for _, v91 in v_u_89:GetChildren() do
+226: 		if not v91:IsA("Frame") then
+227: 			continue
+228: 		end
+229: 		v91:Destroy()
+230: 	end
+231: end
+232: local v_u_92 = v_u_88.Text
+233: local v_u_93 = 1
+234: local v_u_94 = {}
+235: local v_u_95 = { v87:WaitForChild("Slot" .. 1), v87:WaitForChild("Slot" .. 2), v87:WaitForChild("Slot" .. 3) }
+236: local v96 = v87:WaitForChild("ClearButton")
+237: local function v_u_100() -- name: refreshSlots
+238: 	-- upvalues: (copy) v_u_95, (ref) v_u_93, (copy) v_u_33, (ref) v_u_94
+239: 	for v97, v98 in v_u_95 do
+240: 		local v99 = v97 == v_u_93
+241: 		v98.BackgroundColor3 = v99 and v_u_33.accent or v_u_33.card;
+242: 		(v98:FindFirstChild("Text") or v98).TextColor3 = v99 and Color3.new(0, 0, 0) or (v_u_94[v97] and v_u_33.text or v_u_33.dim)
+243: 	end
+244: end
+245: local function v_u_109(p_u_101, p_u_102) -- name: fetchName
+246: 	-- upvalues: (copy) v_u_47, (copy) v_u_9, (copy) v_u_4
+247: 	if not v_u_47[p_u_101] and v_u_9.Items[p_u_101] then
+248: 		v_u_47[p_u_101] = v_u_9.Items[p_u_101].name
+249: 	end
+250: 	if v_u_47[p_u_101] then
+251: 		if p_u_102 then
+252: 			p_u_102.Text = v_u_47[p_u_101]
+253: 		end
+254: 	else
+255: 		task.spawn(function()
+256: 			-- upvalues: (ref) v_u_4, (copy) p_u_101, (ref) v_u_47, (copy) p_u_102
+257: 			local v103 = v_u_4.GetItemDetailsAsync
+258: 			local v104 = v_u_4
+259: 			local v105 = p_u_101
+260: 			local v106 = Enum.AvatarItemType.Asset
+261: 			local v107, v108 = pcall(v103, v104, v105, v106)
+262: 			v_u_47[p_u_101] = v107 and (v108 and v108.Name) or "Article " .. p_u_101
+263: 			if p_u_102 and p_u_102.Parent then
+264: 				p_u_102.Text = v_u_47[p_u_101]
+265: 			end
+266: 		end)
+267: 	end
+268: end
+269: local v_u_110 = nil
+270: local function v_u_119(p111, p112) -- name: styleCard
+271: 	-- upvalues: (ref) v_u_48, (ref) v_u_34, (copy) v_u_33, (copy) v_u_9
+272: 	local v113 = nil
+273: 	for _, v114 in p111:GetChildren() do
+274: 		if not v114:IsA("UIStroke") or v114.Name == "DevOutline" then
+275: 			continue
+276: 		end
+277: 		v113 = v114
+278: 	end
+279: 	local v115
+280: 	if p111:GetAttribute("Body") then
+281: 		v115 = v_u_48 == p112
+282: 	else
+283: 		v115 = table.find(v_u_34, p112) ~= nil
+284: 	end
+285: 	v113.Color = v115 and v_u_33.equipped or v_u_33.edge
+286: 	local v116 = not (p111:GetAttribute("Body") or v115)
+287: 	if v116 then
+288: 		v116 = v_u_9.BlockedBy(v_u_34, p112) ~= nil
+289: 	end
+290: 	p111.BackgroundTransparency = v116 and 0.6 or 0
+291: 	local v117 = p111:FindFirstChild("Thumb")
+292: 	local v118 = p111:FindFirstChild("Model3D")
+293: 	if v117 then
+294: 		v117.ImageTransparency = v116 and 0.65 or 0
+295: 	end
+296: 	if v118 then
+297: 		v118.ImageTransparency = v116 and 0.65 or 0
+298: 	end
+299: end
+300: local v_u_120 = false
+   ...
+582: 		end
+583: 		local v206 = not v205
+584: 		v204.Visible = v206
+585: 		local v207 = v204:FindFirstChild("PriceText", true)
+586: 
+
+===== Players.Gorannss.PlayerScripts.CrosshairClient =====
+   ...
+78: 				return v21.default
+79: 			end
+80: 		end
+81: 		return v_u_6.Settings[p20]
+82: 	end
+83: }
+84: local v_u_23 = setmetatable({}, v22)
+85: local v_u_24 = v_u_1.LocalPlayer
+86: local v_u_25 = workspace.CurrentCamera
+87: local v26 = v_u_24:WaitForChild("PlayerGui"):WaitForChild("Crosshair", (1 / 0))
+88: v26.Enabled = true
+89: task.spawn(function()
+90: 	-- upvalues: (copy) v_u_24
+91: 	v_u_24:WaitForChild("PlayerGui"):WaitForChild("WeaponHUD", (1 / 0)).Enabled = true
+92: end)
+93: local v_u_27 = v26:WaitForChild("CrosshairRoot"):Clone()
+94: local function v_u_32(p_u_28) -- name: newSet
+95: 	local function v31(p29) -- name: piece
+96: 		-- upvalues: (copy) p_u_28
+97: 		local v30 = p_u_28:WaitForChild(p29)
+98: 		return {
+99: 			["f"] = v30,
+100: 			["s"] = v30:FindFirstChildOfClass("UIStroke"),
+101: 			["c"] = v30:FindFirstChildOfClass("UICorner")
+102: 		}
+103: 	end
+104: 	return {
+105: 		["root"] = p_u_28,
+106: 		["lines"] = {
+107: 			v31("Haut"),
+108: 			v31("Bas"),
+109: 			v31("Gauche"),
+110: 			(v31("Droite"))
+111: 		},
+112: 		["ringOutline"] = v31("RingOutline"),
+113: 		["ring"] = v31("Ring"),
+114: 		["dot"] = v31("Dot")
+115: 	}
+116: end
+117: local v_u_33 = v_u_32(v26.CrosshairRoot)
+118: local v_u_34 = v26:FindFirstChild("NoFire")
+119: if v_u_34 then
+120: 	v_u_34.Visible = false
+121: end
+122: local function v_u_43() -- name: reloadProgress
+123: 	-- upvalues: (copy) v_u_24, (copy) v_u_4, (copy) v_u_2
+124: 	local v35 = v_u_24:GetAttribute("DebugReloadFade")
+125: 	if type(v35) == "number" then
+126: 		return math.clamp(v35, 0, 1)
+127: 	end
+128: 	if not (v_u_4.Reloading and v_u_4.ReloadStart) then
+129: 		return nil
+130: 	end
+131: 	local v36 = v_u_24.Character
+132: 	if v36 then
+   ...
+335: 	local v108 = v_u_23.XhDotSize * v78
+336: 	local v109 = math.round(v108)
+337: 	local v110 = math.max(1, v109)
+338: 	local v111 = v91 / 2 - v110 / 2 + 0.5
+339: 	local v112 = math.floor(v111)
+340: 	v107.f.Size = UDim2.fromOffset(v110, v110)
+341: 	v107.f.Position = UDim2.fromOffset(v112, v112)
+342: 	v107.f.BackgroundColor3 = v74
+343: 	v107.f.BackgroundTransparency = v76
+344: 	v107.s.Enabled = v_u_23.XhOutline
+345: 	v107.s.Thickness = v80
+346: 	v107.s.Transparency = v77
+347: end
+348: local v_u_114 = nil
+349: v3:BindToRenderStep("Crosshair", Enum.RenderPriority.Camera.Value + 1, function()
+350: 	-- upvalues: (copy) v_u_24, (copy) v_u_4, (copy) v_u_7, (copy) v_u_33, (copy) v_u_34, (copy) v_u_113, (ref) v_u_114, (copy) v_u_27, (copy) v_u_32, (copy) v_u_23
+351: 	local v115 = v_u_24.Character
+352: 	local v116
+353: 	if v115 then
+354: 		v116 = v115:FindFirstChildOfClass("Humanoid")
+355: 	else
+356: 		v116 = v115
+357: 	end
+358: 	local v117
+359: 	if v116 == nil or v116.Health <= 0 then
+360: 		v117 = false
+361: 	else
+362: 		v117 = v115:FindFirstChildOfClass("Tool") ~= nil
+363: 	end
+364: 	if v_u_4.Equipped or (v_u_4.FistsReady == true or v117) then
+365: 		v117 = not v_u_4.Scoped
+366: 	end
+367: 	local v118
+368: 	if v117 then
+369: 		v118 = v_u_7.Active(v115)
+370: 	else
+371: 		v118 = v117
+372: 	end
+373: 	local v119 = v_u_33.root
+374: 	if v117 then
+375: 		v117 = not v118
+376: 	end
+377: 	v119.Visible = v117
+378: 	if v_u_34 and v_u_34.Visible ~= v118 then
+379: 		v_u_34.Visible = v118
+380: 	end
+381: 	if v_u_33.root.Visible then
+382: 		v_u_113(v_u_33, false)
+383: 	end
+384: 	local v120 = v_u_4.CrosshairPreview
+385: 	if v120 and v120.Parent then
+386: 		if not v_u_114 or v_u_114.root.Parent ~= v120 then
+387: 			if v_u_114 then
+388: 				v_u_114.root:Destroy()
+389: 			end
+390: 			local v121 = v_u_27:Clone()
+391: 			v121.Visible = true
+392: 			v121.Parent = v120
+393: 			v_u_114 = v_u_32(v121)
+394: 		end
+395: 		v_u_113(v_u_114, true)
+396: 	elseif v_u_114 then
+397: 		v_u_114.root:Destroy()
+398: 		v_u_114 = nil
+399: 	end
+400: 	v_u_4.HitmarkerScale = v_u_23.XhHitmarker
+401: 	v_u_4.HitmarkerOn = v_u_23.XhHitmarkerOn ~= false
+402: end)
+403: v_u_5.SetHitmarker(v_u_23.HitSound)
+404: v_u_6.SettingsChanged:Connect(function(p122)
+405: 	-- upvalues: (copy) v_u_5, (copy) v_u_23
+
+===== Players.Gorannss.PlayerScripts.RollClient =====
+   ...
+24: 	if p16 then
+25: 		p16 = p16:FindFirstChildOfClass("Tool")
+26: 	end
+27: 	if p16 then
+28: 		p16 = p16:GetAttribute("RollBoost")
+29: 	end
+30: 	local v19 = tonumber(p16) or 1
+31: 	return v18 * math.clamp(v19, 1, 1.5)
+32: end
+33: local v_u_21 = v_u_1.LocalPlayer
+34: local v_u_22 = (-1 / 0)
+35: local v_u_23 = nil
+36: local v_u_24 = nil
+37: local v_u_25 = nil
+38: local v_u_26 = 0
+39: local v_u_27 = require(v5:WaitForChild("Holds"))
+40: local v_u_28 = false
+41: local v_u_29 = v10.JumpCooldown or 3
+42: local v_u_30 = (-1 / 0)
+43: local v_u_31 = v10.JumpGravity or workspace.Gravity
+44: local v_u_32 = nil
+45: local function v_u_40(p33, p34) -- name: setJumpForce
+46: 	-- upvalues: (ref) v_u_32, (copy) v_u_31
+47: 	if p33 then
+48: 		p33 = p33:FindFirstChild("HumanoidRootPart")
+49: 	end
+50: 	if p33 then
+51: 		if not v_u_32 or v_u_32.Parent ~= p33 then
+52: 			local v35 = p33:FindFirstChild("RootAttachment")
+53: 			if not v35 then
+54: 				v35 = Instance.new("Attachment")
+   ...
+242: 		local v80 = not v_u_7.MobileJump and v_u_7.Equipped and (v_u_7.Aiming and not v79.SeatPart and not (v_u_7.Frozen or v_u_7.NavFreeze))
+243: 		if v80 then
+244: 			v80 = v_u_69.TouchMode()
+245: 		end
+246: 		if v80 then
+247: 			local v81 = v_u_78()
+248: 			if v81 and not v81.Visible then
+249: 				v81.Visible = true
+250: 			end
+251: 			v_u_75 = true
+252: 			return
+253: 		end
+254: 	end
+255: end)
+256: v4.Heartbeat:Connect(function()
+257: 	-- upvalues: (copy) v_u_21, (copy) v_u_7, (ref) v_u_30, (copy) v_u_29, (ref) v_u_28, (ref) v_u_75, (copy) v_u_69, (copy) v_u_78, (copy) v_u_13, (copy) v_u_12, (copy) v_u_11, (ref) v_u_23, (ref) v_u_22, (copy) v_u_43, (ref) v_u_25, (copy) v_u_1, (copy) v_u_27, (copy) v_u_8, (ref) v_u_24, (copy) v_u_15, (ref) v_u_26, (copy) v_u_42
+258: 	local v82 = v_u_21.Character
+259: 	local v83
+260: 	if v82 then
+261: 		v83 = v82:FindFirstChildOfClass("Humanoid")
+262: 	else
+263: 		v83 = v82
+264: 	end
+265: 	if v83 then
+266: 		local v84 = v83:GetState()
+267: 		local v85 = v_u_7.Stamina ~= nil and v_u_7.Stamina < (v_u_7.JumpCost or 0) and not v83.SeatPart
+268: 		if v85 then
+269: 			v85 = v84 ~= Enum.HumanoidStateType.Swimming
+270: 		end
+271: 		local v86 = v_u_7.Equipped and v_u_7.Aiming or v_u_7.Rolling or (v_u_7.JumpBusy or (os.clock() - v_u_30 < v_u_29 and true or (v85 or v_u_7.NavFreeze)))
+272: 		if v86 ~= v_u_28 then
+   ...
+315: 						v92:SetStateEnabled(v93, true)
+316: 					end
+317: 				end
+318: 			else
+319: 				local v94 = v_u_7.RollMode or ""
+320: 				local v95 = (v90 / ((string.sub(v94, 1, 1) == "B" and v_u_13 or v_u_12) / v_u_11) - 0.55) / 0.44999999999999996
+321: 				local v96 = v82:FindFirstChild("HumanoidRootPart")
+322: 				if v95 > 0 and (v96 and v_u_25) then
+323: 					local v97 = math.min(v95, 1)
+324: 					local v98 = v97 * v97 * (3 - 2 * v97)
+325: 					local v99 = v_u_7.CamYaw or v_u_25
+326: 					local v100 = v_u_1.LocalPlayer.Character
+327: 					if v100 then
+328: 						v100 = v100:FindFirstChildOfClass("Tool")
+329: 					end
+330: 					local v101 = v99 + v_u_27.AimTwist(v100 and v100:GetAttribute("Weapon") or "M4A1")
+331: 					v96.CFrame = CFrame.new(v96.Position) * CFrame.Angles(0, v_u_25 + ((v101 - v_u_25 + 3.141592653589793) % 6.283185307179586 - 3.141592653589793) * v98, 0)
+332: 				end
+333: 				local v102 = v90 * v_u_11
+334: 				local v103 = v_u_7.RollMode
+335: 				if string.sub(v103, 1, 1) == "B" then
+336: 					v102 = v_u_13 - v102 or v102
+337: 				end
+338: 				local v104 = v_u_24
+339: 				local v105 = -v_u_8.Velocity(v_u_8.Roll, v102).Z * v_u_11 * (v_u_7.RollSpeed or 1) * v_u_15
+340: 				local v106 = v_u_26
+341: 				local v107 = v104 * math.max(v105, v106, 0)
+342: 				if v96 and v107.Magnitude > 0.01 then
+343: 					v_u_42.FilterDescendantsInstances = { v82, workspace:FindFirstChild("FX"), workspace:FindFirstChild("ClientHitboxes") }
+344: 					local v108 = workspace:Spherecast(v96.Position, 1.1, v_u_24 * (v107.Magnitude * 0.1 + 0.4), v_u_42)
+345: 					if v108 then
+
+===== Players.Gorannss.PlayerScripts.DeathCamClient =====
+   ...
+6: local v6 = v3:WaitForChild("Remotes"):WaitForChild("Killed")
+7: local v_u_7 = require(v3:WaitForChild("Weapons"):WaitForChild("ClientState"))
+8: local v_u_8 = RaycastParams.new()
+9: v_u_8.IgnoreWater = true
+10: v_u_8.FilterType = Enum.RaycastFilterType.Exclude
+11: local function v_u_11(...) -- name: ignoreList
+12: 	local v9 = { workspace:FindFirstChild("FX"), workspace:FindFirstChild("ClientHitboxes") }
+13: 	for _, v10 in { ... } do
+14: 		if not v10 then
+15: 			continue
+16: 		end
+17: 		table.insert(v9, v10)
+18: 	end
+19: 	return v9
+20: end
+21: local function v_u_27(p12, p13, p14, p15) -- name: corpseView
+22: 	-- upvalues: (copy) v_u_11, (copy) v_u_8
+23: 	local v16
+24: 	if p12 then
+25: 		v16 = p12:FindFirstChild("UpperTorso") or p12:FindFirstChild("HumanoidRootPart")
+26: 	else
+27: 		v16 = p12
+28: 	end
+29: 	if not v16 then
+30: 		return nil
+31: 	end
+32: 	local v17 = v16.Position
+33: 	local v18 = (Vector3.new(0, 5, 6)):Lerp(Vector3.new(0, 9, 10), p14)
+34: 	local v19 = p13 * v18.Z
+35: 	local v20 = v18.Y
+36: 	local v21 = v19 + Vector3.new(0, v20, 0)
+   ...
+74: 	local v37 = workspace:Raycast(v34, v35, v_u_8)
+75: 	if not v37 then
+76: 		v40 = v34 + v35
+77: 		return v36(v40, v34)
+78: 	end
+79: 	local v38 = v35.Unit
+80: 	local v39 = v37.Distance - 0.5
+81: 	local v40 = v34 + v38 * math.max(1.5, v39)
+82: 	if v40 then
+83: 		return v36(v40, v34)
+84: 	end
+85: 	v40 = v34 + v35
+86: 	return v36(v40, v34)
+87: end
+88: v6.OnClientEvent:Connect(function(p_u_42, p_u_43)
+89: 	-- upvalues: (copy) v_u_2, (copy) v_u_4, (copy) v_u_5, (copy) v_u_7, (copy) v_u_41, (copy) v_u_27
+90: 	v_u_2:UnbindFromRenderStep("DeathCam")
+91: 	local v_u_44 = os.clock()
+92: 	local v_u_45 = v_u_4.Character
+93: 	local v46 = v_u_5.CFrame.LookVector * Vector3.new(-1, 0, -1)
+94: 	local v_u_47 = v46.Magnitude > 0.01 and v46.Unit or Vector3.new(0, 0, 1)
+95: 	v_u_2:BindToRenderStep("DeathCam", Enum.RenderPriority.Camera.Value + 5, function()
+96: 		-- upvalues: (copy) v_u_44, (ref) v_u_4, (copy) v_u_45, (copy) p_u_43, (ref) v_u_2, (ref) v_u_7, (ref) v_u_41, (copy) p_u_42, (ref) v_u_27, (ref) v_u_47, (ref) v_u_5
+97: 		local v48 = os.clock() - v_u_44
+98: 		local v49 = v_u_4.Character
+99: 		local v50
+100: 		if v49 then
+101: 			v50 = v49:FindFirstChildOfClass("Humanoid")
+102: 		else
+103: 			v50 = v49
+104: 		end
+105: 		if v48 > 15 or v49 and (v49 ~= v_u_45 and (v49 ~= p_u_43 and (v50 and v50.Health > 0))) then
+106: 			v_u_2:UnbindFromRenderStep("DeathCam")
+107: 			return
+108: 		elseif v_u_7.Spectating then
+109: 			return
+110: 		else
+111: 			local v51
+112: 			if v48 >= 1.5 then
+113: 				v51 = v_u_41(p_u_42, p_u_43)
+114: 			else
+115: 				v51 = nil
+116: 			end
+117: 			if not v51 then
+118: 				local v52 = v48 / 1.5
+119: 				v51 = v_u_27(p_u_43, v_u_47, 1 - (1 - math.clamp(v52, 0, 1)) ^ 2, p_u_42)
+120: 			end
+121: 			if v51 then
+122: 				v_u_5.CameraType = Enum.CameraType.Scriptable
+123: 				v_u_5.CFrame = v51
+124: 			end
+125: 		end
+126: 	end)
+127: end)
+128: v_u_4.CharacterAdded:Connect(function() -- name: stop
+129: 	-- upvalues: (copy) v_u_2
+130: 	v_u_2:UnbindFromRenderStep("DeathCam")
+131: end)
+
+===== Players.Gorannss.PlayerScripts.VehicleClient =====
+   ...
+16: local v_u_15 = v_u_8:WaitForChild("VehicleAction")
+17: local v16 = v_u_8:WaitForChild("VehicleFX")
+18: local v_u_17 = require(v6:WaitForChild("Weapons"):WaitForChild("ClientState"))
+19: local v_u_18 = setmetatable({}, {
+20: 	["__mode"] = "k"
+21: })
+22: v_u_17.CarSteer = v_u_18
+23: local v_u_19 = require(v6:WaitForChild("Weapons"):WaitForChild("AnimWorkers"))
+24: local v20 = require(v6:WaitForChild("Weapons"):WaitForChild("Effects"))
+25: local v_u_21 = require(v6:WaitForChild("Weapons"):WaitForChild("WeaponData"))
+26: local v_u_22 = v1.LocalPlayer
+27: local v_u_23 = workspace.CurrentCamera
+28: local v_u_24 = Enum.KeyCode.F
+29: local v_u_25 = Enum.ContextActionPriority.High.Value + 150
+30: local v26 = require
+31: local v_u_27, v_u_28 = pcall(v26, v6:WaitForChild("Notify", 10))
+32: if not v_u_27 then
+33: 	v_u_28 = nil
+34: end
+35: local v_u_29 = Enum.ContextActionPriority.High.Value + 50
+36: local v_u_30 = {}
+37: local v_u_31 = v_u_3:GetTagged("Vehicle")
+38: local v_u_32 = {}
+39: local v_u_33 = nil
+40: local v_u_34 = false
+41: local v_u_35 = false
+42: local v_u_36 = false
+43: local v_u_37 = false
+44: local v_u_38 = false
+45: local v_u_39 = false
+46: local v_u_40 = false
+47: local v_u_41 = nil
+48: local v_u_42 = nil
+49: local v_u_43 = nil
+50: task.spawn(function()
+51: 	-- upvalues: (copy) v_u_22, (ref) v_u_43
+52: 	local v44 = game:GetService("StarterPlayer")
+53: 	local v45 = v_u_22:WaitForChild("PlayerScripts")
+54: 	local v_u_46 = nil
+   ...
+289: 	local v113 = p108.CFrame.RightVector
+290: 	local v114 = (p110 - p108.Position):Dot(v112)
+291: 	local v115 = math.abs(v114)
+292: 	local v116 = p109 and p109.Position or p108.Position
+293: 	local v117 = (p108.Position - v116):Dot(v113)
+294: 	local v118 = (p110 - v116):Dot(v113)
+295: 	local v119
+296: 	if math.abs(v117) > 0.5 then
+297: 		v119 = v117 * v118 < 0
+298: 	else
+299: 		v119 = false
+300: 	end
+301: 	return v115 + (v119 and 4 or 0) + p111 * 0.1
+302: end
+303: local function v_u_139() -- name: updatePrompts
+304: 	-- upvalues: (copy) v_u_22, (ref) v_u_106, (ref) v_u_105, (ref) v_u_107, (ref) v_u_33, (ref) v_u_103, (copy) v_u_102, (copy) v_u_104, (copy) v_u_120
+305: 	local v121 = v_u_22.Character
+306: 	local v122
+307: 	if v121 then
+308: 		v122 = v121:FindFirstChildOfClass("Humanoid")
+309: 	else
+310: 		v122 = v121
+311: 	end
+312: 	local v123
+313: 	if v121 then
+314: 		v123 = v121:FindFirstChild("HumanoidRootPart")
+315: 	else
+316: 		v123 = v121
+317: 	end
+318: 	local v124 = nil
+319: 	local v125 = nil
+320: 	local v126 = nil
+321: 	if v121 then
+322: 		v121 = v121:GetAttribute("Downed") or v121:GetAttribute("CarriedBy")
+323: 	end
+324: 	if v_u_106 and (v_u_105 and os.clock() - v_u_107 > v_u_105.HoldDuration + 0.75) then
+325: 		v_u_106 = false
+326: 	end
+327: 	if not v_u_33 and (v_u_103 <= os.clock() and (v122 and (v123 and (v122.Health > 0 and not v121)))) then
+328: 		for v127, v128 in pairs(v_u_102) do
+329: 			local v129 = v127.Parent
+330: 			local v130 = v128:FindFirstAncestorWhichIsA("Model")
+331: 			if v128.Occupant or (not v129 or (not v129:IsDescendantOf(workspace) or (not v130 or (v130:GetAttribute("Destroyed") or v130:GetAttribute("Noyee"))))) then
+332: 				continue
+333: 			end
+334: 			local v131 = v129.WorldPosition - v123.Position
+335: 			local v132 = v131.X
+336: 			local v133 = v131.Z
+337: 			local v134 = Vector3.new(v132, 0, v133).Magnitude
+338: 			local v135 = v_u_104[v127] or 6
+339: 			local v136 = v_u_120(v128, v129.Parent, v123.Position, v134)
+340: 			if v127 == v_u_105 then
+341: 				if v134 <= v135 + (v_u_106 and 3 or 1) then
+342: 					v126 = v136
+   ...
+353: 		end
+354: 	end
+355: 	if v124 ~= v_u_105 then
+356: 		v_u_106 = false
+357: 	end
+358: 	v_u_105 = v124
+359: 	for v137 in pairs(v_u_102) do
+360: 		local v138 = v137 == v124
+361: 		if v137.Enabled == v138 then
+362: 			continue
+363: 		end
+364: 		v137.Enabled = v138
+365: 	end
+366: end
+367: local function v151(p_u_140) -- name: addPrompts
+368: 	-- upvalues: (copy) v_u_32, (copy) v_u_30, (copy) v_u_9, (copy) v_u_104, (copy) v_u
+
+===== Players.Gorannss.PlayerScripts.KillEffectsClient =====
+   ...
+46: 				v_u_21:Emit(v_u_22)
+47: 			end
+48: 			local v24 = v23 + v_u_21.Lifetime.Max
+49: 			v20 = math.max(v20, v24)
+50: 		else
+51: 			if not v_u_21:IsA("Sound") or p19 then
+52: 				continue
+53: 			end
+54: 			v_u_21:Play()
+55: 			local v25 = v_u_21.TimeLength
+56: 			v20 = math.max(v20, v25)
+57: 		end
+58: 	end
+59: 	return v20
+60: end
+61: local v_u_27 = {
+62: 	[Enum.NormalId.Top] = Vector3.new(0, 1, 0),
+63: 	[Enum.NormalId.Bottom] = Vector3.new(-0, -1, -0),
+64: 	[Enum.NormalId.Right] = Vector3.new(1, 0, 0),
+65: 	[Enum.NormalId.Left] = Vector3.new(-1, -0, -0),
+66: 	[Enum.NormalId.Front] = Vector3.new(-0, -0, -1),
+67: 	[Enum.NormalId.Back] = Vector3.new(0, 0, 1)
+68: }
+69: local function v_u_38(p28, p29) -- name: launchTurn
+70: 	-- upvalues: (copy) v_u_27
+71: 	local v30 = nil
+72: 	for _, v31 in p28:GetDescendants() do
+73: 		if not v31:IsA("ParticleEmitter") or v31.Name ~= p29 then
+74: 			continue
+75: 		end
+76: 		v30 = v31
+77: 	end
+78: 	local v32
+79: 	if v30 then
+80: 		v32 = v30.Parent
+81: 	else
+82: 		v32 = v30
+83: 	end
+84: 	local v33 = not v32 or v32:IsA("Attachment") and v32.WorldCFrame
+85: 	if not v33 then
+86: 		if v32:IsA("BasePart") then
+87: 			v33 = v32.CFrame or nil
+88: 		else
+89: 			v33 = nil
+90: 		end
+91: 	end
+92: 	local v34 = v30 and ((v30.Speed.Min + v30.Speed.Max) / 2 or 0) or 0
+93: 	if v33 and math.abs(v34) >= 0.001 then
+94: 		local v35 = v33:VectorToWorldSpace(v_u_27[v30.EmissionDirection] or Vector3.new(0, 1, 0)) * math.sign(v34)
+95: 		local v36 = v35:Dot(Vector3.new(-0, -1, -0))
+96: 		local v37 = math.clamp(v36, -1, 1)
+97: 		if v37 > 0.9999 then
+98: 			return CFrame.identity
+99: 		elseif v37 < -0.9999 then
+100: 			return CFrame.fromAxisAngle(Vector3.new(1, 0, 0), 3.141592653589793)
+101: 		else
+102: 			return CFrame.fromAxisAngle(v35:Cross(Vector3.new(-0, -1, -0)).Unit, (math.acos(v37)))
+103: 		end
+104: 	else
+105: 		return CFrame.identity
+106: 	end
+107: end
+108: local function v_u_82(p_u_39, p40, p_u_41) -- name: play
+109: 	-- upvalues: (copy) v_u_6, (copy) v_u_8, (copy) v_u_9, (copy) v_u_38, (copy) v_u_10, (copy) v_u_26, (copy) v_u_5
+
+===== Players.Gorannss.PlayerScripts.ConfirmFXClient =====
+   ...
+71: 		end
+72: 		local v_u_24 = v_u_4.RenderStepped:Connect(function()
+73: 			-- upvalues: (copy) p_u_12, (copy) v_u_14
+74: 			if p_u_12.Parent then
+75: 				v_u_14.CFrame = p_u_12.CFrame
+76: 			end
+77: 		end)
+78: 		task.delay(v18 + 0.3, function()
+79: 			-- upvalues: (copy) v_u_24, (copy) v_u_14
+80: 			v_u_24:Disconnect()
+81: 			v_u_14:Destroy()
+82: 		end)
+83: 	end
+84: end
+85: local v_u_26 = {}
+86: local v_u_27 = {}
+87: local v_u_28 = 0
+88: local v_u_29 = {}
+89: local v_u_30 = {}
+90: local v_u_31 = nil
+91: local v_u_32 = Random.new()
+92: local v_u_33 = RaycastParams.new()
+93: v_u_33.FilterType = Enum.RaycastFilterType.Exclude
+94: v_u_33.RespectCanCollide = true
+95: v_u_33.IgnoreWater = true
+96: local function v_u_41(p34) -- name: newBottle
+97: 	-- upvalues: (ref) v_u_28
+98: 	local v35 = p34:Clone()
+99: 	local v36 = v35.PrimaryPart
+100: 	local v37 = {
+101: 		["model"] = v35,
+102: 		["parts"] = {}
+103: 	}
+104: 	for _, v38 in v35:GetChildren() do
+105: 		if not v38:IsA("BasePart") then
+106: 			continue
+107: 		end
+108: 		local v39 = v37.parts
+109: 		local v40 = {
+110: 			["part"] = v38,
+111: 			["off"] = v36.CFrame:ToObjectSpace(v38.CFrame),
+112: 			["tr"] = v38.Transparency
+113: 		}
+114: 		table.insert(v39, v40)
+115: 	end
+116: 	v_u_28 = v_u_28 + 1
+117: 	return v37
+118: end
+119: local function v_u_68(p42) -- name: stepBottles
+120: 	-- upvalues: (copy) v_u_29, (copy) v_u_30, (copy) v_u_27, (copy) v_u_26, (ref) v_u_31
+121: 	local v43 = math.min(p42, 0.05)
+122: 	table.clear(v_u_29)
+123: 	table.clear(v_u_30)
+124: 	local v44 = 0
+125: 	for v45 = #v_u_27, 1, -1 do
+126: 		local v46 = v_u_27[v45]
+127: 		local v47 = false
+128: 		if v46.restT then
+129: 			v46.restT = v46.restT + v43
+130: 			local v48 = v46.rot
+131: 			local v49 = v46.flat
+132: 			local v50 = v43 * 20
+133: 			v46.rot = v48:Lerp(v49, (math.min(1, v50)))
+134: 			local v51 = (v46.restT - 0.3) / 0.2
+135: 			if v51 >= 1 then
+136: 				v47 = true
+137: 			elseif v51 > 0 then
+138: 				for _, v52 in v46.parts do
+139: 					v52.part.Transparency = v52.tr + (1 - v52.tr) * v51
+140: 				end
+141: 			end
+   ...
+150: 				local v56 = v46.pos.Z
+151: 				v46.pos = Vector3.new(v54, v55, v56)
+152: 				v46.hits = v46.hits + 1
+153: 				if v46.hits > 3 or -v53.Y * 0.5 < 4 then
+154: 					v46.restT = 0
+155: 				else
+156: 					local v57 = v53.X * 0.55
+157: 					local v58 = -v53.Y * 0.5
+158: 					local v59 = v53.Z * 0.55
+159: 					v46.vel = Vector3.new(v57, v58, v59)
+160: 					v46.spin = v46.spin * 0.7
+161: 				end
+162: 			end
+163: 		end
+164: 		if v47 then
+165: 			table.remove(v_u_27, v45)
+166: 			v46.model.Parent = nil
+167: 			for _, v60 in v46.parts do
+168: 				v60.part.Transparency = v60.tr
+169: 			end
+170: 			local v61 = v_u_26
+171: 			table.insert(v61, v46)
+172: 		else
+173: 			local v62 = CFrame.new(v46.pos) * v46.rot
+174: 			for _, v63 in v46.parts do
+175: 				v44 = v44 + 1
+176: 				local v64 = v_u_29
+177: 				local v65 = v_u_30
+178: 				local v66 = v63.part
+179: 				local v67 = v62 * v63.off
+180: 				v64[v44] = v66
+181: 				v65[v44] = v67
+182: 			end
+183: 		end
+184: 	end
+185: 	if v44 > 0 then
+186: 		workspace:BulkMoveTo(v_u_29, v_u_30, Enum.BulkMoveMode.FireCFrameChanged)
+187: 	end
+188: 	if #v_u_27 == 0 and v_u_31 then
+189: 		v_u_31:Disconnect()
+190: 		v_u_31 = nil
+191: 	end
+192: end
+193: local function v_u_95(p69) -- name: dropBottle
+194: 	-- upvalues: (copy) v_u_2, (copy) v_u_26, (ref) v_u_28, (copy) v_u_41, (copy) v_u_1, (copy) v_u_33, (copy) v_u_32, (copy) v_u_27, (ref) v_u_31, (copy) v_u_4, (copy) v_u_68
+195: 	local v70 = p69:FindFirstChild("RightHand")
+196: 	local v71 = p69:FindFirstChild("HumanoidRootPart")
+197: 	local v72 = workspace.CurrentCamera
+198: 	local v73 = v_u_2:FindFirstChild("FX")
+199: 	if v73 then
+200: 		v73 = v73:FindFirstChild("BouteilleEDrink")
+201: 	end
+202: 	if v70 and (v71 and (v72 and (v73 and (v72.CFrame.Position - v70.Position).Magnitude <= 100))) then
+203: 		local v74 = table.remove(v_u_26)
+204: 		if not v74 then
+205: 			if v_u_28 >= 6 then
+206: 				return
+207: 		
+
+===== Players.Gorannss.PlayerScripts.DeathScreenClient =====
+   ...
+30: 	if not v18:IsA("GuiObject") or v18.Name:sub(1, 5) ~= "Liser" then
+31: 		continue
+32: 	end
+33: 	table.insert(v_u_17, v18)
+34: end
+35: local v_u_19 = v_u_16:WaitForChild("Text")
+36: local v_u_20 = v_u_19:FindFirstChildOfClass("UIStroke")
+37: local v_u_21 = v_u_19:FindFirstChildOfClass("UIScale")
+38: local v_u_22 = v_u_12.BackgroundTransparency
+39: local v_u_23 = {}
+40: for _, v24 in v_u_13 do
+41: 	v_u_23[v24] = v24.BackgroundTransparency
+42: end
+43: local v_u_25 = v_u_16.Size.Y.Scale
+44: local v_u_26 = v_u_19.TextTransparency
+45: local v_u_27 = v_u_20 and (v_u_20.Transparency or 0) or 0
+46: local v_u_28 = v_u_17[1] and v_u_17[1].BackgroundColor3 or Color3.fromRGB(235, 45, 55)
+47: require(game:GetService("ReplicatedStorage"):WaitForChild("ScaleUI")).Convert(v_u_11)
+48: local v_u_29 = v_u_16:FindFirstChild("Themes")
+49: local v_u_30 = {}
+50: for _, v31 in v_u_13 do
+51: 	v_u_30[v31] = v31.BackgroundColor3
+52: end
+53: local v_u_32 = nil
+54: local function v_u_72(p33) -- name: applyTheme
+55: 	-- upvalues: (ref) v_u_32, (copy) v_u_29, (copy) v_u_13, (copy) v_u_30, (copy) v_u_10, (copy) v_u_5, (copy) v_u_25, (copy) v_u_11, (copy) v_u_9
+56: 	if v_u_32 then
+57: 		v_u_32:Disconnect()
+58: 		v_u_32 = nil
+59: 	end
+60: 	local v34 = nil
+   ...
+306: 		local v110 = v_u_3:Create(v_u_75, TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), v109)
+307: 		local v111 = v_u_88
+308: 		table.insert(v111, v110)
+309: 		v110:Play()
+310: 		if v_u_10.Spectating then
+311: 			v_u_92()
+312: 		else
+313: 			for _, v112 in v_u_80 do
+314: 				v112.TimePosition = 0
+315: 				v112:Play()
+316: 			end
+317: 		end
+318: 	end
+319: end
+320: local function v_u_138(p114) -- name: showMessage
+321: 	-- upvalues: (copy) v_u_28, (copy) v_u_6, (copy) v_u_17, (copy) v_u_72, (copy) v_u_19, (ref) v_u_85, (copy) v_u_16, (copy) v_u_25, (copy) v_u_3, (copy) v_u_88, (copy) v_u_21, (copy) v_u_26, (copy) v_u_20, (copy) v_u_27
+322: 	local v_u_115 = v_u_28
+323: 	local v116
+324: 	if p114 then
+325: 		v116 = v_u_6.ById[p114.Msg or ""]
+326: 	else
+327: 		v116 = p114
+328: 	end
+329: 	if v116 and v116.id ~= v_u_6.DEFAULT then
+330: 		v_u_115 = v116.color
+331: 	end
+332: 	for _, v117 in v_u_17 do
+333: 		v117.BackgroundColor3 = v_u_115
+334: 	end
+335: 	v_u_72(v116 and v116.theme or nil)
+336: 	local v118 = v_u_19
+   ...
+338: 	local v120
+339: 	if p114 then
+340: 		v120 = p114.Msg
+341: 	else
+342: 		v120 = p114
+343: 	end
+344: 	if p114 then
+345: 		p114 = p114.Name
+346: 	end
+347: 	v118.Text = v119(v120, p114, v_u_6.LocalLang(), function(p121)
+348: 		-- upvalues: (ref) v_u_115, (ref) v_u_6
+349: 		return ("<font color=\"#%s\">%s</font>"):format(v_u_115:ToHex(), v_u_6.Escape(p121))
+350: 	end)
+351: 	local v_u_122 = v_u_85
+352: 	task.delay(0.25, function()
+353: 		-- upvalues: (copy) v_u_122, (ref) v_u_85, (ref) v_u_16, (ref) v_u_25, (ref) v_u_3, (ref) v_u_88, (ref) v_u_21, (ref) v_u_19, (ref) v_u_26, (ref) v_u_20, (ref) v_u_27
+354: 		if v_u_122 == v_u_85 then
+355: 			local v123 = v_u_16
+356: 			local v124 = {
+357: 				["Size"] = UDim2.fromScale(1, v_u_25)
+358: 			}
+359: 			local v125 = Enum.EasingStyle.Back
+360: 			local v126 = v_u_3:Create(v123, TweenInfo.new(0.35, v125 or Enum.EasingStyle.Quad, Enum.EasingDirection.Out), v124)
+361: 			local v127 = v_u_88
+362: 			table.insert(v127, v126)
+363: 			v126:Play()
+364: 			if v_u_21 then
+365: 				v_u_21.Scale = 1.3
+366: 				local v128 = v_u_21
+367: 				local v129 = Enum.EasingStyle.Back
+368: 				local v130 = v_u_3:Create(v128, TweenInfo.new(0.45, v129 or Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+369: 					["Scale"] = 1
+370: 				})
+371: 				local v131 = v_u_88
+372: 				table.insert(v131, v130)
+373: 				v130:Play()
+374: 			end
+375: 			local v132 = {
+376: 				["TextTransparency"] = v_u_26
+377: 			}
+378: 			local v133 = v_u_3:Create(v_u_19, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), v132)
+379: 			local v134 = v_u_88
+380: 			table.insert(v134, v133)
+381: 			v133:Play()
+382: 			if v_u_20 then
+383: 				local v135 = {
+3
+
+===== Players.Gorannss.PlayerScripts.ArmorBreakClient =====
+   ...
+46: 	else
+47: 		local v21 = p19:FindFirstChildOfClass("Humanoid")
+48: 		if v21 then
+49: 			v21 = v21:FindFirstChild("LastAttackerChar")
+50: 		end
+51: 		if v20 and (v21 and (v21:IsA("ObjectValue") and v21.Value == v20)) then
+52: 			v_u_18(v_u_12)
+53: 		else
+54: 			local v22 = p19:FindFirstChild("HumanoidRootPart")
+55: 			if v22 and v_u_8.SameSide(v22.Position) then
+56: 				v_u_18(v22)
+57: 			end
+58: 		end
+59: 	end
+60: end
+61: local function v_u_27(p_u_24) -- name: watch
+62: 	-- upvalues: (copy) v_u_23
+63: 	local v_u_25 = p_u_24:GetAttribute("Armor") or 0
+64: 	p_u_24:GetAttributeChangedSignal("Armor"):Connect(function()
+65: 		-- upvalues: (copy) p_u_24, (ref) v_u_25, (ref) v_u_23
+66: 		local v26 = p_u_24:GetAttribute("Armor") or 0
+67: 		if v_u_25 > 0 and (v26 <= 0 and not p_u_24:GetAttribute("ArmorSilent")) then
+68: 			v_u_23(p_u_24)
+69: 		end
+70: 		v_u_25 = v26
+71: 	end)
+72: end
+73: v1.PlayerAdded:Connect(function(p28) -- name: onPlayer
+74: 	-- upvalues: (copy) v_u_27, (copy) v_u_23
+75: 	p28.CharacterAdded:Connect(v_u_27)
+76: 	if p28.Character then
+77: 		local v_u_29 = p28.Character
+78: 		local v_u_30 = v_u_29:GetAttribute("Armor") or 0
+79: 		v_u_29:GetAttributeChangedSignal("Armor"):Connect(function()
+80: 			-- upvalues: (copy) v_u_29, (ref) v_u_30, (ref) v_u_23
+81: 			local v31 = v_u_29:GetAttribute("Armor") or 0
+82: 			if v_u_30 > 0 and (v31 <= 0 and not v_u_29:GetAttribute("ArmorSilent")) then
+83: 				v_u_23(v_u_29)
+84: 			end
+85: 			v_u_30 = v31
+86: 		end)
+87: 	end
+88: end)
+89: for _, v32 in v1:GetPlayers() do
+90: 	v32.CharacterAdded:Connect(v_u_27)
+91: 	if not v32.Character then
+92: 		continue
+93: 	end
+94: 	local v_u_33 = v32.Character
+95: 	local v_u_34 = v_u_33:GetAttribute("Armor") or 0
+96: 	v_u_33:GetAttributeChangedSignal("Armor"):Connect(function()
+97: 		-- upvalues: (copy) v_u_33, (ref) v_u_34, (copy) v_u_23
+98: 		local v35 = v_u_33:GetAttribute("Armor") or 0
+99: 		if v_u_34 > 0 and (v35 <= 0 and not v_u_33:GetAttribute("ArmorSilent")) then
+100: 			v_u_23(v_u_33)
+101: 		end
+102: 		v_u_34 = v35
+103: 	end)
+104: end
+105: v2:GetInstanceAddedSignal("ArmorWearer"):Connect(v_u_27)
+106: for _, v_u_36 in v2:GetTagged("ArmorWearer") do
+107: 	local v_u_37 = v_u_36:GetAttribute("Armor") or 0
+108: 	v_u_36:GetAttributeChangedSignal("Armor"):Connect(function()
+109: 		-- upvalues: (copy) v_u_36, (ref) v_u_37, (copy) v_u_23
+110: 		local v38 = v_u_36:GetAttribute("Armor") or 0
+111: 		if v_u_37 > 0 and (v38 <= 0 and not v_u_36:GetAttribute("ArmorSilent")) then
+112: 			v_u_23(v_u_36)
+113: 		end
+114: 		v_u_37 = v38
+115: 	end)
+116: end
+
+===== Players.Gorannss.PlayerScripts.PlayerProfileClient =====
+   ...
+33: 		v22.TextColor3 = v24
+34: 	end
+35: 	if v23 then
+36: 		v23.Text = p21.badge.desc or ""
+37: 	end
+38: 	local v26 = p20.AbsolutePosition
+39: 	local v27 = p20.AbsoluteSize
+40: 	local v28 = v_u_18.Parent.AbsolutePosition
+41: 	v_u_18.Position = v_u_9.FromAbs(v_u_18, v26.X + v27.X / 2 - v28.X, v26.Y - v27.Y * 0.12 - v28.Y)
+42: 	v_u_18.Visible = true
+43: 	v_u_19 = p20
+44: end
+45: local v_u_30 = v_u_16:WaitForChild("Stats")
+46: local v31 = v_u_17:WaitForChild("Modeles")
+47: local v_u_32 = v31:WaitForChild("Tuile"):Clone()
+48: local v_u_33 = v31:WaitForChild("Badge"):Clone()
+49: local v_u_34 = v31:WaitForChild("Embleme"):Clone()
+50: local v_u_35 = v_u_19
+51: for _, v36 in { v_u_32, v_u_33, v_u_34 } do
+52: 	v36.Visible = true
+53: end
+54: local v_u_37 = v_u_16:WaitForChild("Niveau")
+55: local v_u_38 = v_u_16:WaitForChild("TousBadges")
+56: local v_u_39 = v_u_38:WaitForChild("Grille")
+57: local v_u_40 = v_u_16:WaitForChild("ToutVoir")
+58: local v_u_41 = {
+59: 	v_u_37,
+60: 	v_u_16:WaitForChild("Trait2"),
+61: 	v_u_16:WaitForChild("TitreBadges"),
+62: 	v_u_16:WaitForChild("NombreBadges"),
+63: 	v_u_17
+64: }
+65: local function v_u_44(p42) -- name: clearTiles
+66: 	for _, v43 in p42:GetChildren() do
+   ...
+85: local v_u_51 = {}
+86: v4.RenderStepped:Connect(function(p52)
+87: 	-- upvalues: (copy) v_u_15, (copy) v_u_51
+88: 	if v_u_15.Enabled then
+89: 		for _, v53 in v_u_51 do
+90: 			if not v53.Parent then
+91: 				continue
+92: 			end
+93: 			v53.Rotation = (v53.Rotation + p52 * 90) % 360
+94: 		end
+95: 	end
+96: end)
+97: local v_u_54 = nil
+98: local v_u_55 = {}
+99: local function v_u_77(p_u_56, p57) -- name: badgeTile
+100: 	-- upvalues: (copy) v_u_34, (copy) v_u_33, (copy) v_u_7, (copy) v_u_51, (copy) v_u_32, (copy) v_u_10, (copy) v_u_29, (ref) v_u_35, (copy) v_u_18
+101: 	local v58 = p_u_56.badge
+102: 	local v59 = p_u_56.image
+103: 	local v60 = p_u_56.emblem
+104: 	if v60 then
+105: 		v60 = v59 ~= nil
+106: 	end
+107: 	local v61 = (v60 and v_u_34 or v_u_33):Clone()
+108: 	v61.Name = v58.id
+109: 	local v62 = v61:FindFirstChildOfClass("UIGradient")
+110: 	if v60 then
+111: 		local v63 = v61:FindFirstChild("Logo")
+112: 		local v64 = p_u_56.fit
+113: 		if v63 and v64 then
+114: 			local v65 = v63.Size.X.Scale * 0.474 / v64.r
+115: 			local v66 = 1.15 / v64.span
+116: 			local v67 = math.min(v65, v66)
+117: 			v63.Size = UDim2.fromScale(v67, v67)
+118: 			v63.Position = UDim2.fromScale(v63.Position.X.Scale, v63.Position.Y.Scale - v64.dy * v67)
+119: 		end
+120: 	elseif p_u_56.color == "rainbow" then
+121: 		v61.BackgroundColor3 = Color3.new(1, 1, 1)
+122: 		if v62 then
+
+===== Players.Gorannss.PlayerScripts.NightLightsClient =====
+   ...
+8: if v_u_3.SkyNoNight then
+9: 	v_u_7 = false
+10: else
+11: 	local v8 = v_u_1:GetAttribute("HeureReelle")
+12: 	local v9 = type(v8) == "number" and v8 and v8 or v_u_1.ClockTime
+13: 	v_u_7 = v9 >= 18.25 and true or v9 < 6.25
+14: end
+15: local v_u_10 = setmetatable({}, {
+16: 	["__mode"] = "k"
+17: })
+18: local v_u_11 = {}
+19: local v_u_12 = setmetatable({}, {
+20: 	["__mode"] = "k"
+21: })
+22: local v_u_13 = {}
+23: local function v_u_33() -- name: refreshNear
+24: 	-- upvalues: (copy) v_u_3, (ref) v_u_13, (ref) v_u_5, (copy) v_u_6, (copy) v_u_11, (ref) v_u_7, (copy) v_u_10
+25: 	if v_u_3.PerfNoLights then
+26: 		for v14 in v_u_13 do
+27: 			if not v14.Parent then
+28: 				continue
+29: 			end
+30: 			v14.Enabled = false
+31: 		end
+32: 		v_u_13 = {}
+33: 	else
+34: 		local v15 = v_u_5.CFrame.Position
+35: 		local v16 = {}
+36: 		local v17, v18
+37: 		if v_u_3.PotatoGraphics then
+38: 			v17 = 120
+   ...
+121: 		end
+122: 		p_u_36.Enabled = false
+123: 	end
+124: end
+125: for _, v38 in v4:GetDescendants() do
+126: 	v37(v38)
+127: end
+128: v4.DescendantAdded:Connect(v37)
+129: v4.DescendantRemoving:Connect(function(p39)
+130: 	-- upvalues: (copy) v_u_6, (ref) v_u_35, (copy) v_u_11
+131: 	v_u_6[p39] = nil
+132: 	v_u_35[p39] = nil
+133: 	v_u_11[p39] = nil
+134: end)
+135: local function v43() -- name: onClock
+136: 	-- upvalues: (copy) v_u_3, (copy) v_u_1, (ref) v_u_34, (copy) v_u_33
+137: 	local v40
+138: 	if v_u_3.SkyNoNight then
+139: 		v40 = false
+140: 	else
+141: 		local v41 = v_u_1:GetAttribute("HeureReelle")
+142: 		local v42 = type(v41) == "number" and v41 and v41 or v_u_1.ClockTime
+143: 		v40 = v42 >= 18.25 and true or v42 < 6.25
+144: 	end
+145: 	if v40 ~= v_u_34 then
+146: 		v_u_34 = v40
+147: 		task.delay(math.random() * 1.5, v_u_33)
+148: 	end
+149: end
+150: v_u_1:GetPropertyChangedSignal("ClockTime"):Connect(v43)
+151: v_u_1:GetAttributeChangedSignal("HeureReelle"):Connect(v43)
+152: workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
+153: 	-- upvalues: (ref) v_u_5
+154: 	v_u_5 = workspace.CurrentCamera or v_u_5
+155: end)
+156: local v_u_44 = 0.5
+157: v2.Heartbeat:Connect(function(p45)
+158: 	-- upvalues: (ref) v_u_44, (copy) v_u_33
+159: 	v_u_44 = v_u_44 + p45
+160: 	if v_u_44 >= 0.5 then
+161: 		v_u_44 = 0
+162: 		v_u_33()
+163: 	end
+164: end)
+
+===== Players.Gorannss.PlayerScripts.GraphicsSettingsClient =====
+   ...
+47: 	if not (p20:IsA("MeshPart") and (p20.Parent and p20:FindFirstAncestor("Roads"))) then
+48: 		return false
+49: 	end
+50: 	local v21 = p20.Name:upper()
+51: 	for _, v22 in v_u_19 do
+52: 		if not v21:find(v22, 1, true) then
+53: 			continue
+54: 		end
+55: 		return true
+56: 	end
+57: 	return false
+58: end
+59: local v_u_24 = {}
+60: local v_u_25 = {}
+61: local v_u_26 = {}
+62: local v_u_27 = {}
+63: local v_u_28 = Color3.fromRGB(72, 72, 75)
+64: local v_u_29 = {}
+65: local function v_u_32(p30) -- name: applyLeaf
+66: 	-- upvalues: (ref) v_u_14, (copy) v_u_15, (copy) v_u_7, (copy) v_u_29
+67: 	local v31 = v_u_14 and v_u_15.NoTrees and true or v_u_7.NoTrees
+68: 	if p30.CanCollide or p30.CanQuery then
+69: 		p30.LocalTransparencyModifier = v31 and 1 or 0
+70: 	elseif v31 and (p30.Parent and not v_u_29[p30]) then
+71: 		v_u_29[p30] = p30.Parent
+72: 		p30.Parent = nil
+73: 	end
+74: end
+75: local function v_u_39() -- name: applyTrees
+76: 	-- upvalues: (ref) v_u_14, (copy) v_u_15, (copy) v_u_7, (copy) v_u_24, (copy) v_u_29
+77: 	if v_u_14 and v_u_15.NoTrees and true or v_u_7.NoTrees then
+   ...
+112: end
+113: task.spawn(function()
+114: 	-- upvalues: (copy) v_u_29
+115: 	while true do
+116: 		task.wait(10)
+117: 		for v40, v41 in v_u_29 do
+118: 			if v41:IsDescendantOf(workspace) then
+119: 				continue
+120: 			end
+121: 			v_u_29[v40] = nil
+122: 			v40:Destroy()
+123: 		end
+124: 	end
+125: end)
+126: local function v_u_47(p42) -- name: applyRoad
+127: 	-- upvalues: (copy) v_u_27, (ref) v_u_14, (copy) v_u_15, (copy) v_u_7, (copy) v_u_28
+128: 	local v43 = v_u_27[p42]
+129: 	if v_u_14 and v_u_15.NoRoad and true or v_u_7.NoRoad then
+130: 		if not v43 then
+131: 			v_u_27[p42] = { p42.TextureID, p42.Color, p42.Material }
+132: 		end
+133: 		p42.TextureID = ""
+134: 		p42.Color = v_u_28
+135: 		p42.Material = Enum.Material.Asphalt
+136: 	elseif v43 then
+137: 		local v44 = v43[1]
+138: 		local v45 = v43[2]
+139: 		local v46 = v43[3]
+140: 		p42.TextureID = v44
+141: 		p42.Color = v45
+142: 		p42.Material = v46
+143: 		v_u_27[p42] = nil
+144: 	end
+145: end
+146: local v_u_48 = {}
+147: local v_u_49 = {}
+148: local v_u_50 = setmetatable({}, {
+149: 	["__mode"] = "k"
+150: })
+151: local v_u_51 = {
+152: 	{ "GLASS", 0.4 },
+153: 	{ "WINDOW", 0.4 },
+154: 	{ "WNDW", 0.4 },
+155: 	{ "FENCE", 0.5 },
+156: 	{ "GRILL", 0.5 },
+157: 	{ "BARRI", 0.5 },
+158: 	{ "GATE", 0.5 },
+   ...
+251: 				v_u_25[p63] = true
+252: 				if v_u_14 and v_u_15.NoRoad and true or v_u_7.NoRoad then
+253: 					v_u_47(p63)
+254: 				end
+255: 			end
+256: 		end
+257: 	end
+258: end
+259: local v_u_67 = v_u_14
+260: local v_u_68 = v8
+261: for _, v69 in v6:GetDescendants() do
+262: 	v66(v69)
+263: end
+264: v6.DescendantAdded:Connect(v66)
+265: v6.DescendantRemoving:Connect(function(p70)
+266: 	-- upvalues: (copy) v_u_24, (copy) v_u_25, (copy) v_u_26, (copy) v_u_27, (copy) v_u_48
+267: 	local v71 = v_u_25
+268: 	local v72 = v_u_26
+269: 	local v73 = v_u_27
+270: 	local v74 = v_u_48
+271: 	v_u_24[p70] = nil
+272: 	v71[p70] = nil
+273: 	v72[p70] = nil
+274: 	v73[p70] = nil
+275: 	v74[p70] = nil
+276: end)
+277: local v_u_75 = Instance.new("Sky")
+278: v_u_75.Name = "NoSky"
+279: local v_u_76 = nil
+280: for _, v77 in {
+281: 	"SkyboxBk",
+282: 	"SkyboxDn",
+283: 	"SkyboxFt",
+284: 	"SkyboxLf",
+   ...
+401: 		local v115 = v_u_87
+402: 		if v115 and (v_u_79 and v_u_79:GetAttribute("NoSunRays") == true) then
+403: 			v115 = false
+404: 		end
+405: 		if v114 and (v115 ~= nil and v114.Enabled ~= v115) then
+406: 			v114.Enabled = v115
+407: 		end
+408: 		if v_u_79 and v_u_79.CelestialBodiesShown ~= v_u_81 then
+409: 			v_u_79.CelestialBodiesShown = v_u_81
+410: 		end
+411: 		if v_u_1:GetAttribute("HeureReelle") ~= nil then
+412: 			v_u_1:SetAttribute("HeureReelle", nil)
+413: 		end
+414: 	end
+415: end
+416: local function v_u_137(p117) -- name: setNeutral
+417: 	-- upvalues: (ref) v_u_83, (copy) v_u_4, (copy) v_u_1, (ref) v_u_86, (ref) v_u_87, (copy) v_u_116, (copy) v_u_85, (copy) v_u_84
+418: 	if p117 == v_u_83 then
+419: 		return
+420: 	else
+421: 		v_u_83 = p117
+422: 		v_u_4.
+
+===== Players.Gorannss.PlayerScripts.SettingsMenuClient =====
+   ...
+1082: 			if v262 ~= "XhHitmarker" then
+1083: 				continue
+1084: 			end
+1085: 			v261.Visible = v_u_4.Settings.XhHitmarkerOn ~= false
+1086: 		end
+1087: 	end
+1088: end
+1089: local function v280(p264) -- name: codesSetup
+1090: 	-- upvalues: (copy) v_u_3
+1091: 	local v_u_265 = p264:FindFirstChild("Box", true)
+1092: 	local v266 = p264:FindFirstChild("Redeem", true)
+1093: 	local v_u_267 = p264:FindFirstChild("Status", true)
+1094: 	if v_u_265 and v266 then
+1095: 		local v_u_268 = v_u_3:WaitForChild("Remotes"):WaitForChild("RedeemCode", 30)
+1096: 		local v_u_269 = false
+1097: 		local function v_u_278() -- name: redeem
+1098: 			-- upvalues: (ref) v_u_269, (copy) v_u_268, (copy) v_u_265, (copy) v_u_267
+1099: 			if v_u_269 or not v_u_268 then
+1100: 				return
+1101: 			else
+1102: 				local v270 = v_u_265.Text:gsub("^%s+", ""):gsub("%s+$", "")
+1103: 				if v270 == "" then
+1104: 					if v_u_267 then
+1105: 						v_u_267.RichText = true
+1106: 						v_u_267.Text = ("<font color=\"#%s\">%s</font>"):format("e23a42", "Type a code first")
+1107: 					end
+1108: 				else
+1109: 					v_u_269 = true
+1110: 					if v_u_267 then
+1111: 						v_u_267.Text = "..."
+1112: 					end
+   ...
+1121: 						if v_u_267 then
+1122: 							v_u_267.RichText = true
+1123: 							v_u_267.Text = ("<font color=\"#%s\">%s</font>"):format(v277 and "46c86e" or "e23a42", v276)
+1124: 						end
+1125: 						if v274.ok then
+1126: 							v_u_265.Text = ""
+1127: 						end
+1128: 						return
+1129: 					elseif v_u_267 then
+1130: 						v_u_267.RichText = true
+1131: 						v_u_267.Text = ("<font color=\"#%s\">%s</font>"):format("e23a42", "Something went wrong, try again")
+1132: 					end
+1133: 				end
+1134: 			end
+1135: 		end
+1136: 		v266.Activated:Connect(v_u_278)
+1137: 		v_u_265.FocusLost:Connect(function(p279)
+1138: 			-- upvalues: (copy) v_u_278
+1139: 			if p279 then
+1140: 				v_u_278()
+1141: 			end
+1142: 		end)
+1143: 	end
+1144: end
+1145: local v_u_281 = {}
+1146: local v_u_282 = nil
+1147: local function v_u_297(p283, p284) -- name: showTab
+1148: 	-- upvalues: (ref) v_u_155, (copy) v_u_4, (copy) v_u_149, (copy) v_u_150, (copy) v_u_153, (ref) v_u_282, (copy) v_u_257, (ref) v_u_21, (copy) v_u_6, (ref) v_u_22, (copy) v_u_258, (copy) v_u_148, (copy) v_u_281, (copy) v_u_8, (copy) v_u_20
+1149: 	if v_u_155 then
+1150: 		v_u_155 = nil
+1151: 		v_u_4.Capturing = false
+1152: 		v_u_4.CaptureEndedAt = os.clock()
+1153: 		v_u_149:UnbindAction("SettingsKeyCapture")
+1154: 		if v_u_150 then
+1155: 			v_u_150.Visible = false
+   ...
+1299: 			v320 = v318
+1300: 		else
+1301: 			v320 = v318:FindFirstChild("Text")
+1302: 		end
+1303: 		if v320 then
+1304: 			v320.Text = v319
+1305: 		end
+1306: 		v318.Parent = v13
+1307: 	end
+1308: 	v318.Activated:Connect(function()
+1309: 		-- upvalues: (copy) v_u_297, (copy) v_u_317
+1310: 		v_u_297(v_u_317)
+1311: 	end)
+1312: 	v_u_281[v_u_317] = v318
+1313: end
+1314: local function v_u_334() -- name: refreshTabs
+1315: 	-- upvalues: (copy) v_u_281, (copy) v_u_2, (copy) v_u_4, (copy) v_u_10, (copy) v_u_248, (copy) v_u_257, (copy) v_u_5, (ref) v_u_306, (copy) v_u_297
+1316: 	for v321, v322 in v_u_281 do
+1317: 		local v323 = not v321.touch
+1318: 		if not v323 then
+1319: 			if v_u_2.TouchEnabled or v_u_4.TouchMode() then
+1320: 				v323 = true
+1321: 			else
+1322: 				local v324 = v_u_10.PlayerGui:FindFirstChild("MobileGui")
+1323: 				v323 = v_u_248
+1324: 				if v323 then
+1325: 					if v324 == nil then
+1326: 						v323 = false
+1327: 					else
+1328: 						v323 = v324:GetAttribute("ShowOnPC") == true
+1329: 					end
+   ...
+1369: 				v332 = v_u_248
+1370: 				if v332 then
+1371: 					if v333 == nil then
+1372: 						v332 = false
+1373: 					else
+1374: 						v332 = v333:GetAttribute("ShowOnPC") == true
+1375: 					end
+1376: 				end
+1377: 			end
+1378: 		end
+1379: 		if not v332 then
+1380: 			v_u_297(v_u_5.Tabs[1])
+1381: 		end
+1382: 	end
+1383: end
+1384: v_u_334()
+1385: v_u_4.SettingsChanged:Connect(function(p335)
+1386: 	-- upvalues: (copy) v_u_18, (copy) v_u_153, (copy) v_u_263
+1387: 	if v_u_18[p335] then
+
+===== Players.Gorannss.PlayerScripts.FootstepsClient =====
+   ...
+217: 				continue
+218: 			end
+219: 			v25 = v27[2]
+220: 		end
+221: 	end
+222: 	local v28 = v25 or "concrete"
+223: 	v_u_20[v23] = v28
+224: 	return v28
+225: end
+226: for _, v30 in v_u_10 do
+227: 	for _, v31 in v30 do
+228: 		local v32 = "rbxassetid://" .. v31
+229: 		table.insert(v21, v32)
+230: 	end
+231: end
+232: local v_u_33 = {}
+233: for _, v34 in v21 do
+234: 	local v35 = Instance.new("Sound")
+235: 	v35.SoundId = v34
+236: 	table.insert(v_u_33, v35)
+237: end
+238: task.spawn(function()
+239: 	-- upvalues: (copy) v_u_3, (copy) v_u_33
+240: 	local v36 = v_u_3.PreloadAsync
+241: 	local v37 = v_u_3
+242: 	local v38 = v_u_33
+243: 	pcall(v36, v37, v38)
+244: end)
+245: local v_u_39 = Random.new()
+246: local v_u_40 = setmetatable({}, {
+247: 	["__mode"] = "k"
+248: })
+249: local function v_u_46(p41, p42, p43) -- name: voice
+250: 	if not p41.att or p41.att.Parent ~= p42 then
+251: 		local v44 = Instance.new("Attachment")
+252: 		v44.Name = "Footsteps"
+253: 		v44.Position = Vector3.new(0, -2.6, 0)
+254: 		v44.Parent = p42
+255: 		p41.att = v44
+256: 		p41.sounds = {}
+257: 	end
+
+===== Players.Gorannss.PlayerScripts.EffectsClient =====
+   ...
+13: local v_u_13 = require(v4:WaitForChild("GamepadNav"))
+14: local v_u_14 = require(v4:WaitForChild("Notify"))
+15: local v_u_15 = require(v4:WaitForChild("Screens"))
+16: local v_u_16 = require(v4:WaitForChild("RobuxShopUI"))
+17: local v_u_17 = require(v4:WaitForChild("Controls"))
+18: local v_u_18 = require(v4:WaitForChild("LimitedPacks"))
+19: local v_u_19 = nil
+20: local v20 = v4:WaitForChild("Remotes")
+21: local v_u_21 = v20:WaitForChild("Cosmetics")
+22: local v22 = v20:WaitForChild("CosmeticsChanged")
+23: local v_u_23 = v1.LocalPlayer
+24: local v_u_24 = v_u_23:WaitForChild("PlayerGui"):WaitForChild("EffectsMenu", (1 / 0))
+25: v_u_24.Enabled = false
+26: local v_u_25 = v_u_24:WaitForChild("Window")
+27: local v26 = v_u_25:WaitForChild("Close")
+28: local v_u_27 = v_u_25:WaitForChild("Tabs")
+29: local v_u_28 = v_u_25:WaitForChild("Content")
+30: local v_u_29 = v_u_28:WaitForChild("UIGridLayout")
+31: local v_u_30 = v_u_29:FindFirstChildOfClass("UIAspectRatioConstraint")
+32: local v_u_31 = v_u_25:WaitForChild("Empty")
+33: v_u_31.Visible = false
+34: local v32 = v_u_25:WaitForChild("Templates")
+35: v32.Visible = false
+36: local v33 = v32:WaitForChild("Tab")
+37: local v_u_34 = v32:WaitForChild("Card")
+38: local v_u_35 = v32:WaitForChild("WideCard")
+39: local v_u_36 = v_u_16.Picker(v_u_25:WaitForChild("GiftPicker"), "EffectsGift")
+40: local v_u_37 = v_u_25:WaitForChild("Showcase")
+41: local v_u_38 = v_u_37:WaitForChild("Panel")
+42: v_u_37.Visible = false
+43: local v_u_39 = {
+   ...
+76: local v_u_49 = false
+77: local function v_u_50() -- name: redrawSoon
+78: 	-- upvalues: (ref) v_u_49, (copy) v_u_36, (copy) v_u_24, (ref) v_u_48
+79: 	if not v_u_49 then
+80: 		v_u_49 = true
+81: 		task.delay(0.05, function()
+82: 			-- upvalues: (ref) v_u_49, (ref) v_u_36, (ref) v_u_24, (ref) v_u_48
+83: 			v_u_49 = false
+84: 			if not v_u_36.IsOpen and (v_u_24.Enabled and v_u_48) then
+85: 				v_u_48.redraw()
+86: 			end
+87: 		end)
+88: 	end
+89: end
+90: local function v_u_59(p_u_51, p_u_52) -- name: showGift
+91: 	-- upvalues: (copy) v_u_27, (copy) v_u_28, (copy) v_u_31, (copy) v_u_36, (copy) v_u_16, (copy) v_u_24, (ref) v_u_48
+92: 	v_u_27.Visible = false
+93: 	v_u_28.Visible = false
+94: 	v_u_31.Visible = false
+95: 	local v53 = v_u_36
+96: 	local v54 = {}
+97: 	local v55
+98: 	if p_u_51.id == "KillMsg" then
+99: 		v55 = "GIFT A KILL SCREEN"
+100: 	else
+101: 		local v56 = p_u_51.id == "KillFX" and " KILL EFFECT" or (p_u_51.id == "Tracer" and " TRACERS" or "")
+102: 		v55 = "GIFT " .. string.upper(p_u_52.name) .. v56
+103: 	end
+104: 	v54.title = v55
+105: 	function v54.onSend(p57, p58) -- name: onSend
+106: 		-- upvalues: (ref) v_u_16, (copy) p_u_51, (copy) p_u_52
+107: 		v_u_16.Gift(p_u_51.id, p_u_52.id, p57, p58)
+108: 	end
+109: 	function v54.onClose() -- name: onClose
+110: 		-- upvalues: (ref) v_u_27, (ref) v_u_28, (ref) v_u_24, (ref) v_u_48
+111: 		v_u_27.Visible = true
+112: 		v_u_28.Visible = true
+113: 		if v_u_24.Enabled and v_u_48 then
+114: 			v_u_48.redraw()
+115: 		end
+116: 	end
+117: 	v53:Open(v54)
+118: end
+119: local v_u_60 = {}
+120: local v_u_61 = v_u_38:WaitForChild("View")
+121: local v_u_62 = Instance.new("ImageLabel")
+122: v_u_62.Name = "Blend"
+123: v_u_62.BackgroundTransparency = 1
+124: local v63 = UDim2.fromScale(1, 1)
+125: local v64 = UDim2.fromScale(0, 0)
+126: v_u_62.Size = v63
+   ...
+592: 	v_u_13.Refresh("Effects", p170 and (v186 and v186:FindFirstChild("Buy", true) or v_u_168[p_u_169]) or v_u_168[p_u_169])
+593: end
+594: local v_u_188 = v_u_49
+595: local v_u_189 = v_u_47
+596: local v_u_190 = v_u_48
+597: local v_u_191 = v_u_116
+598: for v192, v_u_193 in v_u_8.Categories do
+599: 	local v194 = v33:Clone()
+600: 	v194.Name = "Tab_" .. v_u_193.id
+601: 	local v195 = UDim2.new()
+602: 	local v196 = UDim2.fromScale(1, 0.1)
+603: 	v194.Position = v195
+604: 	v194.Size = v196
+605: 	v194:FindFirstChild("Text").Text = v_u_193.name
+606: 	v194.LayoutOrder = v192
+607: 	v194.Parent = v_u_27
+608: 	v194.Activated:Connect(function()
+609: 		-- upvalues: (copy) v_u_36, (copy) 
+
+===== Players.Gorannss.PlayerScripts.MoneyClient =====
+   ...
+66: 		if v27 then
+67: 			v23 = v28.X or false
+68: 		else
+69: 			v23 = false
+70: 		end
+71: 		v_u_16[v22] = v23
+72: 		if v27 and v28.Y > 0 then
+73: 			v_u_17[v21] = v28.Y
+74: 		end
+75: 	end
+76: 	return v23 or nil
+77: end
+78: local v_u_30 = nil
+79: local v_u_31 = nil
+80: local v_u_32 = 0
+81: local v_u_33 = 0
+82: local v_u_34 = 0
+83: local v_u_35 = nil
+84: local v_u_36 = nil
+85: local function v_u_42() -- name: finishRoll
+86: 	-- upvalues: (ref) v_u_35, (copy) v_u_5, (ref) v_u_31, (ref) v_u_30, (ref) v_u_32, (ref) v_u_33
+87: 	local v37 = v_u_35
+88: 	v_u_35 = nil
+89: 	if v37 then
+90: 		for _, v38 in v37.wins do
+91: 			v38:Destroy()
+92: 		end
+93: 		if v37.label.Parent then
+94: 			v37.label.Text = v_u_5(v37.target)
+95: 			v37.label.Visible = true
+96: 			v_u_31 = v37.label
+97: 		end
+98: 		local v39 = v37.target
+99: 		local v40 = v37.target
+100: 		local v41 = v37.target
+101: 		v_u_30 = v39
+102: 		v_u_32 = v40
+103: 		v_u_33 = v41
+104: 	end
+105: end
+106: local function v_u_98(p43) -- name: startRoll
+107: 	-- upvalues: (copy) v_u_15, (copy) v_u_5, (ref) v_u_30, (copy) v_u_29, (copy) v_u_17, (ref) v_u_32, (ref) v_u_33, (ref) v_u_31, (ref) v_u_35
+108: 	local v44 = v_u_15()
+109: 	local v_u_45
+110: 	if v44 then
+111: 		v_u_45 = v44.label
+112: 	else
+113: 		v_u_45 = v44
+114: 	end
+115: 	local v46 = v44 and v44.roll
+116: 	if v46 then
+117: 		v46 = v44.roll:FindFirstChild("Reel")
+118: 	end
+119: 	local v47
+120: 	if v46 then
+121: 		v47 = v46:FindFirstChild("Strip")
+122: 	else
+   ...
+269: 				v86(v75, 0)
+270: 				v_u_79.Position = UDim2.fromScale(0, 0)
+271: 			end
+272: 			v_u_80:Destroy()
+273: 			v77.Parent = v64
+274: 			local v97 = v72.wins
+275: 			table.insert(v97, v77)
+276: 			v63 = v63 + v76
+277: 		end
+278: 		v_u_45.Text = v49
+279: 		v_u_45.Visible = false
+280: 		v_u_35 = v72
+281: 	else
+282: 		v_u_30 = p43
+283: 		v_u_32 = p43
+284: 		v_u_33 = p43
+285: 		if v_u_45 then
+286: 			v_u_45.Text = v49
+287: 			v_u_31 = v_u_45
+288: 		end
+289: 	end
+290: end
+291: local function v_u_101() -- name: playKaching
+292: 	-- upvalues: (copy) v_u_15
+293: 	local v99 = v_u_15()
+294: 	if v99 then
+295: 		v99 = v99.kaching
+296: 	end
+297: 	if v99 then
+298: 		local v_u_100 = v99:Clone()
+299: 		v_u_100.Parent = v99.Parent
+300: 		v_u_100.Ended:Once(function()
+301: 			-- upvalues: (copy) v_u_100
+302: 			v_u_100:Destroy()
+303: 		end)
+304: 		v_u_100:Play()
+305: 	end
+306: end
+307: local function v110() -- name: onMoney
+308: 	-- upvalues: (copy) v_u_6, (ref) v_u_30, (ref) v_u_32, (ref) v_u_33, (ref) v_u_35, (ref) v_u_36, (copy) v_u_101, (copy) v_u_98, (copy) v_u_42, (ref) v_u_34
+309: 	local v102 = v_u_6
+310: 	local v103 = tonumber(v102:GetAttribute("Money"))
+311: 	if not v103 then
+312: 		return
+313: 	end
+314: 	if v_u_30 == nil then
+315: 		v_u_30 = v103
+316: 		v_u_32 = v103
+317: 		v_u_33 = v103
+318: 		return
+319: 	end
+320: 	local v104, v105, v106, v107
+321: 	if v_u_35 then
+322: 		local v108 = v_u_35.target
+323: 		local v109 = v_u_36 or 0
+324: 		v104 = math.max(v108, v109)
+325: 		if v104 then
+326: 			if v104 < v103 then
+327: 				v105 = v_u_6
+328: 				if (tonumber(v105:GetAttribute("KachingMuteUntil")) or 0) < os.clock() then
+329: 					v_u_101()
+330: 				end
+331: 				if v_u_35 then
+332: 					v_u_36 = v103
+333: 				else
+334: 					v_u_98(v103)
+335: 				end
+336: 			else
+337: 				if v103 < v104 then
+338: 					if v_u_35 then
+339: 						v_u_42()
+340: 						v_u_36 = nil
+341: 					end
+342: 					v106 = v_u_30
+343: 					v107 = os.clock()
+344: 					v_u_32 = v106
+345: 					v_u_33 = v103
+346: 					v_u_34 = v107
+347: 				end
+348: 				return
+349: 			end
+350: 		else
+351: 			v104 = v_u_33
+352: 			if v104 < v103 then
+353: 				v105 = v_u_6
+354: 				if (tonumber(v105:GetAttribute("KachingMuteUntil")) or 0) < os.clock() then
+355: 					v_u_101()
+356: 				end
+357: 				if v_u_35 then
+358: 					v_u_36 = v103
+359: 				else
+360: 					v_u_98(v103)
+361: 				end
+362: 			else
+363: 				if v103 < v104 then
+364: 					if v_u_35 then
+365: 						v_u_42()
+366: 						v_u_36 = nil
+367: 					end
+368: 					v106 = v_u_30
+
+
+===== Players.Gorannss.PlayerScripts.CaseClient =====
+   ...
+14: local v_u_14 = require(v_u_4:WaitForChild("AttachmentCases"))
+15: local v_u_15 = require(v_u_4:WaitForChild("Weapons"):WaitForChild("ModCatalog"))
+16: local v_u_16 = v_u_4:WaitForChild("WeaponMods")
+17: local v_u_17 = require(v_u_4:WaitForChild("GamepadNav"))
+18: local v_u_18 = require(v_u_4:WaitForChild("Notify"))
+19: local v_u_19 = require(v_u_4:WaitForChild("RollSkip"))
+20: local v_u_20 = v_u_4:WaitForChild("Remotes"):WaitForChild("OpenCase")
+21: local v_u_21 = v_u_4:WaitForChild("WeaponVisuals")
+22: local v22 = require
+23: local v23, v_u_24 = pcall(v22, v_u_4:WaitForChild("MythicReveal", 10))
+24: if not v23 then
+25: 	v_u_24 = nil
+26: end
+27: local v_u_25 = v3.LocalPlayer
+28: local v_u_26 = workspace.CurrentCamera
+29: local v_u_27 = {}
+30: local v_u_28 = Instance.new("Sound")
+31: v_u_28.SoundId = "rbxassetid://" .. 93076868992220
+32: v_u_28.Volume = 0.67
+33: v_u_28:SetAttribute("CaseSound", true)
+34: v_u_28.Parent = v_u_6
+35: v_u_27[v_u_28] = 0.67
+36: local v_u_29 = Instance.new("Sound")
+37: v_u_29.SoundId = "rbxassetid://" .. 113309821562539
+38: v_u_29.Volume = 1.2
+39: v_u_29:SetAttribute("CaseSound", true)
+40: v_u_29.Parent = v_u_6
+41: v_u_27[v_u_29] = 1.2
+42: local v_u_30 = Instance.new("Sound")
+43: v_u_30.SoundId = "rbxassetid://" .. 140635119444127
+44: v_u_30.Volume = 1.6
+45: v_u_30:SetAttribute("CaseSound", true)
+46: v_u_30.Parent = v_u_6
+47: v_u_27[v_u_30] = 1.6
+48: local v_u_31 = Instance.new("Sound")
+49: v_u_31.SoundId = "rbxassetid://" .. 82758229356190
+50: v_u_31.Volume = 0.3
+51: v_u_31:SetAttribute("CaseSound", true)
+52: v_u_31.Parent = v_u_6
+53: v_u_27[v_u_31] = 0.3
+54: local v_u_32 = Instance.new("Sound")
+55: v_u_32.SoundId = "rbxassetid://" .. 9126228631
+56: v_u_32.Volume = 0.5
+57: v_u_32:SetAttribute("CaseSound", true)
+58: v_u_32.Parent = v_u_6
+59: v_u_27[v_u_32] = 0.5
+60: local v_u_33 = Instance.new("Sound")
+61: v_u_33.SoundId = "rbxassetid://" .. 104157091834980
+62: v_u_33.Volume = 1
+63: v_u_33:SetAttribute("CaseSound", true)
+64: v_u_33.Parent = v_u_6
+65: v_u_27[v_u_33] = 1
+66: local v_u_34 = Instance.new("Sound")
+67: v_u_34.SoundId = "rbxassetid://" .. 166047422
+68: v_u_34.Volume = 1.1
+69: v_u_34:SetAttribute("CaseSound", true)
+70: v_u_34.Parent = v_u_6
+71: v_u_27[v_u_34] = 1.1
+72: local v_u_35 = Instance.new("Sound")
+73: v_u_35.SoundId = "rbxassetid://" .. 9126102694
+74: v_u_35.Volume = 0.5
+75: v_u_35:SetAttribute("CaseSound", true)
+76: v_u_35.Parent = v_u_6
+77: v_u_27[v_u_35] = 0.5
+78: local v_u_36 = Instance.new("Sound")
+79: v_u_36.SoundId = "rbxassetid://" .. 9126009571
+80: v_u_36.Volume = 0.9
+81: v_u_36:SetAttribute("CaseSound", true)
+82: v_u_36.Parent = v_u_6
+83: v_u_27[v_u_36] = 0.9
+84: local v_u_37 = Instance.new("Sound")
+85: v_u_37.SoundId = "rbxassetid://" .. 95619349451044
+86: v_u_37.Volume = 0.7
+87: v_u_37:SetAttribute("CaseSound", true)
+88: v_u_37.Parent = v_u_6
+89: v_u_27[v_u_37] = 0.7
+90: local v_u_38 = Instance.new("Sound")
+91: v_u_38.SoundId = "rbxassetid://" .. 109541594740226
+92: v_u_38.Volume = 0.65
+93: v_u_38:SetAttribute("CaseSound", true)
+94: v_u_38.Parent = v_u_6
+95: v_u_27[v_u_38] = 0.65
+96: local v_u_39 = Instance.new("Sound")
+97: v_u_39.SoundId = "rbxassetid://" .. 9126009571
+98: v_u_39.Volume = 0.3
+99: v_u_39:SetAttribute("CaseSound", true)
+100: v_u_39.Parent = v_u_6
+101: v_u_27[v_u_39] = 0.3
+102: local v40 = Instance.new("Sound")
+103: v40.SoundId = "rbxassetid://" .. 137131055688140
+104: v40.Volume = 1
+105: v40:SetAttribute("CaseSound", true)
+106: v40.Parent = v_u_6
+107: v_u_27[v40] = 1
+108: local v_u_41 = {}
+109: local v42 = Instance.new("Sound")
+110: v42.SoundId = "rbxassetid://" .. 133743196377753
+111: v42.Volume = 0.55
+112: v42:SetAttribute("CaseSound", true)
+113: v42.Parent = v_u_6
+114: v_u_27[v42] = 0.55
+115: v_u_41.common = v42
+116: local v43 = Instance.new("Sound")
+117: v43.SoundId = "rbxassetid://" .. 85953550219863
+118: v43.Volume = 0.7
+119: v43:SetAttribute("CaseSound", true)
+120: v43.Parent = v_u_6
+121: v_u_27[v43] = 0.7
+122: v_u_41.uncommon = v43
+123: l
+
+===== Players.Gorannss.PlayerScripts.EauClient =====
+1: local v_u_1 = game:GetService("Players")
+2: local v_u_2 = game:GetService("ReplicatedStorage")
+3: local v3 = game:GetService("RunService")
+4: local v_u_4 = game:GetService("SoundService")
+5: local v_u_5 = workspace.Terrain
+6: local v_u_6 = require(v_u_2:WaitForChild("Eau"))
+7: local v_u_7 = v_u_1.LocalPlayer
+8: local v_u_8 = Color3.fromRGB(120, 205, 230)
+9: local v_u_9 = { "Master_Effects", "Master_Weapons", "Master_Vehicles" }
+10: local v_u_10 = nil
+11: local function v_u_27(p11) -- name: echelleProche
+12: 	-- upvalues: (ref) v_u_10
+13: 	if not (v_u_10 and v_u_10.Parent) then
+14: 		local v12 = workspace:FindFirstChild("Map")
+15: 		if v12 then
+16: 			v12 = v12:FindFirstChild("LadderTrusses")
+17: 		end
+18: 		v_u_10 = v12
+19: 		if not v_u_10 then
+20: 			return nil
+21: 		end
+22: 	end
+23: 	local v13 = nil
+24: 	local v14 = nil
+25: 	for _, v15 in v_u_10:GetChildren() do
+26: 		if not v15:IsA("TrussPart") then
+   ...
+154: 	end
+155: 	p40.etat = "libre"
+156: 	p40.t = 0
+157: 	return p41
+158: end
+159: local v_u_52 = RaycastParams.new()
+160: v_u_52.IgnoreWater = true
+161: v_u_52.FilterType = Enum.RaycastFilterType.Exclude
+162: v_u_52.RespectCanCollide = true
+163: local v_u_53 = false
+164: local v_u_54 = false
+165: local v_u_55 = nil
+166: local v_u_56 = nil
+167: local v_u_57 = 0
+168: v3:BindToRenderStep("EauSaut", Enum.RenderPriority.Input.Value + 1, function(p58)
+169: 	-- upvalues: (copy) v_u_7, (ref) v_u_53, (ref) v_u_54, (ref) v_u_55, (ref) v_u_56, (ref) v_u_29, (copy) v_u_39, (ref) v_u_28, (copy) v_u_6, (ref) v_u_57, (copy) v_u_27, (copy) v_u_38, (copy) v_u_51, (copy) v_u_52
+170: 	local v59 = v_u_7.Character
+171: 	local v60
+172: 	if v59 then
+173: 		v60 = v59:FindFirstChildOfClass("Humanoid")
+174: 	else
+175: 		v60 = v59
+176: 	end
+177: 	local v61
+178: 	if v59 then
+179: 		v61 = v59:FindFirstChild("HumanoidRootPart")
+180: 	else
+181: 		v61 = v59
+182: 	end
+183: 	if v60 and v61 then
+184: 		local v62 = v60.Jump
+185: 		if v60:GetState() == Enum.HumanoidStateType.Swimming then
+186: 			if not v_u_55 then
+187: 				v_u_55 = v60.JumpHeight
+188: 			end
+189: 			local v63 = v_u_6.Profondeur(v61.Position) or 0
+190: 			local v64 = v63 < 1.6
+191: 			local v65 = os.clock()
+192: 			if v64 then
+193: 				if v65 - v_u_57 >= 0.15 then
+194: 					v_u_57 = v65
+195: 					v_u_56 = v_u_27(v61.Position)
+196: 				end
+197: 			else
+198: 				v_u_56 = nil
+199: 			end
+200: 			local v66
+201: 			if v_u_56 and v_u_56.Parent then
+202: 				v66 = (v_u_56.Position - v61.Position) * Vector3.new(1, 0, 1) or nil
+203: 			else
+204: 				v66 = nil
+205: 			end
+206: 			local v67
+207: 			if v66 == nil then
+208: 				v67 = false
+209: 			else
+210: 				v67 = v66.Magnitude <= 4.5
+
+===== Players.Gorannss.PlayerScripts.VehicleCrateClient =====
+   ...
+42: v_u_25.SoundId = "rbxassetid://" .. 104157091834980
+43: v_u_25.Volume = 1
+44: v_u_25.PlaybackSpeed = 1
+45: v_u_25:SetAttribute("Speed", 1)
+46: v_u_25:SetAttribute("CaseSound", true)
+47: v_u_25.Parent = v_u_5
+48: v_u_22[v_u_25] = 1
+49: local v_u_26 = Instance.new("Sound")
+50: v_u_26.SoundId = "rbxassetid://" .. 166047422
+51: v_u_26.Volume = 1.1
+52: v_u_26.PlaybackSpeed = 1
+53: v_u_26:SetAttribute("Speed", 1)
+54: v_u_26:SetAttribute("CaseSound", true)
+55: v_u_26.Parent = v_u_5
+56: v_u_22[v_u_26] = 1.1
+57: local v_u_27 = Instance.new("Sound")
+58: v_u_27.SoundId = "rbxassetid://" .. 9126102694
+59: v_u_27.Volume = 0.5
+60: v_u_27.PlaybackSpeed = 1
+61: v_u_27:SetAttribute("Speed", 1)
+62: v_u_27:SetAttribute("CaseSound", true)
+63: v_u_27.Parent = v_u_5
+64: v_u_22[v_u_27] = 0.5
+65: local v_u_28 = Instance.new("Sound")
+66: v_u_28.SoundId = "rbxassetid://" .. 9126009571
+67: v_u_28.Volume = 0.9
+68: v_u_28.PlaybackSpeed = 1
+69: v_u_28:SetAttribute("Speed", 1)
+70: v_u_28:SetAttribute("CaseSound", true)
+71: v_u_28.Parent = v_u_5
+72: v_u_22[v_u_28] = 0.9
+73: local v_u_29 = Instance.new("Sound")
+74: v_u_29.SoundId = "rbxassetid://" .. 95619349451044
+75: v_u_29.Volume = 0.7
+76: v_u_29.PlaybackSpeed = 1
+77: v_u_29:SetAttribute("Speed", 1)
+78: v_u_29:SetAttribute("CaseSound", true)
+79: v_u_29.Parent = v_u_5
+   ...
+793: 	-- upvalues: (copy) v_u_177
+794: 	v_u_177(p263, function(p264)
+795: 		-- upvalues: (copy) p_u_262, (copy) p_u_261
+796: 		local v265 = #p_u_262 * p264
+797: 		local v266 = math.floor(v265)
+798: 		local v267 = p_u_262:sub(1, v266)
+799: 		for _ = v266 + 1, #p_u_262 do
+800: 			local v268 = math.random(40)
+801: 			v267 = v267 .. ("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&"):sub(v268, v268)
+802: 		end
+803: 		p_u_261.Text = v267
+804: 	end)
+805: 	p_u_261.Text = p_u_262
+806: end
+807: local function v_u_1191(p_u_270) -- name: roll
+808: 	-- upvalues: (copy) v_u_18, (copy) v_u_8, (copy) v_u_9, (copy) v_u_187, (ref) v_u_169, (ref) v_u_208, (copy) v_u_86, (copy) v_u_194, (copy) v_u_103, (ref) v_u_170, (copy) v_u_21, (copy) v_u_183, (copy) v_u_186, (copy) v_u_12, (copy) v_u_1, (copy) v_u_215, (copy) v_u_218, (copy) v_u_260, (copy) v_u_4, (copy) v_u_228, (copy) v_u_19, (copy) v_u_195, (copy) v_u_207, (copy) v_u_24, (copy) v_u_177, (copy) v_u_25, (copy) v_u_26, (copy) v_u_223, (copy) v_u_23, (copy) v_u_106, (copy) v_u_31, (copy) v_u_269, (copy) v_u_70, (copy) v_u_11, (copy) v_u_5, (copy) v_u_22, (copy) v_u_3, (copy) v_u_42, (copy) v_u_7, (copy) v_u_27, (copy) v_u_45, (copy) v_u_30, (copy) v_u_29, (ref) v_u_135, (copy) v_u_28, (copy) v_u_32, (copy) v_u_39, (ref) v_u_134, (copy) v_u_248, (copy) v_u_110
+809: 	local v271 = (workspace:FindFirstChild("Interactions") or workspace):FindFirstChild("CarDealerShowroom")
+810: 	local v272
+811: 	if v271 then
+812: 		v272 = v271:FindFirstChild("Stage")
+813: 	else
+814: 		v272 = v271
+815: 	end
+816: 	local v_u_273
+817: 	if v272 then
+818: 		v_u_273 = v272:FindFirstChild("Turntable")
+819: 	else
+820: 		v_u_273 = v272
+821: 	end
+822: 	local v274
+823: 	if v_u_273 then
+824: 		v274 = v_u_273.PrimaryPart
+825: 	else
+826: 		v274 = v_u_273
+827: 	end
+828: 	if v274 then
+829: 		v274 = v274:FindFirstChild("CarSpot")
+830: 	end
+831: 	if v271 then
+832: 		v271 = v271:FindFirstChild("CamPoint")
+833: 	end
+834: 	local v_u_275 = v_u_18.Character
+835: 	local v_u_276
+836: 	if v_u_275 then
+837: 		v_u_276 = v_u_275:FindFirstChild("HumanoidRootPart")
+838: 	else
+839: 		v_u_276 = v_u_275
+840: 	end
+841: 	local v277
+842: 	if v_u_275 then
+843: 		v277 = v_u_275:FindFirstChildOfClass("Humanoid")
+844: 	else
+845: 		v277 = v_u_275
+846: 	end
+847: 	if not (v274 and (v271 and (v_u_276 and v277))) then
+848: 		return
+849: 	end
+850: 	local v_u_278 = p_u_270.car
+851: 	local v279, v280 = v_u_8.Info(v_u_278)
+852: 	if v279 then
+853: 		v_u_278 = v279.Name or v_u_278
+854: 	end
+855: 	local v_u_281 = v280 or v_u_8.Rarities.common
+856: 	local v_u_282 = v279 and v279.Rarity or "common"
+857: 	local v283 = (v_u_8.Cars[p_u_270.car] or {}).Special
+858: 	local v_u_2
+
+===== Players.Gorannss.PlayerScripts.NetBeatClient =====
+   ...
+548: 		v230.r = nil
+549: 		v230.e = nil
+550: 	end
+551: 	return v230
+552: end
+553: task.spawn(function()
+554: 	-- upvalues: (copy) v_u_39, (copy) v_u_5, (copy) v_u_51, (copy) v_u_90, (copy) v_u_267, (copy) v_u_6, (copy) v_u_89, (copy) v_u_4, (copy) v_u_82
+555: 	local v268 = os.clock()
+556: 	local v269 = workspace:GetAttribute("LightingRev")
+557: 	if not v269 then
+558: 		task.wait(0.2)
+559: 	end
+560: 	if not v269 and os.clock() - v268 <= 30 then
+561: 		continue
+562: 	end
+563: 	local v_u_270 = v_u_39(v_u_5.UserId, v269 or 0)
+564: 	local v_u_271 = v_u_51:NextInteger(1, 100000)
+565: 	while true do
+566: 		v_u_271 = v_u_271 + 1
+567: 		local v272 = table.remove(v_u_90, 1)
+568: 		if not v272 and v_u_271 % 7 == 0 then
+569: 			local v273 = v_u_267
+570: 			local v274, v275 = pcall(v273)
+571: 			v272 = v274 and {
+572: 				["code"] = 1,
+573: 				["extra"] = nil,
+574: 				["extra"] = v275
+575: 			} or v272
+576: 		end
+577: 		local v_u_276
+578: 		if v272 and v272.extra ~= nil then
+579: 			local v277 = v_u_6.JSONEncode
+580: 			local v278 = v_u_6
+581: 			local v279 = v_u_89
+582: 			local v280 = v272.extra
+583: 			local v281, v282 = pcall(v277, v278, v279(v280))
+584: 			v_u_276 = v281 and v282 and v282 or ""
+585: 		else
+586: 			v_u_276 = ""
+587: 		end
+588: 		local v_u_283 = v272 and v272.code or 0
+589: 		local function v284()
+590: 			-- upvalues: (ref) v_u_4, (ref) v_u_82, (copy) v_u_270, (ref) v_u_271, (copy) v_u_283, (ref) v_u_276
+591: 			v_u_4:FireServer((v_u_82(v_u_270, v_u_271, v_u_283, v_u_276)))
+592: 		end
+593: 		pcall(v284)
+594: 		task.wait(0.3)
+595: 	end
+596: end)
+597: local v_u_285 = {}
+598: local v_u_286 = 0
+599: local function v_u_292(p287, p288, p289) -- name: report
+600: 	-- upvalues: (copy) v_u_285, (ref) v_u_286, (copy) v_u_90
+601: 	local v290 = p289 or p287
+602: 	if not v_u_285[v290] then
+603: 		if p287 == 7701 then
+604: 			if v_u_286 >= 12 then
+605: 				return
+606: 			end
+   ...
+733: 	end
+734: end)
+735: local v_u_326 = {
+736: 	["number"] = true,
+737: 	["string"] = true,
+738: 	["boolean"] = true,
+739: 	["Vector2"] = true,
+740: 	["Vector3"] = true,
+741: 	["Color3"] = true,
+742: 	["CFrame"] = true,
+743: 	["UDim"] = true,
+744: 	["UDim2"] = true,
+745: 	["EnumItem"] = true,
+746: 	["NumberRange"] = true
+747: }
+748: local function v_u_335(p327, p328) -- name: sig
+749: 	-- upvalues: (copy) v_u_335, (copy) v_u_326
+750: 	local v329 = p328 or 0
+751: 	local v330 = {}
+752: 	for v331, v332 in p327 do
+753: 		local v333
+754: 		if type(v332) == "table" then
+755: 			v333 = v329 < 4 and ("{" .. v_u_335(v332, v329 + 1) .. "}" or "{}") or "{}"
+756: 		else
+757: 			v333 = v_u_326[typeof(v332)] and tostring(v332) or "<" .. typeof(v332) .. ">"
+758: 		end
+759: 		local v334 = (v_u_326[typeof(v331)] and tostring(v331) or "<" .. typeof(v331) .. ">") .. "=" .. v333
+760: 		table.insert(v330, v334)
+761: 	end
+762: 	table.sort(v330)
+763: 	return table.concat(v330, ";")
+764: end
+765: local function v_u_339(p336, p337) -- name: deepFreeze
+766: 	-- upvalues: (copy) v_u_339
+767: 	if p337 <= 5 then
+768: 		for _, v338 in p336 do
+769: 			if type(v338) ~= "table" then
+770: 				continue
+771: 			end
+772: 			v_u_339(v338, p337 + 1)
+773: 		end
+774: 		if not table.isfrozen(p336) then
+775: 			table.freeze(p336)
+776: 		end
+777: 	end
+778: end
+779: local function v_u_343(p340, p341) -- name: allFrozen
+780: 	-- upvalues: (copy) v_u_343
+781: 	if not table.isfrozen(p340) then
+782: 		return false
+783: 	end
+784: 	if p341 > 5 then
+785: 		return true
+786: 	end
+787: 	for _, v342 in p340 do
+   ...
+802: 		if type(v348) ~= "table" then
+803: 			continue
+804: 		end
+805: 		for _, v349 in {
+806: 			"Ammo",
+807: 			"Bloom",
+808: 			"Damage",
+809: 			"Fire",
+810: 			"Handling",
+811: 			"Recoil"
+812: 		} do
+813: 			local v350 = v348[v349]
+814: 			if type(v350) ~= "table" then
+815: 				continue
+816: 			end
+817: 			v_u_339(v350, 0)
+818: 			local v351 = {
+819: 				["t"] = v350,
+820: 				["s"] = v_u_335(v350),
+821: 				["name"] = tostring(v347) .. "." .. v349
+822: 			}
+823: 			table.insert(v_u_
+
+===== Players.Gorannss.PlayerScripts.ShopClient =====
+   ...
+13: local v13 = require(v2:WaitForChild("ClanShared"))
+14: local v14 = require(v2:WaitForChild("Screens"))
+15: local v_u_15 = require(v2:WaitForChild("Controls"))
+16: local v_u_16 = v1.LocalPlayer
+17: local v_u_17 = v14.Get("ShopMenu")
+18: v_u_17.Visible = false
+19: local v_u_18 = v_u_17:WaitForChild("Window")
+20: local v_u_19 = v_u_18:WaitForChild("Close")
+21: local v_u_20 = v_u_18:WaitForChild("Scroll")
+22: local v_u_21 = v_u_20:FindFirstChild("Main") or v_u_20
+23: local v22 = v_u_21:WaitForChild("Packs")
+24: local v23 = v_u_21:FindFirstChild("Passes")
+25: local v_u_24 = { v_u_20 }
+26: local v_u_25 = v_u_11.Picker(v_u_18:WaitForChild("GiftPicker"), "ShopGift")
+27: local v_u_26 = require(v2:WaitForChild("StarterPack"))
+28: local v_u_27 = v_u_21:FindFirstChild("Starter")
+29: if v_u_27 then
+30: 	v_u_27 = v_u_27:FindFirstChild("Buy", true)
+31: end
+32: local v_u_28 = {}
+33: local v_u_29 = {}
+34: local v_u_30 = {}
+35: local v_u_31 = nil
+36: local v_u_32 = false
+37: local function v_u_33() -- name: refreshSoon
+38: 	-- upvalues: (ref) v_u_32, (ref) v_u_31
+39: 	if not v_u_32 then
+40: 		v_u_32 = true
+41: 		task.delay(0.05, function()
+42: 			-- upvalues: (ref) v_u_32, (ref) v_u_31
+43: 			v_u_32 = false
+44: 			v_u_31()
+45: 		end)
+46: 	end
+47: end
+48: v_u_31 = function()
+49: 	-- upvalues: (copy) v_u_28, (copy) v_u_11, (copy) v_u_33, (copy) v_u_27, (copy) v_u_16, (copy) v_u_12, (copy) v_u_26, (copy) v_u_30, (copy) v_u_29
+50: 	for _, v34 in v_u_28 do
+51: 		local v35 = v34.pack.ProductId
+52: 		if v_u_11.Pending(v35) then
+53: 			v_u_11.SetBuy(v34.buy, "wait", "...")
+54: 		else
+55: 			v_u_11.SetBuy(v34.buy, "buy", v_u_11.PriceText(v35, v_u_33))
+56: 		end
+57: 	end
+58: 	if v_u_27 then
+59: 		if v_u_16:GetAttribute("StarterPackOwned") or v_u_12.Owned(v_u_16, "StarterPack") then
+60: 			v_u_11.SetBuy(v_u_27, "equipped", "OWNED")
+61: 		else
+62: 			local v36 = v_u_12.PriceText("StarterPack", v_u_33)
+63: 			if v36 == "..." or v36 == "" then
+64: 				v36 = v_u_11.ROBUX .. " " .. v_u_26.Price
+65: 			end
+66: 			v_u_11.SetBuy(v_u_27, "buy", v36)
+67: 		end
+68: 	end
+69: 	for _, v37 in v_u_30 do
+70: 		if not v37.buy then
+71: 			continue
+72: 		end
+73: 		local v38 = v37.pack
+74: 		local v39 = v_u_16:GetAttribute("PackProduct_" .. v38.id) or v38.ProductId
+75: 		if v_u_16:GetAttribute("PackBought_" .. v37.pack.id) == true then
+76: 			v_u_11.SetBuy(v37.buy, "equipped", "OWNED")
+77: 		elseif v39 then
+78: 			if v_u_11.Pending(v39) then
+79: 				v_u_11.SetBuy(v37.buy, "wait", "...")
+80: 			else
+81: 				v_u_11.SetBuy(v37.buy, "buy", v_u_11.PriceText(v39, v_u_33))
+82: 			end
+83: 		else
+84: 			v_u_11.SetBuy(v37.buy, "wait", "SOON")
+85: 		end
+86: 	end
+87: 	for _, v40 in v_u_29 do
+88: 		local v41 = v40.show and v40.show() or v40.pass
+89: 		if v_u_12.Owned(v_u_16, v41.id) then
+90: 			v_u_11.SetBuy(v40.buy, "equipped", "OWNED")
+91: 		else
+92: 			v_u_11.SetBuy(v40.buy, "buy", v_u_12.PriceText(v41.id, v_u_33))
+93: 		end
+94: 	end
+95: end
+96: local function v_u_46(p42, p43) -- name: openPicker
+97: 	-- upvalues: (copy) v_u_24, (copy) v_u_25
+98: 	for _, v44 in v_u_24 do
+99: 		if not v44 then
+100: 			continue
+101: 		end
+102: 		v44.Visible = false
+103: 	end
+104: 	v_u_25:Open({
+105: 		["title"] = p42,
+106: 		["onSend"] = p43,
+107: 		["onClose"] = function() -- name: onClose
+108: 			-- upvalues: (ref) v_u_24
+109: 			for _, v45 in v_u_24 do
+110: 				if not v45 then
+111: 					continue
+112: 				end
+113: 				v45.Visible = true
+114: 			end
+115: 		end
+116: 	})
+117: end
+118: local v_u_47 = nil
+119: if v_u_27 then
+120: 	v_u_27.Activated:Connect(function()
+121: 		-- upvalues: (copy) v_u_16, (copy) v_u_12
+122: 		if not (v_u_16:GetAttribute("StarterPackOwned") or v_u_12.Owned(v_u_16, "StarterPack")) then
+123: 			v_u_12.Offer("StarterPack")
+124: 		end
+125: 	end)
+126: 	v_u_16:GetAttributeChangedSignal("StarterPackOwned"):Connect(v_u_33)
+127: end
+128: local v_u_48 = v_u_32
+129: local v_u_49 = v_u_31
+130: for _, v50 in v_u_12.List do
+131: 	v_u_12.PriceText(v50.id)
+132: end
+133: for _, v_u_51 
+
+===== Players.Gorannss.PlayerScripts.BetaRevealClient =====
+   ...
+18: local v_u_17 = v_u_13:WaitForChild("Flash")
+19: local v_u_18 = v_u_13:WaitForChild("Stage")
+20: local v_u_19 = v_u_18:WaitForChild("Rays")
+21: local v_u_20 = v_u_18:WaitForChild("Glow")
+22: local v_u_21 = v_u_18:WaitForChild("Medal")
+23: local v_u_22 = v_u_18:WaitForChild("Camo")
+24: local v_u_23 = v_u_18:WaitForChild("Title")
+25: local v_u_24 = v_u_18:WaitForChild("Forever")
+26: local v_u_25 = v_u_18:FindFirstChild("GiftFrom")
+27: local v_u_26
+28: if v_u_25 then
+29: 	v_u_26 = v_u_25:GetAttribute("Format") or v_u_25.Text
+30: else
+31: 	v_u_26 = v_u_25
+32: end
+33: local v_u_27 = {}
+34: for _, v28 in v_u_18:WaitForChild("Sparkles"):GetChildren() do
+35: 	if not v28:IsA("ImageLabel") then
+36: 		continue
+37: 	end
+38: 	table.insert(v_u_27, v28)
+39: end
+40: local v_u_29 = {
+41: 	["tint"] = v_u_14.BackgroundTransparency,
+42: 	["glow"] = v_u_20.BackgroundTransparency,
+43: 	["glowSize"] = v_u_20.Size,
+44: 	["raysSize"] = v_u_19.Size,
+45: 	["medalPos"] = v_u_21.Position,
+46: 	["camoPos"] = v_u_22.Position,
+47: 	["barTop"] = v_u_15.Position,
+48: 	["barBottom"] = v_u_16.Position
+49: }
+50: local v_u_30 = UDim2.fromScale
+51: local v31 = v_u_13:WaitForChild("Starfield")
+52: local v32 = v31:WaitForChild("Star")
+53: v32.Visible = false
+54: local v_u_33 = {}
+55: for v34 = 1, 45 do
+56: 	local v35 = v32:Clone()
+57: 	v35.Name = "Star" .. v34
+58: 	v35.Visible = true
+59: 	v35.ImageTransparency = 1
+60: 	v35.Parent = v31
+61: 	table.insert(v_u_33, {
+62: 		["img"] = nil,
+63: 		["phase"] = 0,
+64: 		["speed"] = 1,
+65: 		["base"] = 0.01,
+66: 		["img"] = v35
+67: 	})
+68: end
+69: local v_u_36 = Instance.new("NumberValue")
+70: local function v_u_38() -- name: placeStars
+71: 	-- upvalues: (copy) v_u_33, (copy) v_u_30
+72: 	for _, v37 in v_u_33 do
+73: 		v37.phase = math.random() * 3.141592653589793 * 2
+74: 		v37.speed = 0.8 + math.random() * 1.4
+75: 		v37.base = 0.006 + math.random() ^ 3 * 0.014
+76: 		v37.img.Position = v_u_30(math.random(), 0.1 + math.random() * 0.8)
+77: 		v37.img.Rotation = 0
+78: 	end
+79: end
+80: local function v_u_48(_) -- name: twinkle
+81: 	-- upvalues: (copy) v_u_36, (copy) v_u_33, (copy) v_u_30
+82: 	local v39 = os.clock()
+83: 	local v40 = v_u_36.Value
+84: 	for _, v41 in v_u_33 do
+85: 		local v42 = v39 * v41.speed + v41.phase
+86: 		local v43 = math.sin(v42) * 0.5 + 0.5
+87: 		local v44 = v43 * v43
+88: 		local v45 = v41.base * (v44 * 0.35 + 0.75)
+89: 		v41.img.Size = v_u_30(v45, v45)
+90: 		local v46 = v41.img
+91: 		local v47 = v40 * (v44 * 0.55 + 0.15)
+92: 		v46.ImageTransparency = 1 - math.min(1, v47)
+93: 	end
+94: end
+95: local v49 = Instance.new("Folder")
+96: v49.Name = "BetaRevealSounds"
+97: v49.Parent = v5
+98: local v_u_50 = {}
+99: local v51 = Instance.new("Sound")
+   ...
+196: local function v_u_86(p81) -- name: shine
+197: 	-- upvalues: (copy) v_u_30, (copy) v_u_4
+198: 	local v82 = p81.Disc:FindFirstChild("Shine")
+199: 	if v82 then
+200: 		v82.Position = v_u_30(-0.4, 0.5)
+201: 		local v83 = {
+202: 			["Position"] = v_u_30(1.4, 0.5)
+203: 		}
+204: 		local v84 = Enum.EasingStyle.Quad
+205: 		local v85 = Enum.EasingDirection.InOut
+206: 		v_u_4:Create(v82, TweenInfo.new(0.7, v84 or Enum.EasingStyle.Quad, v85 or Enum.EasingDirection.Out, 0, false, 0), v83):Play()
+207: 	end
+208: end
+209: local v_u_87 = 0
+210: local function v_u_100(p88, p89, p90) -- name: burst
+211: 	-- upvalues: (ref) v_u_87, (copy) v_u_27, (copy) v_u_30, (copy) v_u_4
+212: 	for _ = 1, p89 do
+213: 		v_u_87 = v_u_87 % #v_u_27 + 1
+214: 		local v91 = v_u_27[v_u_87]
+215: 		local v92 = math.random() * 3.141592653589793 * 2
+216: 		local v93 = p90 * (0.6 + math.random() * 0.6)
+217: 		local v94 = 0.012 + math.random() * 0.016
+218: 		v91.Position = p88
+219: 		v91.Size = v_u_30(v94, v94)
+220: 		v91.Rotation = 0
+221: 		v91.ImageTransparency = 0.15
+222: 		local v95 = p88 + v_u_30(math.cos(v92) * v93, math.sin(v92) * v93 * 16 / 9)
+223: 		local v96 = 0.7 + math.random() * 0.3
+224: 		local v97 = {
+225: 			["Position"] = v95,
+226: 			["Size"] = v_u_30(v94 * 0.4, v94 * 0.4)
+227: 		}
+228: 	
+
+===== Players.Gorannss.PlayerScripts.CrewClient =====
+   ...
+21: 	v15 = v14:FindFirstChild("CrewButton", true)
+22: end
+23: local v_u_16 = v13.Get("CrewMenu")
+24: v_u_16.Visible = false
+25: local v_u_17 = v_u_16:WaitForChild("Window")
+26: local v18 = v_u_17:WaitForChild("Close")
+27: local v19 = v_u_17:WaitForChild("Card")
+28: local v_u_20 = v19:WaitForChild("NoCrew")
+29: local v_u_21 = v19:WaitForChild("InCrew")
+30: local v_u_22 = v19:WaitForChild("InvitePage")
+31: local v23 = v19:WaitForChild("Templates")
+32: v23.Visible = false
+33: local v_u_24 = v23:WaitForChild("MemberRow")
+34: local v_u_25 = v23:WaitForChild("PlayerRow")
+35: local v_u_26 = v_u_20:WaitForChild("Create")
+36: local v_u_27 = v_u_20:WaitForChild("Note")
+37: local v_u_28 = v_u_20:WaitForChild("NameField"):WaitForChild("NameBox")
+38: local v_u_29 = v_u_21:WaitForChild("CrewName")
+39: local v_u_30 = v_u_21:WaitForChild("Members")
+40: local v_u_31 = v_u_21:WaitForChild("List")
+41: local v_u_32 = v_u_21:WaitForChild("Invite")
+42: local v_u_33 = v_u_21:WaitForChild("Leave")
+43: local v34 = v_u_22:WaitForChild("Back")
+44: local v_u_35 = v_u_22:WaitForChild("List")
+45: local v_u_36 = v_u_22:WaitForChild("Empty")
+46: local v_u_37 = v13.Get("CrewInvite"):WaitForChild("Card")
+47: local v_u_38 = v_u_37:WaitForChild("Message")
+48: local v39 = v_u_37:WaitForChild("Accept")
+49: local v40 = v_u_37:WaitForChild("Decline")
+50: local v_u_41 = v_u_37:WaitForChild("Timer"):WaitForChild("Fill")
+51: local v_u_42 = v_u_37.Position.Y.Scale < 0 and UDim2.fromScale(0.5, 0.07) or v_u_37.Position
+52: local v_u_43 = UDim2.fromScale(v_u_42.X.Scale, -0.35)
+53: v_u_37.Visible = false
+54: v_u_37.Position = v_u_43
+55: local v_u_44 = v_u_33.Text.Text
+56: local v_u_45 = {
+57: 	{
+58: 		["obj"] = v15,
+59: 		["base"] = v15.Size,
+60: 		["small"] = UDim2.fromScale(0.1, 0.13)
+61: 	},
+62: 	{
+63: 		["obj"] = v_u_17,
+64: 		["base"] = v_u_17.Size,
+65: 		["small"] = UDim2.fromScale(0.55, 0.9),
+66: 		["basePos"] = v_u_17.Position,
+67: 		["smallPos"] = UDim2.fromScale(0.88, 0.5)
+68: 	},
+69: 	{
+70: 		["obj"] = v_u_37,
+   ...
+317: 				v_u_60[v_u_124] = os.clock() + 1
+318: 				v_u_108(v_u_124)
+319: 				v_u_11:FireServer("invite", v_u_124)
+320: 			end
+321: 		end)
+322: 		v119.Visible = true
+323: 		v119.Parent = v_u_35
+324: 		local v125 = v_u_70
+325: 		table.insert(v125, v119)
+326: 		v_u_92[v_u_124] = v119.Send
+327: 		v_u_108(v_u_124)
+328: 	end
+329: 	v_u_36.Visible = v113 == 0
+330: end
+331: local function v_u_133() -- name: render
+332: 	-- upvalues: (ref) v_u_58, (copy) v_u_70, (copy) v_u_6, (copy) v_u_12, (ref) v_u_59, (copy) v_u_20, (copy) v_u_21, (copy) v_u_22, (copy) v_u_27, (copy) v_u_28, (copy) v_u_91, (copy) v_u_126, (ref) v_u_61, (copy) v_u_33, (copy) v_u_44
+333: 	if v_u_58 then
+334: 		for _, v127 in v_u_70 do
+335: 			v127:Destroy()
+336: 		end
+337: 		table.clear(v_u_70)
+338: 		local v128 = v_u_6.IdOf(v_u_12)
+339: 		if not v128 then
+340: 			v_u_59 = false
+341: 		end
+342: 		v_u_20.Visible = v128 == nil
+343: 		local v129 = v_u_21
+344: 		local v130
+345: 		if v128 == nil then
+346: 			v130 = false
+347: 		else
+348: 			v130 = not v_u_59
+349: 		end
+350: 		v129.Visible = v130
+351: 		local v131 = v_u_22
+352: 		local v132
+353: 		if v128 == nil then
+354: 			v132 = false
+355: 		else
+356: 			v132 = v_u_59
+357: 		end
+358: 		v131.Visible = v132
+359: 		v_u_27.Visible = true
+360: 		if not v128 and v_u_28.Text == "" then
+361: 			v_u_28.Text = v_u_12:GetAttribute("CrewLastName") or ""
+362: 		end
+363: 		if v128 and not v_u_59 then
+364: 			v_u_91()
+365: 		end
+366: 		if v128 and v_u_59 then
+367: 			v_u_126()
+368: 		end
+369: 		v_u_61 = 0
+370: 		v_u_33.Text.Text = v_u_44
+371: 	end
+372: end
+373: local v_u_134 = false
+374: local function v_u_135() -- name: renderSoon
+375: 	-- upvalues: (ref) v_u_134, (ref) v_u_58, (copy) v_u_133
+376: 	if not v_u_134 and v_u_58 then
+377: 		v_u_134 = true
+378: 		task.defer(function()
+379: 			-- upvalues: (ref) v_u_134, (ref) v_u_133
+380: 			v_u_134 = false
+381: 			v_u_133()
+382: 		end)
+383: 	end
+384: end
+385: local function v_u_141(p136) -- name: setOpen
+  
