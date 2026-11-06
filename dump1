@@ -1,0 +1,2725 @@
+keys: Aim, Target, Shoot, Bullet, Fire, Hit, Camera, Raycast
+scripts scanned: 385
+
+===== Players.Gorannss.PlayerScripts.WeaponClient =====
+   ...
+11: local v10 = v4:WaitForChild("Weapons")
+12: local v_u_11 = require(v10:WaitForChild("Config"))
+13: local v_u_12 = require(v4:WaitForChild("Weapons"):WaitForChild("WeaponData"))
+14: local v_u_13 = require(v10:WaitForChild("ClientState"))
+15: local v_u_14 = nil
+16: local v_u_15 = 0
+17: local v_u_16 = 0
+18: task.spawn(function()
+19: 	-- upvalues: (ref) v_u_14, (copy) v_u_13
+20: 	v_u_14 = v_u_13.RecoilKey()
+21: end)
+22: local v_u_17 = require(v10:WaitForChild("Effects"))
+23: local v_u_18 = require(v10:WaitForChild("HitboxModel"))
+24: local v_u_19 = require(v10:WaitForChild("ClientHitboxes"))
+25: local v_u_20 = require(v10:WaitForChild("HitAudio"))
+26: local v_u_21 = require(v10:WaitForChild("GunAudio"))
+27: local v_u_22 = require(v10:WaitForChild("BoltAction"))
+28: local v_u_23 = require(v10:WaitForChild("Rocket"))
+29: local v_u_24 = require(v10:WaitForChild("VehicleSurface"))
+30: local v_u_25 = require(v10:WaitForChild("ModCatalog"))
+31: local v_u_26 = {
+32: 	["text"] = nil,
+33: 	["mods"] = nil,
+34: 	["mods"] = {}
+35: }
+36: local v_u_27 = setmetatable({}, {
+37: 	["__mode"] = "k"
+38: })
+39: local v_u_28 = v4:WaitForChild("Remotes")
+40: local v_u_29 = require(v4:WaitForChild("Controls"))
+41: local v_u_30 = require(v4:WaitForChild("NetLag"))
+42: local v_u_31 = v_u_3.LocalPlayer
+43: local v_u_32 = workspace.CurrentCamera
+44: local v_u_33 = workspace:WaitForChild("FX")
+45: local v_u_34 = v_u_11.Global
+46: local v_u_35 = Random.new()
+47: local v36 = nil
+48: local v_u_37 = Random.new():NextInteger(1, 1073741824)
+49: local v_u_38 = Vector2.zero
+50: local v_u_39 = Vector2.zero
+51: local v_u_40 = RaycastParams.new()
+52: v_u_40.IgnoreWater = true
+53: v_u_40.FilterType = Enum.RaycastFilterType.Exclude
+54: v_u_40.CollisionGroup = "Bullet"
+55: local v41 = v_u_31:WaitForChild("PlayerGui"):WaitForChild("WeaponHUD", (1 / 0))
+56: local v_u_42 = v41:WaitForChild("Hitmarker")
+57: local v_u_43 = v_u_42:FindFirstChildOfClass("UIScale")
+58: local v_u_44 = v_u_14
+59: local v_u_45 = v36
+60: local v_u_46 = {}
+61: local v_u_47 = {}
+62: local v_u_48 = 0
+63: local v_u_49 = 0
+64: local v_u_50 = nil
+65: local v_u_51 = false
+66: local v_u_52 = false
+67: local v_u_53 = 0
+68: local v_u_54 = 0
+   ...
+238: 			v125.Completed:Connect(function()
+239: 				-- upvalues: (ref) v_u_122, (ref) v_u_121, (ref) v_u_119
+240: 				if v_u_122 == v_u_121 then
+241: 					v_u_119.Enabled = false
+242: 				end
+243: 			end)
+244: 			v125:Play()
+245: 		end
+246: 	end)
+247: 	v124:Play()
+248: end
+249: v_u_13.FlashKill = v_u_126
+250: local function v_u_132(p127) -- name: showHitmarker
+251: 	-- upvalues: (copy) v_u_13, (copy) v_u_42, (copy) v_u_46, (copy) v_u_8, (copy) v_u_77, (copy) v_u_47, (ref) v_u_74, (copy) v_u_43, (copy) v_u_78, (copy) v_u_126
+252: 	if v_u_13.HitmarkerOn ~= false then
+253: 		local v128 = p127.Killed and v_u_42:GetAttribute("KillColor") or p127.Headshot and v_u_42:GetAttribute("HeadshotColor") or (v_u_42:GetAttribute("HitColor") or Color3.new(1, 1, 1))
+254: 		for v129, v130 in v_u_46 do
+255: 			v130.BackgroundColor3 = v128
+256: 			v130.BackgroundTransparency = 0
+257: 			v_u_8:Create(v130, v_u_77, {
+258: 				["BackgroundTransparency"] = 1
+259: 			}):Play()
+260: 			if not v_u_47[v129] then
+261: 				continue
+262: 			end
+263: 			v_u_47[v129].Transparency = v_u_74
+264: 			v_u_8:Create(v_u_47[v129], v_u_77, {
+265: 				["Transparency"] = 1
+266: 			}):Play()
+267: 		end
+268: 		local v131 = v_u_13.HitmarkerScale or 1
+269: 		v_u_43.Scale = (p127.Killed and 1.6 or 1.3) * v131
+270: 		v_u_8:Create(v_u_43, v_u_78, {
+271: 			["Scale"] = (p127.Killed and 1.2 or 1) * v131
+272: 		}):Play()
+273: 	end
+274: 	if p127.Downed or p127.Killed and p127.Downable == false then
+275: 		v_u_126()
+276: 	end
+277: end
+278: v_u_13.ShowHitmarker = v_u_132
+279: local function v145(p133) -- name: onServerHit
+280: 	-- upvalues: (copy) v_u_20, (copy) v_u_17, (copy) v_u_32, (copy) v_u_132, (copy) v_u_126
+281: 	if workspace:GetAttribute("DebugHits") then
+282: 		local v134 = print
+283: 		local v135 = p133.H
+
+===== Players.Gorannss.PlayerScripts.MovementClient =====
+   ...
+82: 			v_u_12 = true
+83: 			v_u_13 = nil
+84: 			v_u_14 = false
+85: 		end
+86: 	end
+87: end)
+88: v_u_11.OnInputEnded(function()
+89: 	-- upvalues: (ref) v_u_10, (copy) v_u_11
+90: 	if v_u_10 and not v_u_11.IsDown("Sprint") then
+91: 		v_u_10 = false
+92: 	end
+93: end)
+94: v4:BindToRenderStep("Movement", Enum.RenderPriority.Camera.Value + 1, function(p32)
+95: 	-- upvalues: (copy) v_u_9, (copy) v_u_7, (ref) v_u_12, (ref) v_u_13, (ref) v_u_15, (ref) v_u_10, (ref) v_u_14, (copy) v_u_6, (ref) v_u_16, (copy) v_u_8
+96: 	local v33 = v_u_9.Character
+97: 	local v34
+98: 	if v33 then
+99: 		v34 = v33:FindFirstChildOfClass("Humanoid")
+100: 	else
+101: 		v34 = v33
+102: 	end
+103: 	local v35
+104: 	if v33 then
+105: 		v35 = v33:FindFirstChild("HumanoidRootPart")
+106: 	else
+107: 		v35 = v33
+108: 	end
+109: 	if v34 and (v35 and v34.Health > 0) then
+110: 		local v36 = v34.MoveDirection
+111: 		local v37 = v36.Magnitude > 0.1
+112: 		local v38 = v34:GetState() == Enum.HumanoidStateType.Swimming
+113: 		local v39
+114: 		if v38 then
+115: 			v39 = v34.Jump
+116: 		else
+117: 			v39 = v38
+118: 		end
+119: 		local v40 = v_u_7.Equipped and v_u_7.Combat or (v_u_7.FistCombat == true and true or v_u_7.MeleeAim == true)
+120: 		if v_u_12 and not v37 then
+121: 			v_u_13 = v_u_13 or os.clock()
+122: 			if os.clock() - v_u_13 > 0.15 then
+123: 				v_u_12 = false
+124: 			end
+125: 		else
+126: 			v_u_13 = nil
+127: 		end
+128: 		local v41 = v_u_7.Crouching == true
+129: 		if v41 and not v_u_15 then
+130: 			v_u_12 = false
+131: 		end
+   ...
+149: 				v46 = not v45
+150: 			else
+151: 				v46 = v43
+152: 			end
+153: 		end
+154: 		v_u_7.Sprinting = v46
+155: 		local v47 = false
+156: 		local v48
+157: 		if v46 then
+158: 			v48 = v38 and 21 or v_u_6.SprintSpeed
+159: 			v47 = true
+160: 		elseif v_u_7.Crouching then
+161: 			v48 = (v_u_6.CrouchSpeed or 8) * ((v_u_7.Equipped or (v_u_7.FistAim or v_u_7.MeleeAim)) and v_u_7.Aiming and 0.8 or 1)
+162: 		elseif (v_u_7.Equipped or (v_u_7.FistAim or v_u_7.MeleeAim)) and v_u_7.Aiming then
+163: 			if v42 then
+164: 				if v37 then
+165: 					if v43 then
+166: 						v47 = not v45
+167: 					else
+168: 						v47 = v43
+169: 					end
+170: 				else
+171: 					v47 = v37
+172: 				end
+173: 			else
+174: 				v47 = v42
+175: 			end
+176: 			v48 = v_u_7.AimWalkSpeed * (v47 and (v_u_6.AimSprintMultiplier or 1.35) or 1)
+177: 		else
+178: 			v48 = v38 and 14 or v_u_6.WalkSpeed
+179: 		end
+180: 		local v49 = v_u_9.Character
+181: 		local v50
+182: 		if v49 then
+183: 			v50 = v49:GetAttribute("EDrinkUntil")
+184: 		else
+185: 			v50 = v49
+186: 		end
+187: 		local v51, v52
+188: 		if v50 and workspace:GetServerTimeNow() < v50 then
+   ...
+235: 			return
+236: 		elseif not (v_u_7.Frozen or (v_u_7.NavFreeze or v_u_7.Freecam)) then
+237: 			local _, v62 = v35.CFrame:ToOrientation()
+238: 			local v63, v64
+239: 			if v40 then
+240: 				local v65 = v_u_7.CamYaw
+241: 				local v66
+242: 				if v_u_7.Equipped then
+243: 					local v67 = v_u_9.Character
+244: 					if v67 then
+245: 						v67 = v_u_9.Character:FindFirstChildOfClass("Tool")
+246: 					end
+247: 					v66 = v_u_8.AimTwist(v67 and v67:GetAttribute("Weapon") or "M4A1") or 0
+248: 				else
+249: 					v66 = 0
+250: 				end
+251: 				v63 = v65 + v66
+252: 				v64 = v_u_6.CombatTurnSpeed
+253: 			else
+254: 				if not v37 then
+255: 					return
+256: 				end
+257: 				if v36.X * v36.X + v36.Z * v36.Z < 0.01 then
+258: 					return
+259: 				end
+   ...
+486: 	end
+487: end
+488: v4.Heartbeat:Connect(function()
+489: 	-- upvalues: (copy) v_u_9, (copy) v_u_7, (ref) v_u_136, (copy) v_u_146
+490: 	local v147 = v_u_9.Character
+491: 	local v148
+492: 	if v147 then
+493: 		v148 = v147:FindFirstChildOfClass("Humanoid")
+494: 	else
+495: 		v148 = v147
+496: 	end
+497: 	if v148 then
+498: 		local v149 = v148.Health > 0 and (v_u_7.Equipped and (v_u_7.Aiming or v_u_7.Combat) or (v_u_7.FistCombat == true or (v_u_7.MeleeAim == true or v_u_7.MeleeSwing == true))) and not (v_u_7.Crouching or v_u_7.Rolling)
+499: 		if v149 then
+500: 			v149 = not v148.SeatPart
+501: 		end
+502: 		if v149 ~= v_
+
+===== Players.Gorannss.PlayerScripts.CameraClient =====
+1: local v_u_1 = require(game:GetService("ReplicatedStorage"):WaitForChild("WorldRefs"))
+2: local v2 = game:GetService("Players")
+3: local v3 = game:GetService("ReplicatedStorage")
+4: local v_u_4 = game:GetService("UserInputService")
+5: local v5 = game:GetService("RunService")
+6: local v_u_6 = v5:IsStudio()
+7: local v_u_7 = UserSettings():GetService("UserGameSettings")
+8: local v8 = v3:WaitForChild("Weapons")
+9: local v_u_9 = require(v8:WaitForChild("Config"))
+10: local v_u_10 = require(v8:WaitForChild("ClientState"))
+11: local v_u_11 = require(v3:WaitForChild("Controls"))
+12: local v_u_12 = require(v8:WaitForChild("AimAssist"))
+13: local v_u_13 = v_u_9.Global.Camera
+14: local v_u_14 = v2.LocalPlayer
+15: local v_u_15 = workspace.CurrentCamera
+16: local v_u_16 = Vector2.new(0.006283185307179587, 0.00471238898038469)
+17: local v_u_17 = Vector2.new(4.725, 2.25)
+18: local v_u_18 = Vector2.new(0.008727, 0.00672)
+19: local v_u_19 = Vector2.zero
+20: v_u_4.InputChanged:Connect(function(p20)
+21: 	-- upvalues: (ref) v_u_19
+22: 	if p20.UserInputType == Enum.UserInputType.MouseMovement then
+23: 		v_u_19 = v_u_19 + Vector2.new(p20.Delta.X, p20.Delta.Y)
+24: 	end
+25: end)
+26: local v21 = v_u_13.MinPitch
+27: local v_u_22 = math.rad(v21)
+28: local v23 = v_u_13.MaxPitch
+29: local v_u_24 = math.rad(v23)
+30: local v_u_710 = v_u_13.Distance
+31: local v_u_638 = v_u_13.Side
+32: local v_u_765 = v_u_13.Height
+33: local v_u_535 = v_u_9.Global.HipFOV
+34: local v_u_29 = require(v8:WaitForChild("ScopeEye"))
+35: local v_u_30 = require(v8:WaitForChild("ClientHitboxes"))
+36: local v_u_31 = require(v8:WaitForChild("VehicleSurface"))
+37: local v_u_32 = RaycastParams.new()
+38: v_u_32.IgnoreWater = true
+39: v_u_32.FilterType = Enum.RaycastFilterType.Exclude
+40: v_u_32.CollisionGroup = "Default"
+41: local v_u_33 = RaycastParams.new()
+42: v_u_33.IgnoreWater = true
+43: v_u_33.FilterType = Enum.RaycastFilterType.Exclude
+44: v_u_33.RespectCanCollide = true
+45: local v_u_34 = {
+46: 	"BetaNotice",
+47: 	"GenderChoice",
+48: 	"ModNotice",
+49: 	"Armory",
+50: 	"Inventory",
+51: 	"SettingsMenu",
+52: 	"EffectsMenu",
+53: 	"ModEditor",
+54: 	"Wardrobe",
+55: 	"PlayerProfile",
+   ...
+116: 	v_u_32.FilterDescendantsInstances = v54
+117: 	local v61 = p51:FindFirstChild("Head")
+118: 	local v62 = v53.LookVector
+119: 	local v63 = v53.Position
+120: 	local v64
+121: 	if v61 then
+122: 		local v65 = v61.Position - v53.Position
+123: 		v64 = math.max(0, v65:Dot(v62)) or 0
+124: 	else
+125: 		v64 = 0
+126: 	end
+127: 	local v66 = v63 + v62 * v64
+128: 	local v67 = workspace:FindFirstChild("ClientHitboxes")
+129: 	if v67 then
+130: 		table.insert(v54, v67)
+131: 	end
+132: 	v_u_32.FilterDescendantsInstances = v54
+133: 	local v68 = workspace:Raycast(v66, v62 * 2000, v_u_32)
+134: 	for _ = 1, 8 do
+135: 		if not v68 or v68.Instance.Transparency < 0.95 then
+136: 			break
+137: 		end
+138: 		local v69 = v68.Instance
+139: 		table.insert(v54, v69)
+140: 		v_u_32.FilterDescendantsInstances = v54
+141: 		v68 = workspace:Raycast(v66, v62 * 2000, v_u_32)
+142: 	end
+143: 	local v70 = v68 and v68.Position or v66 + v62 * 2000
+144: 	local v71, _, v72 = v_u_31.Raycast(v66, v62, 2000, v57)
+145: 	if v71 then
+146: 		if v72 >= (v70 - v66).Magnitude then
+147: 			v71 = v70
+148: 		end
+149: 	else
+150: 		v71 = v70
+151: 	end
+152: 	if p52 then
+153: 		local v73 = workspace
+154: 		local v74 = (v71 - v66).Magnitude
+155: 		local v75 = v73:Spherecast(v66, p52, v62 * math.min(v74, 1000), v_u_32)
+156: 		if v75 then
+   ...
+349: 			if v130 then
+350: 				local v131 = workspace:Spherecast(p119, 0.35, p120 * p121, v_u_33)
+351: 				if v131 then
+352: 					local v132 = v131.Distance - 0.1
+353: 					p121 = math.max(v132, 0) or p121
+354: 				end
+355: 				return p121
+356: 			end
+357: 		end
+358: 	end
+359: 	if not v_u_118.clearDistance then
+360: 		v_u_118.clearDistance = true
+361: 		warn("[CameraClient] valeur non finie (NaN) venant de : clearDistance -> ignor\195\169e, cam\195\169ra conserv\195\169e")
+362: 	end
+363: 	return 0
+364: end
+365: local function v1
+
+===== Players.Gorannss.PlayerScripts.GunAnimator =====
+   ...
+20: local v_u_15 = require(v_u_4:WaitForChild("Holds"))
+21: local v_u_16 = require(v_u_4:WaitForChild("SeatedArms"))
+22: local v_u_17 = require(v_u_4:WaitForChild("FistAnim"))
+23: local v_u_18 = require(v_u_4:WaitForChild("SwimTilt"))
+24: local v_u_19 = require(v_u_4:WaitForChild("FrameCache"))
+25: local v_u_20 = require(v_u_4:WaitForChild("AnimWorkers"))
+26: v_u_20.Init(script)
+27: local v_u_21 = nil
+28: local v_u_22 = nil
+29: local v_u_23 = nil
+30: local v_u_24 = v_u_1.LocalPlayer
+31: local v_u_25 = v_u_24.Character
+32: local v_u_26 = workspace.CurrentCamera
+33: local v_u_27 = { 80, 180, 350 }
+34: local v_u_28 = false
+35: local v_u_29 = 0
+36: local v_u_30 = setmetatable({}, {
+37: 	["__mode"] = "k"
+38: })
+39: local v_u_31 = { 30, 20 }
+40: local v_u_32 = true
+41: local v_u_33 = (-1 / 0)
+42: local v_u_34 = 0
+43: local v_u_35 = 0
+44: local v_u_36 = 0
+   ...
+107: 				else
+108: 					v74 = false
+109: 				end
+110: 			end
+111: 		end
+112: 		if v_u_38.forceOff and v73 ~= v_u_25 then
+113: 			v74 = false
+114: 		end
+115: 		v_u_39[v73] = v74
+116: 	end
+117: end
+118: local v_u_81 = {
+119: 	["Aim"] = true,
+120: 	["Reload"] = true,
+121: 	["Low"] = true,
+122: 	["Sprint"] = true,
+123: 	["ReloadAim"] = true
+124: }
+125: local v_u_82 = CFrame.new(0, 0.15, -0.15) * CFrame.Angles(0.7853981633974483, 0, 0)
+126: local v_u_83 = v_u_5.Poses.Low
+127: local v_u_84 = v_u_5.Poses.PistolGrip or CFrame.identity
+128: local v_u_85 = v_u_5.Poses.PistolAim or v_u_5.Poses.Aim
+129: local v_u_86 = v_u_5.Poses.PistolReload and v_u_5.Poses.PistolReload.GunInHand or v_u_85.RightHand:Inverse()
+130: local v_u_87 = {
+131: 	["Waist"] = "UpperTorso",
+132: 	["Neck"] = "Head",
+133: 	["RightShoulder"] = "RightUpperArm",
+134: 	["RightElbow"] = "RightLowerArm",
+135: 	["RightWrist"] = "RightHand",
+136: 	["LeftShoulder"] = "LeftUpperArm",
+137: 	["LeftElbow"] = "LeftLowerArm",
+138: 	["LeftWrist"] = "LeftHand"
+139: }
+140: local v_u_88 = setmetatable({}, {
+   ...
+474: 	["RightKnee"] = "Legs",
+475: 	["RightAnkle"] = "Legs",
+476: 	["LeftHip"] = "Legs",
+477: 	["LeftKnee"] = "Legs",
+478: 	["LeftAnkle"] = "Legs",
+479: 	["RightShoulder"] = "Arms",
+480: 	["RightElbow"] = "Arms",
+481: 	["RightWrist"] = "Arms",
+482: 	["LeftShoulder"] = "Arms",
+483: 	["LeftElbow"] = "Arms",
+484: 	["LeftWrist"] = "Arms"
+485: }
+486: local v216 = RaycastParams.new()
+487: v216.FilterType = Enum.RaycastFilterType.Exclude
+488: v216.IgnoreWater = true
+489: local v_u_217 = setmetatable({}, {
+490: 	["__mode"] = "k"
+491: })
+492: local v_u_218 = 0
+493: local v_u_219 = setmetatable({}, {
+494: 	["__mode"] = "k"
+495: })
+496: local function v_u_222(p220) -- name: rayParamsOf
+497: 	-- upvalues: (copy) v_u_219, (copy) v_u_20
+498: 	local v221 = v_u_219[p220]
+499: 	if not v221 then
+500: 		v_u_20.Sync()
+501: 		v221 = RaycastParams.new()
+502: 		v221.FilterType = Enum.RaycastFilterType.Exclude
+503: 		v221.IgnoreWater = true
+504: 		v221.FilterDescendantsInstances = { p220 }
+505: 		v_u_219[p220] = v221
+506: 	end
+507: 	return v221
+508: end
+509: local function v_u_237(p223, p224) -- name: onGround
+510: 	-- upvalues: (copy) v_u_19, (ref) v_u_114, (copy) v_u_217, (ref) v_u_218, (copy) v_u_222
+511: 	if not p224 then
+512: 		return false
+513: 	end
+514: 	if v_u_19.Floor(p224) ~= Enum.Material.Air then
+   ...
+517: 	local v225 = p223.Parent
+518: 	if v225 == v_u_114 then
+519: 		return false
+520: 	end
+521: 	local v226 = v_u_217[v225]
+522: 	if v226 and v226[1] == v_u_218 then
+523: 		return v226[2]
+524: 	end
+525: 	local v227 = p224.HipHeight + p223.Size.Y / 2 + 1.5
+526: 	local v228 = workspace
+527: 	local v229 = p223.Position
+528: 	local v230 = -v227
+529: 	local v231 = v228:Raycast(v229, Vector3.new(0, v230, 0), (v_u_222(v225)))
+530: 	local v232 = v231 ~= nil
+531: 	if v226 then
+532: 		local v233 = v_u_218
+533: 		if v231 then
+534: 			v231 = v231.Distance
+535: 		end
+536: 		v226[1] = v233
+537: 		v226[2] = v232
+538: 		v226[3] = v231
+539: 		return v232
+540: 	end
+541: 	local v234 = v_u_217
+   ...
+580: 	end
+581: 	local v250 = v_u_246[p247]
+582: 	if
+
+===== Players.Gorannss.PlayerScripts.HotbarClient =====
+   ...
+20: 	-- upvalues: (copy) v_u_3
+21: 	for _ = 1, 20 do
+22: 		local v11 = v_u_3.SetCoreGuiEnabled
+23: 		local v12 = v_u_3
+24: 		local v13 = Enum.CoreGuiType.Backpack
+25: 		if pcall(v11, v12, v13, false) then
+26: 			return
+27: 		end
+28: 		task.wait(0.5)
+29: 	end
+30: end)
+31: local v_u_14 = require(v_u_2:WaitForChild("Weapons"):WaitForChild("Inventory"))
+32: local v_u_15 = require(v_u_2:WaitForChild("Weapons"):WaitForChild("HitAudio"))
+33: local v_u_16 = require(v_u_2:WaitForChild("Notify"))
+34: local function v_u_22(p17) -- name: blocked
+35: 	-- upvalues: (copy) v_u_14, (copy) v_u_9, (copy) v_u_6, (copy) v_u_5
+36: 	if v_u_14.IsBroken(p17) then
+37: 		return true
+38: 	end
+39: 	if p17:GetAttribute("Weapon") or p17:GetAttribute("Melee") then
+40: 		local v18 = v_u_9.Character
+41: 		if v18 then
+42: 			v18 = v18:FindFirstChildOfClass("Humanoid")
+43: 		end
+44: 		if v18 then
+45: 			v18 = v18.SeatPart
+46: 		end
+47: 		if v18 and v18:GetAttribute("NoWeapons") then
+48: 			return true
+49: 		end
+50: 	end
+51: 	local v19 = v_u_6[p17:GetAttribute("Weapon")]
+52: 	if not v19 or (not v19.Fire or v19.Fire.Mode ~= "Rocket") then
+53: 		return false
+54: 	end
+55: 	local v20 = v_u_9.Character
+56: 	if v20 then
+57: 		v20 = v20:FindFirstChildOfClass("Humanoid")
+58: 	end
+59: 	if v20 then
+60: 		v20 = v20.SeatPart
+61: 	end
+62: 	if v20 then
+63: 		v20 = v20:FindFirstAncestorWhichIsA("Model")
+64: 	end
+   ...
+467: 	end
+468: end
+469: v_u_7.BindsChanged:Connect(function()
+470: 	-- upvalues: (ref) v_u_102, (copy) v_u_129
+471: 	v_u_102 = nil
+472: 	v_u_129()
+473: end)
+474: v_u_129()
+475: local function v_u_134(p130, p131, p132) -- name: setLook
+476: 	-- upvalues: (copy) v_u_85, (copy) v_u_52, (copy) v_u_53, (copy) v_u_50, (copy) v_u_51
+477: 	p130.grad.Color = v_u_85(p132)
+478: 	local v133 = p131 and 1.12 or 1
+479: 	if p130.scaleTarget ~= v133 then
+480: 		p130.scaleTarget = v133
+481: 		v_u_52:Create(p130.scale, v_u_53, {
+482: 			["Scale"] = v133
+483: 		}):Play()
+484: 	end
+485: 	p130.key.TextColor3 = p131 and v_u_50 or v_u_51
+486: end
+487: local v_u_135 = nil
+488: local function v_u_143(p136) -- name: ammoText
+489: 	-- upvalues: (ref) v_u_135
+490: 	local v137 = p136:GetAttribute("Kg")
+491: 	local v138 = tonumber(v137)
+492: 	if v138 then
+   ...
+600: 		v_u_160 = v174
+601: 		if not v_u_161 then
+602: 			v_u_161 = true
+603: 			task.delay(0.25, function()
+604: 				-- upvalues: (ref) v_u_157, (ref) v_u_161, (ref) v_u_160, (ref) v_u_159
+605: 				local v175 = os.clock()
+606: 				while not v_u_157 and os.clock() - v175 < 60 do
+607: 					task.wait(1)
+608: 				end
+609: 				v_u_161 = false
+610: 				if v_u_157 and (v_u_160 and v_u_160 ~= v_u_159) then
+611: 					v_u_159 = v_u_160
+612: 					v_u_157:FireServer(v_u_160)
+613: 				end
+614: 			end)
+615: 		end
+616: 	else
+617: 		return
+618: 	end
+619: end
+620: local v_u_177 = nil
+621: local v_u_178 = nil
+622: local function v_u_205() -- name: refreshView
+623: 	-- upvalues: (ref) v_u_145, (copy) v_u_8, (ref) v_u_177, (copy) v_u_155, (ref) v_u_178, (copy) v_u_1, (copy) v_u_80, (copy) v_u_134, (copy) v_u_144, (copy) v_u_62, (copy) v_u_49, (copy) v_u_14, (copy) v_u_143, (copy) v_u_68, (copy) v_u_69, (copy) v_u_154
+624: 	v_u_145 = nil
+
+===== Players.Gorannss.PlayerScripts.BodyLifeClient =====
+1: local v_u_1 = game:GetService("Players")
+2: local v2 = game:GetService("ReplicatedStorage")
+3: local v3 = game:GetService("RunService")
+4: local v4 = v2:WaitForChild("Weapons")
+5: local v_u_5 = require(v4:WaitForChild("Config"))
+6: local v_u_6 = require(v4:WaitForChild("ClientState"))
+7: local v_u_7 = require(v4:WaitForChild("BodyLife"))
+8: local v_u_8 = v_u_1.LocalPlayer
+9: local v_u_9 = workspace.CurrentCamera
+10: local v_u_10 = setmetatable({}, {
+11: 	["__mode"] = "k"
+12: })
+13: local v_u_11 = {}
+14: local v_u_12 = require(v4:WaitForChild("OnScreen"))
+15: v3.PreAnimation:Connect(function(p13)
+16: 	-- upvalues: (copy) v_u_11, (copy) v_u_9, (copy) v_u_1, (copy) v_u_12, (copy) v_u_7, (copy) v_u_8, (copy) v_u_6, (copy) v_u_5
+17: 	table.clear(v_u_11)
+18: 	local v14 = v_u_9.CFrame.Position
+19: 	for _, v15 in v_u_1:GetPlayers() do
+20: 		local v16 = v15.Character
+21: 		local v17
+   ...
+32: 			v18 = v18:FindFirstChild("Handle")
+33: 		end
+34: 		local v19
+35: 		if v18 == nil then
+36: 			v19 = false
+37: 		else
+38: 			v19 = v18:FindFirstChild("GunJoint") ~= nil
+39: 		end
+40: 		local v20 = v_u_7.Update
+41: 		local v21
+42: 		if v19 then
+43: 			if v16 == v_u_8.Character then
+44: 				if v_u_6.Stance == "Aim" then
+45: 					v21 = v_u_6.Equipped
+46: 				else
+47: 					v21 = false
+48: 				end
+49: 			else
+50: 				local v22 = v16:GetAttribute("GunStance")
+51: 				v21 = v22 == v_u_5.StanceIds.Aim and true or v22 == v_u_5.StanceIds.ReloadAim
+52: 			end
+53: 		else
+54: 			v21 = v19
+55: 		end
+56: 		if not v20(v16, p13, v21, v19) then
+57: 			continue
+58: 		end
+59: 		v_u_11[v16] = v19
+60: 	end
+61: end)
+62: v3.PreSimulation:Connect(function()
+63: 	-- upvalues: (copy) v_u_11, (copy) v_u_7, (copy) v_u_10
+
+===== Players.Gorannss.PlayerScripts.WardrobeClient =====
+   ...
+443: 	local v162 = p160:FindFirstChild("Model3D")
+444: 	if v161 and (v162 and not v_u_157[p160]) then
+445: 		local v163 = v161:Clone()
+446: 		v163.CFrame = CFrame.new()
+447: 		v163.Parent = v162
+448: 		local v164 = v163.Size
+449: 		local v165 = v163:FindFirstChildWhichIsA("SpecialMesh")
+450: 		if v165 then
+451: 			v164 = v164 * v165.Scale
+452: 		end
+453: 		local v166 = v164.Magnitude / 2
+454: 		local v167 = math.max(v166, 0.1)
+455: 		local v168 = Instance.new("Camera")
+456: 		v168.FieldOfView = 30
+457: 		local v169 = v168.FieldOfView / 2
+458: 		local v170 = math.rad(v169)
+459: 		local v171 = v167 / math.sin(v170) * 0.95
+460: 		local v172 = CFrame.lookAt
+461: 		local v173 = v167 * 0.2
+462: 		v168.CFrame = v172(Vector3.new(0, v173, v171), Vector3.new(0, 0, 0))
+463: 		v168.Parent = v162
+464: 		v162.CurrentCamera = v168
+465: 		v162.Visible = true
+466: 		p160.Thumb.Visible = false
+467: 		local v174 = v161:GetAttribute("WornRot")
+468: 		local v175 = typeof(v174) == "CFrame" and v174:Inverse() or CFrame.identity
+469: 		local v176 = v_u_9.Items[p159]
+470: 		if v176 and v176.view then
+471: 			local v177 = CFrame.Angles
+472: 			local v178 = v176.view
+473: 			v175 = v177(0, math.rad(v178), 0) * v175
+474: 		end
+475: 		local v179 = {
+476: 			["part"] = nil,
+   ...
+1657: 	-- upvalues: (copy) v_u_38, (copy) v_u_5, (copy) v_u_10, (ref) v_u_460, (copy) v_u_465, (copy) v_u_2, (copy) v_u_39
+1658: 	if v_u_38.Visible then
+1659: 		v_u_5.CursorFree = true
+1660: 		if v_u_10:GetAttribute("InWardrobe") == true then
+1661: 			local v470 = v_u_10.Character
+1662: 			if v470 then
+1663: 				v470 = v_u_10.Character:FindFirstChild("HumanoidRootPart")
+1664: 			end
+1665: 			if v470 and (v_u_460 ~= v470 or not v470.Anchored) then
+1666: 				v_u_465(true)
+1667: 			end
+1668: 		end
+1669: 		v_u_5.FixedCamera = v_u_2:GetAttribute("WardrobeCamera")
+1670: 		v_u_5.FixedFOV = v_u_2:GetAttribute("WardrobeCameraFOV")
+1671: 		if not v_u_5.FixedCamera then
+1672: 			local v471 = v_u_39.AbsolutePosition.X + v_u_39.AbsoluteSize.X
+1673: 			v_u_5.WardrobeFocusX = v471 + (v_u_38.AbsoluteSize.X - v471) / 2
+1674: 		end
+1675: 	end
+1676: end)
+1677: local v_u_472 = false
+1678: local v_u_473 = nil
+1679: local v_u_474 = 0
+1680: local v_u_475 = 0
+1681: local v_u_476 = 0
+1682: v_u_39.Active = true
+1683: v_u_3.InputBegan:Connect(function(p477, p478)
+   ...
+1770: 	end
+1771: 	if p496 then
+1772: 		local v502 = v_u_10.Character
+1773: 		if v502 then
+1774: 			v502 = v_u_10.Character:FindFirstChildOfClass("Humanoid")
+1775: 		end
+1776: 		if v502 then
+1777: 			v502:UnequipTools()
+1778: 		end
+1779: 	else
+1780: 		local v503 = v_u_5
+1781: 		local v504 = v_u_5
+1782: 		v_u_5.FixedCamera = nil
+1783: 		v503.FixedFOV = nil
+1784: 		v504.WardrobeFocusX = nil
+1785: 	end
+1786: 	if p496 and not v_u_493 then
+1787: 		v_u_493 = true
+1788: 		local v505 = v_u_8.GetState.InvokeServer
+1789: 		local v506 = v_u_8.GetState
+1790: 		local v507, v508 = pcall(v505, v506)
+1791: 		if v507 and v508 then
+1792: 			v_u_34 = v508.current
+1793: 			v_u_48 = v508.body
+1794: 			local v509 = v508.active or 1
+   ...
+1992: 		if v_u_10:GetAttribute("Onboarding") ~= true then
+1993: 			v_u_495 = true
+1994: 		end
+1995: 		v_u_5.WardrobeOpen = false
+1996: 		v_u_5.CursorFree = false
+1997: 		v_u_5.Frozen = false
+1998: 		if v_u_460 then
+1999: 			v_u_460.Anchored = false
+2000: 		end
+2001: 		v_u_460 = nil
+2002: 		local v554 = v_u_5
+2003: 		local v555 = v_u_5
+2004: 		v_u_5.FixedCamera = nil
+2005: 		v554.FixedFOV = nil
+2006: 		v555.WardrobeFocusX = nil
+2007: 		v_u_7.Close("Wardrobe")
+2008: 	end
+2009: end
+2010: local v_u_557 = v_u_37.Get("WardrobeFade")
+2011: local v_u_558 = v_u_557:WaitForChild("Fade")
+2012: local v_u_559 = nil
+2013: local function v_u_561() -- name: fadeFromBlack
+2014: 	-- upvalues: (ref) v_u_559, (copy) v_u_558, (copy) v_u_557, (copy) v_u_61
+2015: 	if v_u_559 then
+2016: 		v_u_559:Cancel()
+   ...
+2163: 			pcall(v590)
+2164: 		end
+2165: 		if v_u_559 then
+2166: 			v_u_559:Cancel()
+2167: 		end
+2168: 		v_u_557.Visible = true
+2169: 		v
+
+===== Players.Gorannss.PlayerScripts.CrosshairClient =====
+1: local v_u_1 = game:GetService("Players")
+2: local v_u_2 = game:GetService("ReplicatedStorage")
+3: local v3 = game:GetService("RunService")
+4: local v_u_4 = require(v_u_2:WaitForChild("Weapons"):WaitForChild("ClientState"))
+5: local v_u_5 = require(v_u_2.Weapons:WaitForChild("HitAudio"))
+6: local v_u_6 = require(v_u_2:WaitForChild("Controls"))
+7: local v_u_7 = require(v_u_2:WaitForChild("SpawnShield"))
+8: local v_u_8 = require(v_u_2.Controls:WaitForChild("Spec"))
+9: local v_u_9 = {
+10: 	["XhMode"] = true,
+11: 	["XhHitmarker"] = true,
+12: 	["XhHitmarkerOn"] = true
+13: }
+14: local v_u_10 = require(v_u_2:WaitForChild("Weapons"):WaitForChild("WeaponData"))
+15: local v_u_11 = {
+16: 	["XhShape"] = "Circle",
+17: 	["XhLength"] = 4,
+18: 	["XhGap"] = 9,
+19: 	["XhThickness"] = 1,
+20: 	["XhDot"] = true,
+21: 	["XhDotSize"] = 3
+22: }
+23: local v_u_12 = {
+24: 	["XhShape"] = "Dot",
+   ...
+52: 		v17 = v16
+53: 	end
+54: 	local v18
+55: 	if v17 then
+56: 		v18 = v17.Handling
+57: 	else
+58: 		v18 = v17
+59: 	end
+60: 	local v19 = ((not v16 or v16:GetAttribute("Melee") == nil) and true or false) and not v16
+61: 	if v19 then
+62: 		v19 = v_u_4.FistsReady == true
+63: 	end
+64: 	v_u_15 = v19 and v_u_13 or v17 and (v17.Fire and (v17.Fire.Pellets and v_u_11)) or (v18 and (v18.Scope and v_u_12) or nil)
+65: end)
+66: local v22 = {
+67: 	["__index"] = function(_, p20) -- name: __index
+68: 		-- upvalues: (copy) v_u_6, (copy) v_u_9, (ref) v_u_15, (copy) v_u_14, (copy) v_u_8
+69: 		if v_u_6.Settings.XhMode ~= "Custom" and (type(p20) == "string" and (p20:sub(1, 2) == "Xh" and not v_u_9[p20])) then
+70: 			if v_u_15 and v_u_15[p20] ~= nil then
+71: 				return v_u_15[p20]
+72: 			end
+73: 			if v_u_14[p20] ~= nil then
+74: 				return v_u_14[p20]
+75: 			end
+76: 			local v21 = v_u_8[p20]
+77: 			if type(v21) == "table" and v21.default ~= nil then
+78: 				return v21.default
+79: 			end
+80: 		end
+81: 		return v_u_6.Settings[p20]
+82: 	end
+83: }
+84: local v_u_23 = setmetatable({}, v22)
+85: local v_u_24 = v_u_1.LocalPlayer
+86: local v_u_25 = workspace.CurrentCamera
+87: local v26 = v_u_24:WaitForChild("PlayerGui"):WaitForChild("Crosshair", (1 / 0))
+88: v26.Enabled = true
+89: task.spawn(function()
+90: 	-- upvalues: (copy) v_u_24
+91: 	v_u_24:WaitForChild("PlayerGui"):WaitForChild("WeaponHUD", (1 / 0)).Enabled = true
+92: end)
+93: local v_u_27 = v26:WaitForChild("CrosshairRoot"):Clone()
+94: local function v_u_32(p_u_28) -- name: newSet
+95: 	local function v31(p29) -- name: piece
+96: 		-- upvalues: (copy) p_u_28
+97: 		local v30 = p_u_28:WaitForChild(p29)
+98: 		return {
+   ...
+106: 		["lines"] = {
+107: 			v31("Haut"),
+108: 			v31("Bas"),
+109: 			v31("Gauche"),
+110: 			(v31("Droite"))
+111: 		},
+112: 		["ringOutline"] = v31("RingOutline"),
+113: 		["ring"] = v31("Ring"),
+114: 		["dot"] = v31("Dot")
+115: 	}
+116: end
+117: local v_u_33 = v_u_32(v26.CrosshairRoot)
+118: local v_u_34 = v26:FindFirstChild("NoFire")
+119: if v_u_34 then
+120: 	v_u_34.Visible = false
+121: end
+122: local function v_u_43() -- name: reloadProgress
+123: 	-- upvalues: (copy) v_u_24, (copy) v_u_4, (copy) v_u_2
+124: 	local v35 = v_u_24:GetAttribute("DebugReloadFade")
+125: 	if type(v35) == "number" then
+126: 		return math.clamp(v35, 0, 1)
+127: 	end
+128: 	if not (v_u_4.Reloading and v_u_4.ReloadStart) then
+129: 		return nil
+130: 	end
+   ...
+252: 	end
+253: 	local v76 = 1 - v_u_23.XhOpacity * (v75 and 0.1 + 0.9 * v75 or 1)
+254: 	local v77 = 0.3 + 0.7 * v76
+255: 	local v78 = v_u_25.ViewportSize.Y > 0 and v_u_25.ViewportSize.Y / 1080 or 1
+256: 	local v79 = math.round(v78)
+257: 	local v80 = math.max(1, v79)
+258: 	local v81 = v_u_23.XhGap * v78
+259: 	local v82 = math.round(v81)
+260: 	if v_u_23.XhDynamic and not p73 then
+261: 		v82 = v82 + v_u_71()
+262: 	end
+263: 	local v83 = v_u_23.XhShape
+264: 	local v84 = p73 or not v_u_23.XhCombatOnly or (v_u_4.Combat or ((v_u_4.FistCombat == true or v_u_4.MeleeAim == true) and true or v_u_4.MeleeSwing == true))
+265: 	local v85 = v_u_23.XhLength * v78
+266: 	local v86 = math.round(v85)
+267: 	local v8
+
+===== Players.Gorannss.PlayerScripts.RollClient =====
+   ...
+68: 			local v37 = p33.AssemblyMass
+69: 			local v38 = workspace.Gravity - v_u_31
+70: 			local v39 = v37 * math.max(0, v38)
+71: 			v36.Force = Vector3.new(0, v39, 0)
+72: 		end
+73: 		v_u_32.Enabled = p34
+74: 	end
+75: end
+76: local v_u_41 = {
+77: 	[Enum.HumanoidStateType.Jumping] = true,
+78: 	[Enum.HumanoidStateType.Freefall] = true
+79: }
+80: local v_u_42 = RaycastParams.new()
+81: v_u_42.IgnoreWater = true
+82: v_u_42.FilterType = Enum.RaycastFilterType.Exclude
+83: v_u_42.RespectCanCollide = true
+84: local v_u_43 = { Enum.HumanoidStateType.FallingDown, Enum.HumanoidStateType.Ragdoll }
+85: local function v_u_68() -- name: startRoll
+86: 	-- upvalues: (copy) v_u_21, (copy) v_u_7, (ref) v_u_26, (ref) v_u_24, (ref) v_u_25, (copy) v_u_43, (copy) v_u_20, (ref) v_u_23, (copy) v_u_9
+87: 	local v44 = v_u_21.Character
+88: 	local v45
+89: 	if v44 then
+90: 		v45 = v44:FindFirstChildOfClass("Humanoid")
+91: 	else
+92: 		v45 = v44
+93: 	end
+94: 	local v46
+   ...
+157: 			v64.RollMode = v52
+158: 			v65.RollStart = v66
+159: 			v_u_7.RollSpeed = v_u_20(v44)
+160: 			local v67 = v46:FindFirstChild("RootAttachment") or Instance.new("Attachment", v46)
+161: 			v_u_23 = Instance.new("LinearVelocity")
+162: 			v_u_23.Name = "RollVelocity"
+163: 			v_u_23.Attachment0 = v67
+164: 			v_u_23.RelativeTo = Enum.ActuatorRelativeTo.World
+165: 			v_u_23.ForceLimitMode = Enum.ForceLimitMode.PerAxis
+166: 			v_u_23.MaxAxesForce = Vector3.new(1000000, 0, 1000000)
+167: 			v_u_23.VectorVelocity = v49 * v_u_26
+168: 			v_u_23.Parent = v46
+169: 			v_u_9:FireServer(v52)
+170: 		end
+171: 	else
+172: 		return
+173: 	end
+174: end
+175: local v_u_69 = require(game:GetService("ReplicatedStorage"):WaitForChild("Controls"))
+176: v3.InputBegan:Connect(function(p70, p71)
+177: 	-- upvalues: (copy) v_u_7, (copy) v_u_69, (ref) v_u_22, (copy) v_u_14, (copy) v_u_68
+178: 	if not p71 and (not v_u_7.Freecam and v_u_69.Is("Roll", p70)) then
+179: 		if v_u_7.Equipped and v_u_7.Aiming then
+180: 			if v_u_7.Rolling then
+181: 				return
+182: 			end
+183: 			if os.clock() - v_u_22 < v_u_14 then
+184: 				return
+185: 			end
+186: 			v_u_68()
+187: 		end
+188: 	end
+189: end)
+190: v_u_69.Pressed:Connect(function(p72, p73)
+191: 	-- upvalues: (copy) v_u_7, (ref) v_u_22, (copy) v_u_14, (copy) v_u_68
+192: 	if p72 == "Jump" and (p73 and (v_u_7.Equipped and v_u_7.Aiming)) then
+193: 		if v_u_7.Rolling then
+194: 			return
+195: 		end
+196: 		if os.clock() - v_u_22 < v_u_14 then
+197: 			return
+198: 		end
+199: 		v_u_68()
+200: 	end
+201: end)
+202: local v_u_74 = nil
+203: local v_u_75 = false
+204: local function v_u_78() -- name: findTouchJump
+   ...
+211: 	if v76 then
+212: 		v76 = v76:FindFirstChild("TouchGui")
+213: 	end
+214: 	if v76 then
+215: 		v76 = v76:FindFirstChild("JumpButton", true)
+216: 	end
+217: 	if not (v76 and v76:IsA("GuiButton")) then
+218: 		return nil
+219: 	end
+220: 	v_u_74 = v76
+221: 	v76.InputBegan:Connect(function(p77)
+222: 		-- upvalues: (ref) v_u_7, (ref) v_u_22, (ref) v_u_14, (ref) v_u_68
+223: 		if p77.UserInputType == Enum.UserInputType.Touch and (p77.UserInputState == Enum.UserInputState.Begin and (v_u_7.Equipped and v_u_7.Aiming)) then
+224: 			if v_u_7.Rolling then
+225: 				return
+226: 			end
+227: 			if os.clock() - v_u_22 < v_u_14 then
+228: 				return
+229: 			end
+230: 			v_u_68()
+231: 		end
+232: 	end)
+233: 	return v76
+234: end
+235: v4.RenderStepped:Connect(function()
+236: 	-- upvalues: (copy) v_u_21, (copy) v_u_7, (copy) v_u_69, (copy) v_u_78, (ref) v_u_75
+237: 	local v79 = v_u_21.Character
+238: 	if v79 then
+239: 		v79 = v79:FindFirstChildOfClass("Humanoid")
+240: 	end
+241: 	if v79 then
+242: 		local v80 = not v_u_7.MobileJump and v_u_7.Equipped and (v_u_7.Aiming and not v79.SeatPart and not (v_u_7.Frozen or v_u_7.NavFreeze))
+243: 		if v80 then
+244: 			v80 = v_u_69.TouchMode()
+245: 		end
+246: 		if v80 then
+247: 			local v81 = v_u_78()
+248: 			if v81 and not v81.Visible then
+249: 				v81.Visible = true
+250: 			end
+251: 			v_u_75 = true
+252: 			return
+253: 		end
+254: 	end
+   ...
+259: 	local v83
+260: 	if 
+
+===== Players.Gorannss.PlayerScripts.HealClient =====
+   ...
+32: 					v_u_6.HealDenied = os.clock()
+33: 					v19.HealDeniedText = "ARMOR FULL"
+34: 					return
+35: 				end
+36: 			elseif v16.Health >= v16.MaxHealth then
+37: 				local v20 = v_u_6
+38: 				v_u_6.HealDenied = os.clock()
+39: 				v20.HealDeniedText = nil
+40: 				return
+41: 			end
+42: 			if v18.Crouch and not v_u_6.Crouching then
+43: 				v_u_6.Crouching = true
+44: 				v_u_9:FireServer(true)
+45: 				v_u_10 = true
+46: 			end
+47: 			local v21 = v_u_6
+48: 			local v22 = v_u_6
+49: 			local v23 = v_u_6
+50: 			local v24 = os.clock()
+51: 			v21.HealItem = v17
+52: 			v22.HealStart = v24
+53: 			v23.Healing = true
+54: 			v_u_13 = false
+55: 			v_u_7:FireServer()
+56: 		end
+57: 	else
+58: 		return
+59: 	end
+60: end
+61: local function v_u_36(p26, p27) -- name: gripLocally
+62: 	-- upvalues: (copy) v_u_8, (copy) v_u_12
+63: 	local v28 = v_u_8.Items[p27:GetAttribute("Item")]
+64: 	local v_u_29 = p27:FindFirstChild("Item")
+65: 	local v30 = p26:FindFirstChild("RightHand")
+66: 	if v28 and (v_u_29 and v30) then
+67: 		if not (function() -- name: hasServerGrip
+   ...
+106: 		p_u_37.Activated:Connect(function()
+107: 			-- upvalues: (ref) v_u_25, (copy) p_u_37
+108: 			v_u_25(p_u_37)
+109: 		end)
+110: 	end
+111: end
+112: local function v47(p_u_39) -- name: onCharacter
+113: 	-- upvalues: (ref) v_u_10, (copy) v_u_6, (copy) v_u_9, (ref) v_u_13, (copy) v_u_38, (copy) v_u_36
+114: 	if v_u_10 then
+115: 		v_u_10 = false
+116: 		if v_u_6.Crouching then
+117: 			v_u_6.Crouching = false
+118: 			v_u_9:FireServer(false)
+119: 		end
+120: 	end
+121: 	local v40 = v_u_6
+122: 	local v41 = v_u_6
+123: 	v_u_6.HealItem = nil
+124: 	v40.HealStart = nil
+125: 	v41.Healing = false
+126: 	v_u_13 = false
+127: 	p_u_39.ChildAdded:Connect(function(p42)
+128: 		-- upvalues: (ref) v_u_38, (ref) v_u_36, (copy) p_u_39
+129: 		if p42:IsA("Tool") and p42:GetAttribute("Item") then
+130: 			v_u_38(p42)
+   ...
+136: 		if p43:IsA("Tool") and p43:GetAttribute("Item") then
+137: 			for _, v44 in p43:GetDescendants() do
+138: 				if v44.Name ~= "ItemGrip" or not v44:GetAttribute("Local") then
+139: 					continue
+140: 				end
+141: 				v44:Destroy()
+142: 			end
+143: 			if v_u_6.HealItem then
+144: 				if v_u_10 then
+145: 					v_u_10 = false
+146: 					if v_u_6.Crouching then
+147: 						v_u_6.Crouching = false
+148: 						v_u_9:FireServer(false)
+149: 					end
+150: 				end
+151: 				local v45 = v_u_6
+152: 				local v46 = v_u_6
+153: 				v_u_6.HealItem = nil
+154: 				v45.HealStart = nil
+155: 				v46.Healing = false
+156: 				v_u_13 = false
+157: 			end
+158: 		end
+159: 	end)
+160: end
+   ...
+183: 		local v53 = os.clock() - v_u_6.HealStart
+184: 		if v51 then
+185: 			v51 = v51:GetAttribute("HealItem") ~= nil
+186: 		end
+187: 		if v51 then
+188: 			v_u_13 = true
+189: 		end
+190: 		if not v52 or (v52.Time < v53 or v_u_13 and (not v51 and v53 < v52.Time - 0.15)) or not v_u_13 and v53 > 1 then
+191: 			if v_u_10 then
+192: 				v_u_10 = false
+193: 				if v_u_6.Crouching then
+194: 					v_u_6.Crouching = false
+195: 					v_u_9:FireServer(false)
+196: 				end
+197: 			end
+198: 			local v54 = v_u_6
+199: 			local v55 = v_u_6
+200: 			v_u_6.HealItem = nil
+201: 			v54.HealStart = nil
+202: 			v55.Healing = false
+203: 			v_u_13 = false
+204: 		end
+205: 	end
+206: end)
+
+===== Players.Gorannss.PlayerScripts.HitboxClient =====
+1: local v_u_1 = require(game:GetService("ReplicatedStorage"):WaitForChild("WorldRefs"))
+2: local v_u_2 = game:GetService("Players")
+3: local v3 = game:GetService("ReplicatedStorage")
+4: local v4 = game:GetService("RunService")
+5: local v5 = v3:WaitForChild("Weapons")
+6: local v_u_6 = require(v5:WaitForChild("HitboxModel"))
+7: local v_u_7 = require(v5:WaitForChild("ClientHitboxes"))
+8: local v_u_8 = require(v5:WaitForChild("WeaponData"))
+9: local v_u_9 = v_u_2.LocalPlayer
+10: local v_u_10 = Instance.new("Folder")
+11: v_u_10.Name = "ClientHitboxes"
+12: v_u_10.Parent = workspace
+13: local v_u_11 = CFrame.new(0, -10000, 0)
+14: local function v_u_17(p12) -- name: folderFor
+15: 	-- upvalues: (copy) v_u_7, (copy) v_u_6, (copy) v_u_11, (copy) v_u_10
+16: 	local v13 = v_u_7.folders[p12]
+17: 	if v13 and v13.Parent then
+18: 		return v13
+19: 	end
+20: 	local v14 = Instance.new("Folder")
+21: 	v14.Name = p12.Name
+22: 	for _, v15 in v_u_6.BOXES do
+23: 		local v16 = Instance.new("Part")
+24: 		v16.Name = v15
+25: 		v16.Anchored = true
+26: 		v16.CanCollide = false
+27: 		v16.CanTouch = false
+28: 		v16.CanQuery = true
+29: 		v16.CastShadow = false
+30: 		v16.Transparency = 1
+31: 		v16.Material = Enum.Material.ForceField
+32: 		v16.Color = Color3.fromRGB(255, 40, 40)
+33: 		v16.CollisionGroup = "Hitbox"
+34: 		v16.Size = Vector3.new(1, 1, 1)
+35: 		v16.CFrame = v_u_11
+36: 		v16.Parent = v14
+37: 		v_u_7.parts[v16] = {
+38: 			["char"] = p12,
+39: 			["name"] = v15
+40: 		}
+41: 	end
+42: 	v14.Parent = v_u_10
+43: 	v_u_7.folders[p12] = v14
+44: 	return v14
+45: end
+46: local v_u_18 = {}
+47: local v_u_19 = (-1 / 0)
+48: local function v_u_48() -- name: refresh
+49: 	-- upvalues: (ref) v_u_19, (copy) v_u_9, (copy) v_u_8, (copy) v_u_18, (copy) v_u_17, (copy) v_u_6, (copy) v_u_11, (copy) v_u_2, (copy) v_u_1, (copy) v_u_7
+50: 	local v20 = os.clock()
+51: 	if v20 - v_u_19 >= 0.002 then
+52: 		v_u_19 = v20
+53: 		local v_u_21 = workspace:GetServerTimeNow()
+54: 		local v_u_22 = workspace:GetAttribute("ShowHitboxes") == true
+55: 		local v23 = v_u_9.Character
+56: 		if v23 then
+57: 			v23 = v23:FindFirstChildOfClass("Tool")
+58: 		end
+59: 		if v23 then
+60: 			v23 = v_u_8[v23:GetAttribute("Weapon") or ""]
+61: 		end
+62: 		local v_u_24 = v23 and v23.Handling.HitboxScale or 1
+63: 		local v_u_25 = {}
+64: 		local v_u_26 = {}
+65: 		table.clear(v_u_18)
+66: 		local function v40(p27) -- name: place
+67: 			-- upvalues: (ref) v_u_18, (ref) v_u_17, (ref) v_u_6, (copy) v_u_21, (ref) v_u_9, (copy) v_u_24, (copy) v_u_22, (copy) v_u_25, (copy) v_u_26, (ref) v_u_11
+68: 			local v28 = p27:FindFirstChild("HumanoidRootPart")
+69: 			local v29 = p27:FindFirstChildOfClass("Humanoid")
+70: 			if v28 and (v29 and v29.Health > 0) then
+71: 				v_u_18[p27] = true
+72: 				local v30 = nil
+73: 				for _, v31 in v_u_17(p27):GetChildren() do
+74: 					local v32 = p27:FindFirstChild(v31.Name)
+   ...
+111: 			v40(v42)
+112: 		end
+113: 		local v43 = v_u_1.Find("Dummies")
+114: 		if v43 then
+115: 			for _, v44 in v43:GetChildren() do
+116: 				if not v44:IsA("Model") then
+117: 					continue
+118: 				end
+119: 				v40(v44)
+120: 			end
+121: 		end
+122: 		if #v_u_25 > 0 then
+123: 			workspace:BulkMoveTo(v_u_25, v_u_26, Enum.BulkMoveMode.FireCFrameChanged)
+124: 		end
+125: 		for v45 in v_u_7.folders do
+126: 			if v_u_18[v45] then
+127: 				continue
+128: 			end
+129: 			local v46 = v_u_7.folders[v45]
+130: 			if v46 then
+131: 				for _, v47 in v46:GetChildren() do
+132: 					v_u_7.parts[v47] = nil
+133: 				end
+134: 				v46:Destroy()
+135: 			end
+136: 			v_u_7.folders[v45] = nil
+137: 		end
+138: 	end
+139: end
+140: v_u_7.Refresh = v_u_48
+141: v4:BindToRenderStep("ClientHitboxes", Enum.RenderPriority.Camera.Value - 2, function()
+142: 	-- upvalues: (copy) v_u_48
+143: 	if workspace:GetAttribute("ShowHitboxes") == true then
+144: 		v_u_48()
+145: 	end
+146: end)
+
+===== Players.Gorannss.PlayerScripts.DeathCamClient =====
+1: local v1 = game:GetService("Players")
+2: local v_u_2 = game:GetService("RunService")
+3: local v3 = game:GetService("ReplicatedStorage")
+4: local v_u_4 = v1.LocalPlayer
+5: local v_u_5 = workspace.CurrentCamera
+6: local v6 = v3:WaitForChild("Remotes"):WaitForChild("Killed")
+7: local v_u_7 = require(v3:WaitForChild("Weapons"):WaitForChild("ClientState"))
+8: local v_u_8 = RaycastParams.new()
+9: v_u_8.IgnoreWater = true
+10: v_u_8.FilterType = Enum.RaycastFilterType.Exclude
+11: local function v_u_11(...) -- name: ignoreList
+12: 	local v9 = { workspace:FindFirstChild("FX"), workspace:FindFirstChild("ClientHitboxes") }
+13: 	for _, v10 in { ... } do
+14: 		if not v10 then
+15: 			continue
+16: 		end
+17: 		table.insert(v9, v10)
+18: 	end
+19: 	return v9
+20: end
+21: local function v_u_27(p12, p13, p14, p15) -- name: corpseView
+22: 	-- upvalues: (copy) v_u_11, (copy) v_u_8
+23: 	local v16
+24: 	if p12 then
+   ...
+27: 		v16 = p12
+28: 	end
+29: 	if not v16 then
+30: 		return nil
+31: 	end
+32: 	local v17 = v16.Position
+33: 	local v18 = (Vector3.new(0, 5, 6)):Lerp(Vector3.new(0, 9, 10), p14)
+34: 	local v19 = p13 * v18.Z
+35: 	local v20 = v18.Y
+36: 	local v21 = v19 + Vector3.new(0, v20, 0)
+37: 	local v22 = CFrame.lookAt
+38: 	v_u_8.FilterDescendantsInstances = v_u_11(p12, p15)
+39: 	local v23 = workspace:Raycast(v17, v21, v_u_8)
+40: 	if not v23 then
+41: 		v26 = v17 + v21
+42: 		return v22(v26, v17)
+43: 	end
+44: 	local v24 = v21.Unit
+45: 	local v25 = v23.Distance - 0.5
+46: 	local v26 = v17 + v24 * math.max(1.5, v25)
+47: 	if v26 then
+48: 		return v22(v26, v17)
+49: 	end
+50: 	v26 = v17 + v21
+51: 	return v22(v26, v17)
+   ...
+62: 	else
+63: 		v31 = p28
+64: 	end
+65: 	if not (v30 and v31) then
+66: 		return nil
+67: 	end
+68: 	local v32 = v31.CFrame.LookVector * Vector3.new(1, 0, 1)
+69: 	local v33 = v32.Magnitude > 0.01 and v32.Unit or Vector3.new(0, 0, 1)
+70: 	local v34 = v30.Position - Vector3.new(0, 0.15, 0)
+71: 	local v35 = v33 * 6 + Vector3.new(0, 0.4, 0)
+72: 	local v36 = CFrame.lookAt
+73: 	v_u_8.FilterDescendantsInstances = v_u_11(p28, p29)
+74: 	local v37 = workspace:Raycast(v34, v35, v_u_8)
+75: 	if not v37 then
+76: 		v40 = v34 + v35
+77: 		return v36(v40, v34)
+78: 	end
+79: 	local v38 = v35.Unit
+80: 	local v39 = v37.Distance - 0.5
+81: 	local v40 = v34 + v38 * math.max(1.5, v39)
+82: 	if v40 then
+83: 		return v36(v40, v34)
+84: 	end
+85: 	v40 = v34 + v35
+86: 	return v36(v40, v34)
+87: end
+88: v6.OnClientEvent:Connect(function(p_u_42, p_u_43)
+89: 	-- upvalues: (copy) v_u_2, (copy) v_u_4, (copy) v_u_5, (copy) v_u_7, (copy) v_u_41, (copy) v_u_27
+90: 	v_u_2:UnbindFromRenderStep("DeathCam")
+91: 	local v_u_44 = os.clock()
+92: 	local v_u_45 = v_u_4.Character
+93: 	local v46 = v_u_5.CFrame.LookVector * Vector3.new(-1, 0, -1)
+94: 	local v_u_47 = v46.Magnitude > 0.01 and v46.Unit or Vector3.new(0, 0, 1)
+95: 	v_u_2:BindToRenderStep("DeathCam", Enum.RenderPriority.Camera.Value + 5, function()
+96: 		-- upvalues: (copy) v_u_44, (ref) v_u_4, (copy) v_u_45, (copy) p_u_43, (ref) v_u_2, (ref) v_u_7, (ref) v_u_41, (copy) p_u_42, (ref) v_u_27, (ref) v_u_47, (ref) v_u_5
+97: 		local v48 = os.clock() - v_u_44
+98: 		local v49 = v_u_4.Character
+99: 		local v50
+100: 		if v49 then
+101: 			v50 = v49:FindFirstChildOfClass("Humanoid")
+102: 		else
+103: 			v50 = v49
+104: 		end
+105: 		if v48 > 15 or v49 and (v49 ~= v_u_45 and (v49 ~= p_u_43 and (v50 and v50.Health > 0))) then
+106: 			v_u_2:UnbindFromRenderStep("DeathCam")
+107: 			return
+   ...
+110: 		else
+111: 			local v51
+112: 			if v48 >= 1.5 then
+113: 				v51 = v_u_41(p_u_42, p_u_43)
+114: 			else
+115: 				v51 = nil
+116: 			end
+117: 			if not v51 then
+118: 				local v52 = v48 / 1.5
+119: 				v51 = v_u_27(p_u_43, v_u_47, 1 - (1 - math.clamp(v52, 0, 1)) ^ 2, p_u_42)
+120: 			end
+121: 			if v51 then
+122: 				v_u_5.CameraType = Enum.CameraType.Scriptable
+123: 				v_u_5.CFrame = v51
+124: 			end
+125: 		end
+126: 	end)
+127: end)
+128: v_u_4.CharacterAdded:Connect(function() -- name: stop
+129: 	-- upvalues: (copy) v_u_2
+130: 	v_u_2:UnbindFromRenderStep("Death
+
+===== Players.Gorannss.PlayerScripts.ScopeClient =====
+   ...
+74: 		v34.LocalTransparencyModifier = v33
+75: 	end
+76: 	local v35 = v_u_7[p31]
+77: 	if v35 then
+78: 		for _, v36 in v35:GetDescendants() do
+79: 			if not (v36:IsA("BasePart") or v36:IsA("Decal")) then
+80: 				continue
+81: 			end
+82: 			v36.LocalTransparencyModifier = v33
+83: 		end
+84: 	end
+85: end
+86: v2:BindToRenderStep("ScopeOverlay", Enum.RenderPriority.Camera.Value + 2, function()
+87: 	-- upvalues: (copy) v_u_9, (copy) v_u_6, (copy) v_u_13, (copy) v_u_12, (ref) v_u_30, (copy) v_u_37
+88: 	local v38 = v_u_9.Character
+89: 	local v39
+90: 	if v38 then
+91: 		v39 = v38:FindFirstChildOfClass("Humanoid")
+92: 	else
+93: 		v39 = v38
+94: 	end
+95: 	local v40
+96: 	if v_u_6.Scoped == true and (v_u_6.ScopeOverlay ~= nil and v39 ~= nil) then
+97: 		v40 = v39.Health > 0
+98: 	else
+
+===== Players.Gorannss.PlayerScripts.VehicleClient =====
+   ...
+15: v_u_12.StartClient()
+16: local v_u_15 = v_u_8:WaitForChild("VehicleAction")
+17: local v16 = v_u_8:WaitForChild("VehicleFX")
+18: local v_u_17 = require(v6:WaitForChild("Weapons"):WaitForChild("ClientState"))
+19: local v_u_18 = setmetatable({}, {
+20: 	["__mode"] = "k"
+21: })
+22: v_u_17.CarSteer = v_u_18
+23: local v_u_19 = require(v6:WaitForChild("Weapons"):WaitForChild("AnimWorkers"))
+24: local v20 = require(v6:WaitForChild("Weapons"):WaitForChild("Effects"))
+25: local v_u_21 = require(v6:WaitForChild("Weapons"):WaitForChild("WeaponData"))
+26: local v_u_22 = v1.LocalPlayer
+27: local v_u_23 = workspace.CurrentCamera
+28: local v_u_24 = Enum.KeyCode.F
+29: local v_u_25 = Enum.ContextActionPriority.High.Value + 150
+30: local v26 = require
+31: local v_u_27, v_u_28 = pcall(v26, v6:WaitForChild("Notify", 10))
+32: if not v_u_27 then
+33: 	v_u_28 = nil
+34: end
+35: local v_u_29 = Enum.ContextActionPriority.High.Value + 50
+36: local v_u_30 = {}
+37: local v_u_31 = v_u_3:GetTagged("Vehicle")
+38: local v_u_32 = {}
+39: local v_u_33 = nil
+   ...
+362: 			continue
+363: 		end
+364: 		v137.Enabled = v138
+365: 	end
+366: end
+367: local function v151(p_u_140) -- name: addPrompts
+368: 	-- upvalues: (copy) v_u_32, (copy) v_u_30, (copy) v_u_9, (copy) v_u_104, (copy) v_u_5, (ref) v_u_105, (ref) v_u_106, (ref) v_u_107, (ref) v_u_33, (ref) v_u_103, (copy) v_u_22, (ref) v_u_28, (copy) v_u_139, (copy) v_u_15, (copy) v_u_102
+369: 	if v_u_32[p_u_140] then
+370: 		return
+371: 	else
+372: 		v_u_32[p_u_140] = true
+373: 		local v141 = p_u_140:WaitForChild("VehicleSeats", 10)
+374: 		local v142 = p_u_140:WaitForChild("VehicleHitbox", 10)
+375: 		local v143
+376: 		if v141 then
+377: 			if v142 then
+378: 				local v144 = v_u_30[p_u_140]
+379: 				if not v144 then
+380: 					v144 = v_u_9.newState(p_u_140) or false
+381: 					v_u_30[p_u_140] = v144
+382: 				end
+383: 				v143 = v144 or nil
+384: 			else
+385: 				v143 = v142
+386: 			end
+   ...
+431: 						return
+432: 					else
+433: 						local v150 = v_u_22.Character
+434: 						if v150 and (v150:GetAttribute("Downed") or v150:GetAttribute("CarriedBy")) then
+435: 							return
+436: 						elseif v_u_146:GetAttribute("Role") == "Driver" and (p_u_140:GetAttribute("Locked") and p_u_140:GetAttribute("OwnerId") ~= v_u_22.UserId) then
+437: 							if v_u_28 and v_u_28.Error then
+438: 								v_u_28.Error("This vehicle is locked")
+439: 							end
+440: 						else
+441: 							v_u_103 = os.clock() + 1.5
+442: 							v_u_139()
+443: 							v_u_15:FireServer("Enter", p_u_140, v_u_146)
+444: 						end
+445: 					end
+446: 				end)
+447: 				v_u_149.Destroying:Connect(function()
+448: 					-- upvalues: (ref) v_u_102, (copy) v_u_149, (ref) v_u_104
+449: 					v_u_102[v_u_149] = nil
+450: 					v_u_104[v_u_149] = nil
+451: 				end)
+452: 				v_u_102[v_u_149] = v_u_146
+453: 				v148.Parent = v142
+454: 			end
+455: 			v_u_139()
+   ...
+468: 	while true do
+469: 		v_u_139()
+470: 		task.wait(0.1)
+471: 	end
+472: end)
+473: local v_u_156 = nil
+474: local function v_u_161(_, p157, _) -- name: onExit
+475: 	-- upvalues: (ref) v_u_153, (ref) v_u_156, (copy) v_u_15, (copy) v_u_22
+476: 	if p157 ~= Enum.UserInputState.Begin or not v_u_153 then
+477: 		if p157 == Enum.UserInputState.End and v_u_156 then
+478: 			v_u_156 = nil
+479: 			if v_u_153 and v_u_153.driver then
+480: 				v_u_15:FireServer("Horn")
+481: 			end
+482: 		elseif p157 == Enum.UserInputState.Cancel then
+483: 			v_u_156 = nil
+484: 		end
+485: 		return Enum.ContextActionResult.Sink
+486: 	end
+487: 	v_u_156 = nil
+488: 	if v_u_153 then
+489: 		v_u_15:FireServer("Exit")
+490: 		if v_u_153.driver then
+491: 			local v158 = v_u_153.seat
+492: 			if v158 then
+493: 				v158 = v_u_153.seat:FindFirstChild("SeatWeld")
+494: 			end
+495: 			if v158 then
+496: 				v158:Destroy()
+497: 			end
+498: 			local v159 = v_u_22.Character
+499: 			local v160
+500: 			if v159 then
+501: 				v160 = v159:FindFirstChildOfClass("Humanoid")
+   ...
+524: 	return nil
+525: end
+526: local function v_u_165() -- name: sink
+527: 	return Enum.ContextActionResult
+
+===== Players.Gorannss.PlayerScripts.CrouchClient =====
+   ...
+18: 			end
+19: 			if not v12 or (v12.Health <= 0 or v_u_5.Rolling) then
+20: 				return
+21: 			end
+22: 			local v13 = v12:GetState()
+23: 			if ((v12.FloorMaterial == Enum.Material.Air or (v13 == Enum.HumanoidStateType.Jumping or v13 == Enum.HumanoidStateType.Freefall)) and true or v13 == Enum.HumanoidStateType.Swimming) and not v_u_5.Crouching then
+24: 				return
+25: 			end
+26: 			if type(p10) == "table" and p10.Hold then
+27: 				if v_u_5.Crouching == true ~= true then
+28: 					v_u_5.Crouching = true
+29: 					v_u_9 = os.clock()
+30: 					v_u_6:FireServer(true)
+31: 				end
+32: 			end
+33: 			local v14 = not v_u_5.Crouching
+34: 			if v_u_5.Crouching == true == v14 then
+35: 				return
+36: 			end
+37: 			v_u_5.Crouching = v14
+38: 			v_u_9 = os.clock()
+39: 			v_u_6:FireServer(v14)
+40: 		end
+41: 	end
+42: end)
+43: v_u_7.OnInputEnded(function(p15)
+44: 	-- upvalues: (copy) v_u_5, (ref) v_u_9, (copy) v_u_6
+45: 	if type(p15) == "table" and (p15.Hold and (p15.Virtual == "Crouch" and v_u_5.Crouching)) then
+46: 		if v_u_5.Crouching == true == false then
+47: 			return
+48: 		end
+49: 		v_u_5.Crouching = false
+50: 		v_u_9 = os.clock()
+51: 		v_u_6:FireServer(false)
+52: 	end
+53: end)
+54: v3.Heartbeat:Connect(function()
+55: 	-- upvalues: (copy) v_u_5, (copy) v_u_8, (ref) v_u_9, (copy) v_u_6
+56: 	if v_u_5.Crouching then
+57: 		local v16 = v_u_8.Character
+58: 		if v16 then
+59: 			v16 = v_u_8.Character:FindFirstChildOfClass("Humanoid")
+60: 		end
+61: 		if not v16 or (v16.Health <= 0 or (v_u_5.Rolling or (v_u_5.Sprinting or v16:GetState() == Enum.HumanoidStateType.Swimming))) then
+62: 			if v_u_5.Crouching == true == false then
+63: 				return
+64: 			end
+65: 			v_u_5.Crouching = false
+66: 			v_u_9 = os.clock()
+67: 			v_u_6:FireServer(false)
+68: 		end
+69: 	end
+70: end)
+71: local function v19(p_u_17) -- name: onCharacter
+72: 	-- upvalues: (copy) v_u_5, (ref) v_u_9, (copy) v_u_6
+73: 	v_u_5.Crouching = false
+74: 	p_u_17:GetAttributeChangedSignal("Crouch"):Connect(function()
+75: 		-- upvalues: (copy) p_u_17, (ref) v_u_5, (ref) v_u_9
+76: 		if p_u_17:GetAttribute("Crouch") == false and (v_u_5.Crouching and os.clock() - v_u_9 > 1) then
+77: 			v_u_5.Crouching = false
+78: 		end
+79: 	end)
+80: 	p_u_17:WaitForChild("Humanoid").StateChanged:Connect(function(_, p18)
+81: 		-- upvalues: (ref) v_u_5, (ref) v_u_9, (ref) v_u_6
+82: 		if p18 == Enum.HumanoidStateType.Jumping then
+83: 			if v_u_5.Crouching == true == false then
+84: 				return
+85: 			end
+86: 			v_u_5.Crouching = false
+87: 			v_u_9 = os.clock()
+88: 			v_u_6:FireServer(false)
+89: 		end
+90: 	end)
+91: end
+92: v_u_8.CharacterAdded:Connect(v19)
+93: if v_u_8.Character then
+94: 	task.spawn(v19, v_u_8.Character)
+95: end
+
+===== Players.Gorannss.PlayerScripts.RocketClient =====
+1: local v1 = game:GetService("Players")
+2: local v2 = game:GetService("ReplicatedStorage")
+3: local v3 = v2:WaitForChild("Weapons")
+4: local v_u_4 = require(v3:WaitForChild("Rocket"))
+5: local v_u_5 = require(v3:WaitForChild("WeaponData"))
+6: local v6 = v2:WaitForChild("Remotes")
+7: local v_u_7 = v1.LocalPlayer
+8: v6:WaitForChild("Rocket").OnClientEvent:Connect(function(p8, p9, p10, p11, p12, p13)
+9: 	-- upvalues: (copy) v_u_5, (copy) v_u_7, (copy) v_u_4
+10: 	local v14 = v_u_5[p13 or "RPG"]
+11: 	if v14 and v14.Fire.Rocket then
+12: 		if p8 == "Launch" then
+13: 			if p10 ~= v_u_7 then
+14: 				local v15
+15: 				if typeof(p10) == "Instance" then
+16: 					v15 = p10:IsA("Player") and p10.Character or (p10:IsA("Model") and p10 and p10 or nil)
+17: 				else
+18: 					v15 = nil
+19: 				end
+20: 				v_u_4.Launch(p9, v15, p11, p12, v14.Fire.Rocket, v14.RocketSounds)
+21: 			end
+22: 		else
+23: 			if p8 == "Explode" then
+24: 				v_u_4.Explode(p9, p10, v14.RocketSounds)
+25: 			end
+26: 			return
+27: 		end
+28: 	else
+29: 		return
+30: 	end
+31: end)
+
+===== Players.Gorannss.PlayerScripts.ReaperFXClient =====
+   ...
+176: 		["anchorName"] = v40,
+177: 		["kind"] = p32,
+178: 		["emitters"] = v51
+179: 	}
+180: end
+181: local v_u_55 = 0
+182: local v_u_56 = {}
+183: v2.Heartbeat:Connect(function(p57)
+184: 	-- upvalues: (ref) v_u_55, (copy) v_u_5, (copy) v_u_56, (copy) v_u_1, (copy) v_u_8, (copy) v_u_54, (copy) v_u_7, (copy) v_u_4
+185: 	v_u_55 = v_u_55 + p57
+186: 	if v_u_55 >= 0.06666666666666667 then
+187: 		v_u_55 = 0
+188: 		local v58 = workspace.CurrentCamera.CFrame.Position
+189: 		local v59 = v_u_5.SavedQualityLevel.Value
+190: 		local v60 = (v59 == 0 or v59 >= 6) and 1 or (v59 >= 3 and 0.6 or 0.35)
+191: 		table.clear(v_u_56)
+192: 		for _, v61 in v_u_1:GetPlayers() do
+193: 			local v62 = v61.Character
+194: 			local v63
+195: 			if v62 then
+196: 				v63 = v62:GetAttribute("CostumeFX")
+197: 			else
+198: 				v63 = v62
+199: 			end
+200: 			if not v63 then
+   ...
+236: 					end
+237: 				end
+238: 			end
+239: 			if not v67 then
+240: 				v67 = v_u_54(v62, v63)
+241: 				v_u_8[v62] = v67
+242: 			end
+243: 			if not v67 then
+244: 				continue
+245: 			end
+246: 			local v71 = 1.15 - v66 / 140
+247: 			local v72 = v60 * math.clamp(v71, 0.25, 1)
+248: 			local v73 = (v61 == v_u_7 and (v_u_4.Aiming or v_u_4.Scoped) and 0 or v72) * 20
+249: 			local v74 = math.round(v73) / 20
+250: 			if v74 == v67.k then
+251: 				continue
+252: 			end
+253: 			v67.k = v74
+254: 			for _, v75 in v67.emitters do
+255: 				v75[1].Rate = v75[2] * v74
+256: 			end
+257: 		end
+258: 		for v76 in v_u_8 do
+259: 			if v_u_56[v76] then
+260: 				continue
+
+===== Players.Gorannss.PlayerScripts.EDrinkClient =====
+   ...
+8: })
+9: local function v_u_9(p_u_7) -- name: hookTool
+10: 	-- upvalues: (copy) v_u_6, (copy) v_u_5, (copy) v_u_3, (copy) v_u_4
+11: 	if p_u_7:IsA("Tool") and (p_u_7:GetAttribute("Item") == "EDrink" and not v_u_6[p_u_7]) then
+12: 		v_u_6[p_u_7] = true
+13: 		p_u_7.Activated:Connect(function()
+14: 			-- upvalues: (ref) v_u_5, (ref) v_u_3, (copy) p_u_7, (ref) v_u_4
+15: 			local v8 = v_u_5.Character
+16: 			if v_u_3.CursorFree or (not v8 or (v8:GetAttribute("Drinking") or p_u_7.Parent ~= v8)) then
+17: 				return
+18: 			elseif not v_u_3.DrinkStart then
+19: 				v_u_3.DrinkStart = os.clock()
+20: 				v_u_4:FireServer()
+21: 			end
+22: 		end)
+23: 	end
+24: end
+25: local function v_u_17(p10, p11) -- name: gripLocally
+26: 	local v12 = p11:FindFirstChild("Item")
+27: 	local v13 = p10:FindFirstChild("RightHand")
+28: 	if v12 and (v13 and not v12:FindFirstChild("ItemGrip")) then
+29: 		local v_u_14 = Instance.new("Weld")
+30: 		v_u_14.Name = "LocalGrip"
+31: 		v_u_14.Part0 = v13
+32: 		v_u_14.Part1 = v12
+
+===== Players.Gorannss.PlayerScripts.KillEffectsClient =====
+1: local v_u_1 = game:GetService("Players")
+2: local v2 = game:GetService("ReplicatedStorage")
+3: local v3 = game:GetService("SoundService")
+4: local v_u_4 = game:GetService("ContentProvider")
+5: local v_u_5 = game:GetService("RunService")
+6: local v_u_6 = require(v2:WaitForChild("KillEffects"))
+7: local v7 = v2:WaitForChild("Remotes"):WaitForChild("KillFX")
+8: local v_u_8 = v2:WaitForChild("KillFX")
+9: local v_u_9 = workspace.CurrentCamera
+10: local v_u_10 = {}
+11: for v11, v12 in v_u_6.Effects do
+12: 	if not v12.Sound then
+13: 		continue
+14: 	end
+15: 	local v13 = Instance.new("Sound")
+16: 	v13.Name = "KillFX_" .. v11
+17: 	v13.SoundId = "rbxassetid://" .. v12.Sound
+18: 	v13.Volume = v12.Volume or 1
+19: 	v13.Parent = v3
+20: 	v_u_10[v11] = v13
+21: end
+   ...
+169: 					if v_u_58.Ease then
+170: 						v65 = 1 - (1 - v64) ^ v_u_58.Ease or v64
+171: 					else
+172: 						v65 = v64
+173: 					end
+174: 					local v66 = v_u_59
+175: 					local v67 = v_u_60 * v65
+176: 					local v68 = v66 + Vector3.new(0, v67, 0)
+177: 					local v69 = table.create(#v_u_51)
+178: 					for v70 in v_u_51 do
+179: 						v69[v70] = v68 * v_u_52[v70]
+180: 					end
+181: 					workspace:BulkMoveTo(v_u_51, v69, Enum.BulkMoveMode.FireCFrameChanged)
+182: 					if v64 >= 1 then
+183: 						v_u_62:Disconnect()
+184: 						if v_u_56 then
+185: 							v_u_56.Enabled = false
+186: 						end
+187: 						local v71 = p_u_39
+188: 						local v72 = v_u_42
+189: 						local v73 = v_u_60
+190: 						local v74 = v_u_59.Position + Vector3.new(0, v73, 0)
+191: 						local v75 = p_u_41
+192: 						local v76 = v_u_10[v71]
+193: 						if v76 then
+   ...
+224: 		return
+225: 	end
+226: end
+227: v7.OnClientEvent:Connect(function(p83, p84, p85)
+228: 	-- upvalues: (copy) v_u_1, (copy) v_u_6, (copy) v_u_82
+229: 	if typeof(p84) == "Vector3" then
+230: 		local v86
+231: 		if p85 == nil then
+232: 			v86 = false
+233: 		else
+234: 			v86 = p85 ~= v_u_1.LocalPlayer.UserId
+235: 		end
+236: 		local v87 = workspace.CurrentCamera
+237: 		if not v86 or (not v87 or (v87.CFrame.Position - p84).Magnitude <= v_u_6.VIEW_DISTANCE) then
+238: 			v_u_82(p83, p84, v86)
+239: 		end
+240: 	else
+241: 		return
+242: 	end
+243: end)
+
+===== Players.Gorannss.PlayerScripts.GiveUpClient =====
+   ...
+107: 					v_u_17 = nil
+108: 					v_u_18 = nil
+109: 					v_u_11.Size = UDim2.fromScale(0, 1)
+110: 					return
+111: 				end
+112: 				local v37 = (os.clock() - v_u_17) / 1
+113: 				v_u_11.Size = UDim2.fromScale(math.clamp(v37, 0, 1), 1)
+114: 				if v37 >= 1 and v_u_16 then
+115: 					if os.clock() - v_u_19 >= 2 then
+116: 						v_u_19 = os.clock()
+117: 						v_u_17 = nil
+118: 						v_u_18 = nil
+119: 						v_u_7:FireServer()
+120: 					end
+121: 				end
+122: 			elseif v_u_11.Size.X.Scale ~= 0 then
+123: 				v_u_11.Size = UDim2.fromScale(0, 1)
+124: 			end
+125: 		end
+126: 	else
+127: 		return
+128: 	end
+129: end)
+130: task.spawn(function()
+131: 	-- upvalues: (copy) v_u_6, (ref) v_u_10, (ref) v_u_11, (ref) v_u_12, (ref) v_u_13, (ref) v_u_14, (ref) v_u_15, (ref) v_u_16, (ref) v_u_19, (ref) v_u_17, (ref) v_u_18, (copy) v_u_7, (ref) v_u_9
+   ...
+137: 	v_u_14 = v_u_12:WaitForChild("Glyph")
+138: 	v_u_15 = v_u_10:WaitForChild("Sub")
+139: 	v38.Visible = false
+140: 	v_u_10.Activated:Connect(function()
+141: 		-- upvalues: (ref) v_u_16, (ref) v_u_19, (ref) v_u_17, (ref) v_u_18, (ref) v_u_7
+142: 		if v_u_16 and v_u_16 then
+143: 			if os.clock() - v_u_19 < 2 then
+144: 				return
+145: 			end
+146: 			v_u_19 = os.clock()
+147: 			v_u_17 = nil
+148: 			v_u_18 = nil
+149: 			v_u_7:FireServer()
+150: 		end
+151: 	end)
+152: 	v_u_9 = v38
+153: end)
+
+===== Players.Gorannss.PlayerScripts.NeutralFaceClient =====
+   ...
+87: 			continue
+88: 		end
+89: 		v14:Stop(0)
+90: 	end
+91: end
+92: v_u_3.CharacterAdded:Connect(v15)
+93: if v_u_3.Character then
+94: 	task.spawn(v15, v_u_3.Character)
+95: end
+96: local v_u_16 = require(game:GetService("ReplicatedStorage"):WaitForChild("Weapons"):WaitForChild("OnScreen"))
+97: v2.Heartbeat:Connect(function()
+98: 	-- upvalues: (copy) v_u_1, (copy) v_u_3, (copy) v_u_16, (copy) v_u_4
+99: 	local v17 = workspace.CurrentCamera
+100: 	local v18 = v17.CFrame.Position
+101: 	local v19 = v17.FieldOfView / 70
+102: 	local v20 = math.clamp(v19, 0.05, 1)
+103: 	for _, v21 in v_u_1:GetPlayers() do
+104: 		local v22 = v21.Character
+105: 		if v22 then
+106: 			v22 = v21.Character:FindFirstChild("Head")
+107: 		end
+108: 		if v22 and (v21 ~= v_u_3 and ((v22.Position - v18).Magnitude * v20 > 60 or not v_u_16.Is(v21.Character))) then
+109: 			continue
+110: 		end
+111: 		if v22 then
+
+===== Players.Gorannss.PlayerScripts.ConfirmFXClient =====
+   ...
+80: 			v_u_24:Disconnect()
+81: 			v_u_14:Destroy()
+82: 		end)
+83: 	end
+84: end
+85: local v_u_26 = {}
+86: local v_u_27 = {}
+87: local v_u_28 = 0
+88: local v_u_29 = {}
+89: local v_u_30 = {}
+90: local v_u_31 = nil
+91: local v_u_32 = Random.new()
+92: local v_u_33 = RaycastParams.new()
+93: v_u_33.FilterType = Enum.RaycastFilterType.Exclude
+94: v_u_33.RespectCanCollide = true
+95: v_u_33.IgnoreWater = true
+96: local function v_u_41(p34) -- name: newBottle
+97: 	-- upvalues: (ref) v_u_28
+98: 	local v35 = p34:Clone()
+99: 	local v36 = v35.PrimaryPart
+100: 	local v37 = {
+101: 		["model"] = v35,
+102: 		["parts"] = {}
+103: 	}
+104: 	for _, v38 in v35:GetChildren() do
+105: 		if not v38:IsA("BasePart") then
+   ...
+174: 			for _, v63 in v46.parts do
+175: 				v44 = v44 + 1
+176: 				local v64 = v_u_29
+177: 				local v65 = v_u_30
+178: 				local v66 = v63.part
+179: 				local v67 = v62 * v63.off
+180: 				v64[v44] = v66
+181: 				v65[v44] = v67
+182: 			end
+183: 		end
+184: 	end
+185: 	if v44 > 0 then
+186: 		workspace:BulkMoveTo(v_u_29, v_u_30, Enum.BulkMoveMode.FireCFrameChanged)
+187: 	end
+188: 	if #v_u_27 == 0 and v_u_31 then
+189: 		v_u_31:Disconnect()
+190: 		v_u_31 = nil
+191: 	end
+192: end
+193: local function v_u_95(p69) -- name: dropBottle
+194: 	-- upvalues: (copy) v_u_2, (copy) v_u_26, (ref) v_u_28, (copy) v_u_41, (copy) v_u_1, (copy) v_u_33, (copy) v_u_32, (copy) v_u_27, (ref) v_u_31, (copy) v_u_4, (copy) v_u_68
+195: 	local v70 = p69:FindFirstChild("RightHand")
+196: 	local v71 = p69:FindFirstChild("HumanoidRootPart")
+197: 	local v72 = workspace.CurrentCamera
+198: 	local v73 = v_u_2:FindFirstChild("FX")
+199: 	if v73 then
+200: 		v73 = v73:FindFirstChild("BouteilleEDrink")
+201: 	end
+202: 	if v70 and (v71 and (v72 and (v73 and (v72.CFrame.Position - v70.Position).Magnitude <= 100))) then
+203: 		local v74 = table.remove(v_u_26)
+204: 		if not v74 then
+205: 			if v_u_28 >= 6 then
+206: 				return
+207: 			end
+208: 			v74 = v_u_41(v73)
+209: 		end
+   ...
+215: 			local v77 = v76.Character
+216: 			table.insert(v75, v77)
+217: 		end
+218: 		v_u_33.FilterDescendantsInstances = v75
+219: 		local v78 = v71.CFrame
+220: 		local v79 = v70.Position
+221: 		local v80 = v78.RightVector * v_u_32:NextNumber(3, 6) + v78.LookVector * v_u_32:NextNumber(-1, 3) + v71.AssemblyLinearVelocity * Vector3.new(0.4, 0, 0.4)
+222: 		local v81 = v_u_32:NextNumber(5, 9)
+223: 		local v82 = v80 + Vector3.new(0, v81, 0)
+224: 		local v83 = v82.X
+225: 		local v84 = v82.Z
+226: 		local v85 = Vector3.new(v83, 0, v84) * 0.45
+227: 		if v85.Magnitude > 0.1 and workspace:Raycast(v79, v85, v_u_33) then
+228: 			local v86 = v82.Y
+229: 			v82 = Vector3.new(0, v86, 0)
+230: 			v85 = Vector3.new(0, 0, 0)
+231: 		end
+232: 		local v87 = workspace:Raycast(v79 + v85, Vector3.new(0, -40, 0), v_u_33)
+233: 		if v87 then
+234: 			local v88 = v70.CFrame.Rotation
+235: 			v74.pos = v79
+236: 			v74.vel = v82
+237: 			v74.rot = v88
+238: 			v74.floor = v87.Position.Y + 0.2
+239: 			v74.hits = 0
+240: 			v74.restT = nil
+241: 			local v89 = v_u_32:NextUnitVector()
+242: 			local v90 = v_u_32:NextNumber(10, 18)
+243: 			v74.axis = v89
+244: 			v74.spin = v90
+
+===== Players.Gorannss.PlayerScripts.WardrobeRoomFX =====
+   ...
+5: local v_u_5 = {
+6: 	["Ambient"] = nil,
+7: 	["OutdoorAmbient"] = nil,
+8: 	["ExposureCompensation"] = -0.45,
+9: 	["EnvironmentDiffuseScale"] = 0.35,
+10: 	["Ambient"] = Color3.fromRGB(18, 9, 3),
+11: 	["OutdoorAmbient"] = Color3.fromRGB(18, 9, 3)
+12: }
+13: local v_u_6 = nil
+14: v3.RenderStepped:Connect(function()
+15: 	-- upvalues: (copy) v_u_4, (ref) v_u_6, (copy) v_u_5, (copy) v_u_1
+16: 	local v7
+17: 	if v_u_4.WardrobeOpen == true and v_u_4.FixedCamera ~= nil then
+18: 		v7 = not v_u_4.CaseRolling
+19: 	else
+20: 		v7 = false
+21: 	end
+22: 	if v7 and not v_u_6 then
+23: 		v_u_6 = {}
+24: 		for v8, v9 in v_u_5 do
+25: 			v_u_6[v8] = v_u_1[v8]
+26: 			v_u_1[v8] = v9
+27: 		end
+28: 	elseif not v7 and v_u_6 then
+29: 		for v10, v11 in v_u_6 do
+
+===== Players.Gorannss.PlayerScripts.ThermalScopeClient =====
+1: local v_u_1 = require(game:GetService("ReplicatedStorage"):WaitForChild("WorldRefs"))
+2: local v_u_2 = game:GetService("Players")
+3: local v3 = game:GetService("RunService")
+4: local v_u_4 = game:GetService("Lighting")
+5: local v_u_5 = game:GetService("CollectionService")
+6: local v_u_6 = game:GetService("ContextActionService")
+7: local v7 = game:GetService("ReplicatedStorage"):WaitForChild("Weapons")
+8: local v_u_8 = require(v7:WaitForChild("ClientState"))
+9: local v_u_9 = require(v7:WaitForChild("WeaponData"))
+10: local v_u_10 = v_u_2.LocalPlayer
+11: local v_u_11 = workspace.CurrentCamera
+12: local v12 = Color3.fromRGB(255, 205, 30)
+13: local v13 = Color3.fromRGB(255, 110, 0)
+14: local v_u_14 = {
+15: 	["Density"] = 0.5,
+16: 	["Offset"] = 0,
+17: 	["Haze"] = 2,
+18: 	["Glare"] = 0,
+19: 	["Color"] = nil,
+20: 	["Decay"] = nil,
+21: 	["Color"] = Color3.fromRGB(28, 44, 92),
+22: 	["Decay"] = Color3.fromRGB(14, 22, 60)
+23: }
+   ...
+229: end
+230: local function v_u_82(_, p81) -- name: onToggle
+231: 	-- upvalues: (ref) v_u_42, (copy) v_u_16
+232: 	v_u_42 = p81 ~= Enum.UserInputState.Begin or not v_u_42
+233: 	if not v_u_42 then
+234: 		v_u_16.off.TimePosition = 0
+235: 		v_u_16.off:Play()
+236: 	end
+237: 	return Enum.ContextActionResult.Sink
+238: end
+239: local v_u_83 = 0
+240: local v_u_84 = 0
+241: v3:BindToRenderStep("ThermalScope", Enum.RenderPriority.Camera.Value + 3, function()
+242: 	-- upvalues: (copy) v_u_10, (copy) v_u_9, (copy) v_u_8, (ref) v_u_45, (copy) v_u_6, (copy) v_u_82, (copy) v_u_80, (ref) v_u_42, (ref) v_u_44, (ref) v_u_83, (copy) v_u_69, (copy) v_u_41, (ref) v_u_84, (copy) v_u_21, (copy) v_u_23, (copy) v_u_22
+243: 	local v85 = v_u_10.Character
+244: 	if v85 then
+245: 		v85 = v85:FindFirstChildOfClass("Humanoid")
+246: 	end
+247: 	local v86 = v_u_10.Character
+248: 	if v86 then
+249: 		v86 = v86:FindFirstChildOfClass("Tool")
+250: 	end
+251: 	if v86 then
+252: 		v86 = v_u_9[v86:GetAttribute("Weapon") or ""]
+253: 	end
+
+===== Players.Gorannss.PlayerScripts.DownedClient =====
+   ...
+9: local v_u_8 = v_u_6:WaitForChild("PlayerGui")
+10: local v_u_9 = {}
+11: local function v_u_12() -- name: makeCross
+12: 	-- upvalues: (copy) v_u_7, (copy) v_u_8
+13: 	local v10 = Instance.new("Part")
+14: 	v10.Name = "DownedCrossAnchor"
+15: 	v10.Anchored = true
+16: 	v10.CanCollide = false
+17: 	v10.CanQuery = false
+18: 	v10.CanTouch = false
+19: 	v10.Transparency = 1
+20: 	v10.Size = Vector3.new(0.2, 0.2, 0.2)
+21: 	v10.Parent = workspace.CurrentCamera
+22: 	local v11 = v_u_7:Clone()
+23: 	v11.Adornee = v10
+24: 	v11.Enabled = true
+25: 	v11.Parent = v_u_8
+26: 	return {
+27: 		["anchor"] = v10,
+28: 		["gui"] = v11
+29: 	}
+30: end
+31: local function v_u_18(p13) -- name: bodyCenter
+32: 	-- upvalues: (copy) v_u_4
+33: 	local v14 = v_u_4.CarryVisuals
+   ...
+83: 	local v28 = p26:FindFirstChild("HumanoidRootPart")
+84: 	if v28 then
+85: 		local v29 = p26:FindFirstChild("UpperTorso") or v28
+86: 		local v30 = v29.CFrame.UpVector.X
+87: 		local v31 = v29.CFrame.UpVector.Z
+88: 		local v32 = Vector3.new(v30, 0, v31)
+89: 		if v32.Magnitude < 0.1 then
+90: 			local v33 = v28.CFrame.LookVector.X
+91: 			local v34 = v28.CFrame.LookVector.Z
+92: 			v32 = Vector3.new(v33, 0, v34)
+93: 		end
+94: 		local v35 = v32.Magnitude < 0.1 and Vector3.new(0, 0, 1) or v32
+95: 		local v36 = RaycastParams.new()
+96: 		v36.IgnoreWater = true
+97: 		v36.FilterType = Enum.RaycastFilterType.Exclude
+98: 		v36.FilterDescendantsInstances = { p26, workspace:FindFirstChild("FX"), workspace.CurrentCamera }
+99: 		v36.CollisionGroup = v28.CollisionGroup
+100: 		local v37 = workspace:Raycast(v28.Position + Vector3.new(0, 3, 0), Vector3.new(0, -12, 0), v36)
+101: 		if not v37 then
+102: 			local v38 = workspace:Raycast(v28.Position, Vector3.new(0, 18, 0), v36)
+103: 			if v38 and v38.Normal.Y < -0.5 then
+104: 				v37 = workspace:Raycast(v38.Position + Vector3.new(0, 3, 0), Vector3.new(0, -3.5, 0), v36) or v38
+105: 			end
+106: 		end
+107: 		local v39 = (v37 and v37.Position.Y or v28.Position.Y - 1) + p27.HipHeight + v28.Size.Y / 2
+108: 		local v40 = v28.Position.X
+109: 		local v41 = v28.Position.Z
+110: 		local v42 = Vector3.new(v40, v39, v41)
+111: 		v28.CFrame = CFrame.lookAt(v42, v42 + v35.Unit)
+112: 		local v43 = {}
+113: 		for _, v44 in p26:GetDescendants() do
+114: 			if not (v44:IsA("Motor6D") or v44:IsA("AnimationConstraint")) then
+115: 				continue
+116: 			end
+   ...
+197: 		v_u_4.Frozen = v_u_65
+198: 		local function v68()
+199: 			-- upvalues: (ref) v_u_62, (copy) v_u_65, (ref) v_u_4
+200: 			local v66 = v_u_62
+201: 			local v67 = not v_u_65
+202: 			if v67 then
+203: 				v67 = v_u_4.BetaRollLock ~= true
+204: 			end
+205: 			v66.Enabled = v67
+206: 		end
+207: 		pcall(v68)
+208: 		if v_u_65 then
+209: 			v_u_4.Aiming = false
+210: 			v64:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+211: 			v64:ChangeState(Enum.HumanoidStateType.Physics)
+212: 			v_u_61 = 3
+213: 			local v69 = v64:GetAttribute("LastHitDir")
+214: 			if typeof(v69) == "Vector3" and v69.Magnitude > 0 then
+215: 				for _, v70 in { "UpperTorso", "LowerTorso", "Head" } do
+216: 					local v71 = v63:FindFirstChild(v70)
+217: 					if not v71 then
+218: 						continue
+219: 					end
+220: 					v71:ApplyImpulse(v69.Unit * v71:GetMass() * 12)
+221: 				end
+222: 			end
+223: 		elseif v64 and v64.Health > 0 then
+224: 			v64:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+225: 			v64.PlatformStand = false
+
+===== Players.Gorannss.PlayerScripts.AntiAfkClient =====
+1: local v1 = game:GetService("Players")
+2: local v_u_2 = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("AfkRejoin")
+3: v1.LocalPlayer.Idled:Connect(function(p3)
+4: 	-- upvalues: (copy) v_u_2
+5: 	if p3 >= 900 then
+6: 		v_u_2:FireServer(p3)
+7: 	end
+8: end)
+
+===== Players.Gorannss.PlayerScripts.CarryClient =====
+   ...
+5: local v4 = game:GetService("UserInputService")
+6: local v_u_5 = require(v2:WaitForChild("Weapons"):WaitForChild("ClientState"))
+7: local v_u_6 = v2:WaitForChild("Remotes")
+8: local v_u_7 = v1.LocalPlayer
+9: v4.InputBegan:Connect(function(p8, p9)
+10: 	-- upvalues: (copy) v_u_7, (copy) v_u_6
+11: 	if p9 then
+12: 		return
+13: 	elseif p8.KeyCode == Enum.KeyCode.F or p8.KeyCode == Enum.KeyCode.ButtonY then
+14: 		local v10 = v_u_7.Character
+15: 		local v11 = v10 and (v10:GetAttribute("Carrying") and v_u_6:FindFirstChild("CarryDrop"))
+16: 		if v11 then
+17: 			v11:FireServer()
+18: 		end
+19: 	end
+20: end)
+21: require(v2:WaitForChild("Controls")).Pressed:Connect(function(p12, p13)
+22: 	-- upvalues: (copy) v_u_7, (copy) v_u_6
+23: 	if p12 == "DropPlayer" and p13 then
+24: 		local v14 = v_u_7.Character
+25: 		local v15 = v14 and (v14:GetAttribute("Carrying") and v_u_6:FindFirstChild("CarryDrop"))
+26: 		if v15 then
+27: 			v15:FireServer()
+28: 		end
+29: 	end
+30: end)
+31: local v_u_16 = Instance.new("Folder")
+32: v_u_16.Name = "CarryVisuals"
+33: v_u_16.Parent = workspace
+34: local v_u_17 = {}
+35: v_u_5.CarryVisuals = v_u_17
+36: local v_u_18 = {
+37: 	"LuaSourceContainer",
+38: 	"ProximityPrompt",
+39: 	"BillboardGui",
+
+===== Players.Gorannss.PlayerScripts.DamageNumbersClient =====
+   ...
+5: local v_u_5 = v1.LocalPlayer:WaitForChild("PlayerGui")
+6: local v_u_6 = setmetatable({}, {
+7: 	["__mode"] = "k"
+8: })
+9: local v_u_7 = game:GetService("StarterGui"):WaitForChild("WorldUI"):WaitForChild("DamageNumber")
+10: local v8 = v_u_7:WaitForChild("Text")
+11: local v_u_9 = v8:GetAttribute("HeadColor") or Color3.fromRGB(255, 214, 64)
+12: local v_u_10 = v8:GetAttribute("ArmorColor") or Color3.fromRGB(70, 160, 255)
+13: local v_u_11 = v8.Size
+14: local v_u_12 = Random.new()
+15: local v_u_13 = Instance.new("Folder")
+16: v_u_13.Name = "DamageNumbers"
+17: v_u_13.Parent = workspace.CurrentCamera
+18: local function v_u_26(p14) -- name: nextAngle
+19: 	-- upvalues: (copy) v_u_6, (copy) v_u_12
+20: 	local v15 = os.clock()
+21: 	local v16 = v_u_6[p14] or {}
+22: 	v_u_6[p14] = v16
+23: 	for v17 = #v16, 1, -1 do
+24: 		if v16[v17][2] > v15 then
+25: 			continue
+26: 		end
+27: 		table.remove(v16, v17)
+28: 	end
+29: 	local v18 = -1
+   ...
+47: 	return math.rad(v19)
+48: end
+49: local function v_u_54(p27, p28, p29, p30, p31) -- name: show
+50: 	-- upvalues: (copy) v_u_26, (copy) v_u_12, (copy) v_u_13, (copy) v_u_7, (copy) v_u_11, (copy) v_u_9, (copy) v_u_5, (copy) v_u_3
+51: 	local v_u_32 = Instance.new("Part")
+52: 	v_u_32.Name = "DamageNumberAnchor"
+53: 	v_u_32.Anchored = true
+54: 	v_u_32.CanCollide = false
+55: 	v_u_32.CanQuery = false
+56: 	v_u_32.CanTouch = false
+57: 	v_u_32.Transparency = 1
+58: 	v_u_32.Size = Vector3.new(0.1, 0.1, 0.1)
+59: 	local v33 = workspace.CurrentCamera.CFrame
+60: 	local v34 = v33.RightVector.X
+61: 	local v35 = v33.RightVector.Z
+62: 	local v36 = Vector3.new(v34, 0, v35)
+63: 	local v37 = v36.Magnitude > 0.01 and v36.Unit or Vector3.new(1, 0, 0)
+64: 	local v38
+65: 	if p30 then
+66: 		v38 = p30:FindFirstChild("Head") or p30:FindFirstChild("HumanoidRootPart")
+67: 	else
+68: 		v38 = p30
+69: 	end
+70: 	local v39
+71: 	if v38 then
+   ...
+111: 			v_u_3:Create(v_u_50, TweenInfo.new(0.15), {
+112: 				["TextTransparency"] = 1,
+113: 				["TextStrokeTransparency"] = 1
+114: 			}):Play()
+115: 		end
+116: 	end)
+117: 	task.delay(0.7, function()
+118: 		-- upvalues: (copy) v_u_49, (copy) v_u_32
+119: 		v_u_49:Destroy()
+120: 		v_u_32:Destroy()
+121: 	end)
+122: end
+123: local function v64(p55) -- name: onHit
+124: 	-- upvalues: (copy) v_u_54, (copy) v_u_10
+125: 	if type(p55) == "table" then
+126: 		local v56 = p55.HitPos
+127: 		if typeof(v56) == "Vector3" then
+128: 			local v57 = p55.Damage
+129: 			if type(v57) == "number" then
+130: 				if p55.Damage > 0 then
+131: 					local v58 = p55.Target
+132: 					local v59
+133: 					if typeof(v58) == "Instance" and p55.Target:IsA("Model") then
+134: 						v59 = p55.Target or nil
+135: 					else
+136: 						v59 = nil
+137: 					end
+138: 					local v60 = p55.Armor
+139: 					local v61
+140: 					if type(v60) == "number" then
+141: 						local v62 = p55.Armor
+142: 						local v63 = p55.Damage
+143: 						v61 = math.clamp(v62, 0, v63) or 0
+144: 					else
+145: 						v61 = 0
+146: 					end
+147: 					if v61 > 0 then
+148: 						v_u_54(p55.HitPos, v61, false, v59, v_u_10)
+149: 					end
+150: 					if p55.Damage - v61 > 0.5 then
+151: 						v_u_54(p55.HitPos, p55.Damage - v61, p55.Headshot == true, v59)
+152: 					end
+153: 				end
+154: 			end
+155: 		end
+156: 	end
+157: end
+158: v4:WaitForChild("Hit").OnClientEvent:Connect(v64)
+159: require(v2:WaitForChild("Weapons"):WaitForChild("ClientState")).ShowDamageNumber = v64
+
+===== Players.Gorannss.PlayerScripts.CarHitClient =====
+1: local v_u_1 = require(game:GetService("ReplicatedStorage"):WaitForChild("WorldRefs"))
+2: local v2 = game:GetService("Players")
+3: local v3 = game:GetService("ReplicatedStorage")
+4: local v_u_4 = game:GetService("RunService")
+5: local v_u_5 = require(v3:WaitForChild("Weapons"):WaitForChild("ClientState"))
+6: local v_u_6 = require(v3:WaitForChild("AntiTunnel"))
+7: local v_u_7 = require(v3:WaitForChild("SpawnShield"))
+8: local v_u_8 = v3:WaitForChild("Remotes"):WaitForChild("CarHit")
+9: local v_u_9 = v2.LocalPlayer
+10: local v_u_10 = require(v3.Weapons:WaitForChild("HitAudio"))
+11: v3.Remotes:WaitForChild("CarHitMarker").OnClientEvent:Connect(function()
+12: 	-- upvalues: (copy) v_u_10
+13: 	v_u_10.Play("Marker")
+14: end)
+15: local v_u_11 = Instance.new("Part")
+16: v_u_11.Shape = Enum.PartType.Ball
+17: v_u_11.Size = Vector3.new(0.4, 0.4, 0.4)
+18: v_u_11.Anchored = true
+19: v_u_11.CanCollide = false
+20: v_u_11.CanQuery = false
+21: v_u_11.CanTouch = false
+22: local v_u_12 = OverlapParams.new()
+23: v_u_12.FilterType = Enum.RaycastFilterType.Exclude
+24: v_u_12.RespectCanCollide = true
+25: v_u_12.CollisionGroup = "Default"
+26: local function v_u_53(p13, p14) -- name: standUp
+27: 	-- upvalues: (copy) v_u_11, (copy) v_u_12
+28: 	local v15 = p13:FindFirstChild("HumanoidRootPart")
+29: 	if v15 then
+30: 		local v16 = p13:FindFirstChild("UpperTorso") or v15
+31: 		local v17 = v16.CFrame.UpVector.X
+32: 		local v18 = v16.CFrame.UpVector.Z
+33: 		local v19 = Vector3.new(v17, 0, v18)
+34: 		if v19.Magnitude < 0.1 then
+35: 			local v20 = v15.CFrame.LookVector.X
+36: 			local v21 = v15.CFrame.LookVector.Z
+37: 			v19 = Vector3.new(v20, 0, v21)
+38: 		end
+39: 		local v22 = v19.Magnitude < 0.1 and Vector3.new(0, 0, 1) or v19
+40: 		local v23 = RaycastParams.new()
+41: 		v23.IgnoreWater = true
+42: 		v23.FilterType = Enum.RaycastFilterType.Exclude
+43: 		v23.FilterDescendantsInstances = { p13, workspace:FindFirstChild("FX"), workspace.CurrentCamera }
+44: 		v23.CollisionGroup = "Default"
+45: 		local v24 = nil
+46: 		for _, v25 in { 3, 6, 10 } do
+47: 			local v26 = v15.Position + Vector3.new(0, v25, 0)
+48: 			if v25 ~= 10 then
+49: 				local v27 = v23.FilterDescendantsInstances
+50: 				v_u_11.CFrame = CFrame.new(v26)
+51: 				v_u_12.FilterDescendantsInstances = v27
+52: 				local v28 = workspace.GetPartsInPart
+53: 				local v29 = workspace
+54: 				local v30 = v_u_11
+55: 				local v31 = v_u_12
+56: 				local v32, v33 = pcall(v28, v29, v30, v31)
+57: 				if v32 then
+58: 					v32 = #v33 > 0
+59: 				end
+60: 				if v32 then
+61: 					continue
+62: 				end
+63: 			end
+64: 			local v34 = workspace
+65: 			local v35 = -(v25 + 9)
+66: 			v24 = v34:Raycast(v26, Vector3.new(0, v35, 0), v23)
+67: 		end
+68: 		if not v24 then
+69: 			local v36 = workspace:Raycast(v15.Position, Vector3.new(0, 18, 0), v23)
+70: 			if v36 and v36.Normal.Y < -0.5 then
+71: 				v24 = workspace:Raycast(v36.Position + Vector3.new(0, 3, 0), Vector3.new(0, -3.5, 0), v23) or v36
+72: 			end
+73: 		end
+74: 		local v37 = (v24 and v24.Position.Y or v15.Position.Y - 1) + p14.HipHeight + v15.Size.Y / 2
+75: 		local v38 = v15.Position.X
+76: 		local v39 = v15.Position.Z
+77: 		local v40 = Vector3.new(v38, v37, v39)
+78: 		v15.CFrame = CFrame.lookAt(v40, v40 + v22.Unit)
+79: 		local v41 = {}
+80: 		for _, v42 in p13:GetDescendants() do
+81: 			if not (v42:IsA("Motor6D") or v42:IsA("AnimationConstraint")) then
+82: 				continue
+83: 			end
+   ...
+128: 			end
+129: 		end
+130: 		for _, v52 in p13:GetDescendants() do
+131: 			if not v52:IsA("BasePart") then
+132: 				continue
+133: 			end
+134: 			v52.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+135: 			v52.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+136: 		end
+137: 	end
+138: end
+139: local v_u_54 = nil
+140: local v_u_55 = RaycastParams.new()
+141: v_u_55.IgnoreWater = true
+142: v_u_55.FilterType = Enum.RaycastFilterType.Exclude
+143: v_u_55.RespectCanCollide = true
+144: local function v_u_74(p56, p57, p58) -- name: wallBehind
+145: 	-- upvalues: (copy) v_u_1, (copy) v_u_55
+146: 	local v59 = 
+
+===== Players.Gorannss.PlayerScripts.DanceClient =====
+1: local v_u_1 = game:GetService("Players")
+2: local v2 = game:GetService("ReplicatedStorage")
+3: local v_u_3 = game:GetService("RunService")
+4: local v_u_4 = game:GetService("UserInputService")
+5: local v_u_5 = game:GetService("TweenService")
+6: local v6 = v2:WaitForChild("Weapons")
+7: local v_u_7 = require(v6:WaitForChild("Clips"))
+8: local v_u_8 = require(v6:WaitForChild("ClientState"))
+9: local v_u_9 = require(v2:WaitForChild("Controls"))
+10: local v_u_10 = v2:WaitForChild("Remotes"):WaitForChild("Dance")
+11: local v_u_11 = require(v2:WaitForChild("GamepadNav"))
+12: local v_u_12 = v_u_1.LocalPlayer
+13: local v_u_13 = workspace.CurrentCamera
+14: local v_u_14 = v_u_7.PhonkDance
+15: local v_u_15 = {
+16: 	["Phonk"] = {
+17: 		["clip"] = v_u_7.PhonkDance
+18: 	},
+19: 	["GMod"] = {
+20: 		["clip"] = v_u_7.GModDance
+21: 	},
+22: 	["HipHop"] = {
+23: 		["clip"] = v_u_7.HipHopDance
+24: 	}
+25: }
+   ...
+118: 	local v31, v32, v33 = v_u_29()
+119: 	if v31 then
+120: 		local v34 = not v_u_15[p30] and "Phonk" or p30
+121: 		v33:UnequipTools()
+122: 		v_u_20 = true
+123: 		local v35 = v_u_15[v34].speed or 1
+124: 		local v36 = workspace:GetServerTimeNow()
+125: 		v32:SetAttribute("DanceStart", v36)
+126: 		v32:SetAttribute("DanceSpeed", v35)
+127: 		v32:SetAttribute("DanceGroup", v_u_12.UserId)
+128: 		v32:SetAttribute("DanceMusicStart", v36)
+129: 		v32:SetAttribute("DanceId", v34)
+130: 		v_u_10:FireServer(true, v35, v34)
+131: 	end
+132: end
+133: local function v_u_43(p38) -- name: join
+134: 	-- upvalues: (copy) v_u_12, (copy) v_u_8, (copy) v_u_25, (ref) v_u_20, (copy) v_u_21, (copy) v_u_10
+135: 	local v39 = v_u_12.Character
+136: 	local v40 = p38.Character
+137: 	local v41
+138: 	if v39 then
+139: 		v41 = v39:FindFirstChildOfClass("Humanoid")
+140: 	else
+141: 		v41 = v39
+142: 	end
+143: 	if v41 and (v41.Health > 0 and not (v41.SeatPart or (v39:GetAttribute("Downed") or v_u_8.Rolling))) then
+144: 		if v_u_25(v_u_12) or v_u_25(p38) then
+145: 			return
+146: 		elseif v40 and v40:GetAttribute("DanceStart") then
+147: 			v41:UnequipTools()
+148: 			v_u_20 = true
+149: 			for _, v42 in v_u_21 do
+150: 				v39:SetAttribute(v42, v40:GetAttribute(v42))
+151: 			end
+152: 			v_u_10:FireServer("join", p38)
+153: 		end
+154: 	else
+155: 		return
+156: 	end
+157: end
+158: local function v_u_46() -- name: stop
+159: 	-- upvalues: (ref) v_u_20, (copy) v_u_12, (copy) v_u_21, (copy) v_u_10
+160: 	if v_u_20 then
+161: 		v_u_20 = false
+162: 		local v44 = v_u_12.Character
+163: 		if v44 then
+164: 			for _, v45 in v_u_21 do
+165: 				v44:SetAttribute(v45, nil)
+166: 			end
+167: 		end
+168: 		v_u_10:FireServer(false)
+169: 	end
+170: end
+171: local v_u_47 = Color3.fromRGB(255, 170, 60)
+172: local v_u_48 = Color3.fromRGB(235, 235, 240)
+173: local v_u_49 = TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+174: local v_u_50 = nil
+175: local v_u_51 = nil
+176: local v_u_52 = {}
+177: local v_u_53 = {}
+178: local v_u_54 = false
+179: local v_u_55 = nil
+180: local v_u_56 = nil
+
+===== Players.Gorannss.PlayerScripts.PlayerProfileClient =====
+1: local v_u_1 = game:GetService("Players")
+2: local v_u_2 = game:GetService("ReplicatedStorage")
+3: local v_u_3 = game:GetService("UserInputService")
+4: local v4 = game:GetService("RunService")
+5: local v_u_5 = game:GetService("GuiService")
+6: local v_u_6 = require(v_u_2:WaitForChild("Weapons"):WaitForChild("ClientState"))
+7: local v_u_7 = require(v_u_2:WaitForChild("BadgeCatalog"))
+8: local v_u_8 = require(v_u_2:WaitForChild("Stretch"))
+9: local v_u_9 = require(v_u_2:WaitForChild("ScaleUI"))
+10: local v_u_10 = require(v_u_2:WaitForChild("GamepadNav"))
+11: local v_u_11 = require(v_u_2:WaitForChild("ClanShared"))
+12: local v_u_12 = v_u_1.LocalPlayer
+13: local v_u_13 = workspace.CurrentCamera
+14: local v14 = Color3.new(0, 0, 0)
+15: local v_u_15 = v_u_12:WaitForChild("PlayerGui"):WaitForChild("PlayerProfile", (1 / 0))
+16: v_u_15.Enabled = false
+17: local v_u_16 = v_u_15:WaitForChild("Panel")
+18: local v_u_17 = v_u_16:WaitForChild("Badges")
+19: local v_u_18 = v_u_15:WaitForChild("BadgeTooltip")
+20: v_u_18.Visible = false
+21: local v_u_19 = nil
+22: local function v_u_29(p20, p21) -- name: showTip
+23: 	-- upvalues: (copy) v_u_18, (copy) v_u_9, (ref) v_u_19
+24: 	local v22 = v_u_18:FindFirstChild("Titre")
+25: 	local v23 = v_u_18:FindFirstChild("Description")
+   ...
+295: local function v_u_138(p116) -- name: fill
+296: 	-- upvalues: (ref) v_u_54, (copy) v_u_16, (copy) v_u_11, (copy) v_u_30, (copy) v_u_50, (copy) v_u_115, (copy) v_u_92
+297: 	if v_u_54 and v_u_54.Parent then
+298: 		local v117 = v_u_54:IsA("Player")
+299: 		local v118 = v117 and v_u_54.DisplayName or (v_u_54:GetAttribute("DisplayName") or v_u_54.Name)
+300: 		local v119 = v117 and v_u_54.Name or (v_u_54:GetAttribute("UserName") or v_u_54.Name)
+301: 		local v120 = v117 and v_u_54.UserId or (v_u_54:GetAttribute("UserId") or 1)
+302: 		v_u_16.DisplayName.RichText = true
+303: 		v_u_16.DisplayName.Text = v_u_11.PrefixRich(v_u_54) .. tostring(v118):gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;")
+304: 		v_u_16.UserName.Text = "@" .. v119
+305: 		v_u_16.Avatar.Image = ("rbxthumb://type=AvatarHeadShot&id=%d&w=150&h=150"):format(v120)
+306: 		local v121 = v_u_54:GetAttribute("Stat_Shots") or 0
+307: 		local v122 = v_u_54:GetAttribute("Stat_Hits") or 0
+308: 		local v123 = math.min(v122, v121)
+309: 		local v124 = v_u_54:GetAttribute("Stat_Kills") or 0
+310: 		local v125 = v_u_54:GetAttribute("Stat_Deaths") or 0
+311: 		local v126 = v121 > 0 and (("%.1f%%"):format(v123 / v121 * 100) or "\226\128\148") or "\226\128\148"
+312: 		local v127 = v_u_30:FindFirstChild("Precision")
+313: 		if v127 then
+314: 			v127 = v127:FindFirstChild("Valeur")
+315: 		end
+316: 		if v127 then
+317: 			v127.Text = v126
+318: 		end
+319: 		local v128 = v_u_50(v123)
+   ...
+384: 		require(v_u_2:WaitForChild("GamepadNav")).Close("Profile")
+385: 	end
+386: 	pcall(v145)
+387: 	if v_u_139 then
+388: 		v_u_139 = false
+389: 		if v_u_6.ActiveMenu == "Profile" then
+390: 			v_u_6.CursorFree = false
+391: 		end
+392: 	end
+393: 	if v_u_140 then
+394: 		v_u_140 = false
+395: 		if v_u_141 then
+396: 			v_u_141:Fire()
+397: 		end
+398: 	end
+399: end
+400: v_u_16:WaitForChild("Close").Activated:Connect(v_u_146)
+401: v_u_40.Activated:Connect(function()
+402: 	-- upvalues: (ref) v_u_78, (copy) v_u_18, (copy) v_u_82, (copy) v_u_10, (copy) v_u_40
+403: 	v_u_78 = not v_u_78
+404: 	v_u_18.Visible = false
+405: 	v_u_82()
+406: 	v_u_10.Refresh("Profile", v_u_40)
+407: end)
+408: v4.RenderStepped:Connect(function()
+   ...
+422: 				elseif not v_u_6.CursorFree then
+423: 					v_u_146()
+424: 				end
+425: 			end
+426: 		else
+427: 			v_u_146()
+428: 			return
+429: 		end
+430: 	else
+431: 		return
+432: 	end
+433: end)
+434: local v_u_147 = RaycastParams.new()
+435: v_u_147.IgnoreWater = true
+436: v_u_147.FilterType = Enum.RaycastFilterType.Exclude
+437: local function v_u_153(p148, p149) -- name: profileAt
+438: 	-- upvalues: (copy) v_u_13, (copy) v_u_8, (copy) v_u_147, (copy) v_u_1
+439: 	local v150 = v_u_13:ViewportPointToRay(v_u_8.ToClean(p148, p149))
+440: 	v_u_147.FilterD
+
+===== Players.Gorannss.PlayerScripts.NameTagClient =====
+   ...
+20: 	else
+21: 		v13 = v12
+22: 	end
+23: 	if v13 then
+24: 		if v_u_6[v13] == nil then
+25: 			table.clear(v_u_6)
+26: 			v_u_6[v13] = v13.TextTransparency
+27: 		end
+28: 		local v14 = v13:GetAttribute("Base")
+29: 		if type(v14) == "number" then
+30: 			v_u_6[v13] = v14
+31: 		end
+32: 		local v15 = v_u_4.Aiming and 1 or v_u_6[v13]
+33: 		local v16 = p11 / 0.12 * (1 - v_u_6[v13])
+34: 		local v17 = v13.TextTransparency
+35: 		if v17 < v15 then
+36: 			local v18 = v17 + v16
+37: 			v17 = math.min(v18, v15)
+38: 		elseif v15 < v17 then
+39: 			local v19 = v17 - v16
+40: 			v17 = math.max(v19, v15)
+41: 		end
+42: 		v13.TextTransparency = v17
+43: 		local v20 = v13:FindFirstChild("VipStroke")
+44: 		local v21 = v13:FindFirstChild("Reflet")
+
+===== Players.Gorannss.PlayerScripts.TrainClient =====
+   ...
+14: 	if v9.Dir > 0 then
+15: 		v11 = CFrame.Angles(0, 3.141592653589793, 0) * v11
+16: 	end
+17: 	local v12 = {
+18: 		["cfg"] = v9,
+19: 		["template"] = v10,
+20: 		["len"] = v10.Size.Z,
+21: 		["rot"] = v11,
+22: 		["cars"] = {}
+23: 	}
+24: 	table.insert(v_u_8, v12)
+25: end
+26: local v_u_13 = workspace.CurrentCamera
+27: local v_u_14 = Random.new()
+28: local v_u_15 = Instance.new("SoundGroup")
+29: v_u_15.Name = "TrainSons"
+30: local v16 = Instance.new("ReverbSoundEffect")
+31: v16.DecayTime = v_u_5.ReverbDecay
+32: v16.Density = 1
+33: v16.Diffusion = 1
+34: v16.WetLevel = v_u_5.ReverbWet
+35: v16.DryLevel = 0
+36: v16.Parent = v_u_15
+37: v_u_15.Parent = v3
+38: local function v24(p17, p18, p19, p20, p21) -- name: emitter
+   ...
+252: 				local v111 = CFrame.new(v107, v95.cfg.Y, v95.cfg.Z) * v95.rot
+253: 				table.insert(v110, v111)
+254: 			else
+255: 				if not (v95.cars[v106] and v95.cars[v106].Parent) then
+256: 					continue
+257: 				end
+258: 				v95.cars[v106].Parent = nil
+259: 			end
+260: 		end
+261: 		v_u_92(v95, v94, v98, v99, v100, p93)
+262: 	end
+263: 	if #v_u_30 > 0 then
+264: 		workspace:BulkMoveTo(v_u_30, v_u_31, Enum.BulkMoveMode.FireCFrameChanged)
+265: 	end
+266: end)
+
+===== Players.Gorannss.PlayerScripts.NightLightsClient =====
+1: local v_u_1 = game:GetService("Lighting")
+2: local v2 = game:GetService("RunService")
+3: local v_u_3 = require(game:GetService("ReplicatedStorage"):WaitForChild("Weapons"):WaitForChild("ClientState"))
+4: local v4 = workspace:WaitForChild("Map")
+5: local v_u_5 = workspace.CurrentCamera
+6: local v_u_6 = {}
+7: local v_u_7
+8: if v_u_3.SkyNoNight then
+9: 	v_u_7 = false
+10: else
+11: 	local v8 = v_u_1:GetAttribute("HeureReelle")
+12: 	local v9 = type(v8) == "number" and v8 and v8 or v_u_1.ClockTime
+13: 	v_u_7 = v9 >= 18.25 and true or v9 < 6.25
+14: end
+15: local v_u_10 = setmetatable({}, {
+16: 	["__mode"] = "k"
+17: })
+   ...
+140: 	else
+141: 		local v41 = v_u_1:GetAttribute("HeureReelle")
+142: 		local v42 = type(v41) == "number" and v41 and v41 or v_u_1.ClockTime
+143: 		v40 = v42 >= 18.25 and true or v42 < 6.25
+144: 	end
+145: 	if v40 ~= v_u_34 then
+146: 		v_u_34 = v40
+147: 		task.delay(math.random() * 1.5, v_u_33)
+148: 	end
+149: end
+150: v_u_1:GetPropertyChangedSignal("ClockTime"):Connect(v43)
+151: v_u_1:GetAttributeChangedSignal("HeureReelle"):Connect(v43)
+152: workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
+153: 	-- upvalues: (ref) v_u_5
+154: 	v_u_5 = workspace.CurrentCamera or v_u_5
+155: end)
+156: local v_u_44 = 0.5
+157: v2.Heartbeat:Connect(function(p45)
+158: 	-- upvalues: (ref) v_u_44, (copy) v_u_33
+159: 	v_u_44 = v_u_44 + p45
+160: 	if v_u_44 >= 0.5 then
+161: 		v_u_44 = 0
+162: 		v_u_33()
+163: 	end
+164: end)
+
+===== Players.Gorannss.PlayerScripts.AudioSettingsClient =====
+   ...
+34: 		return "Music"
+35: 	end
+36: 	local v14 = v_u_1.Find("Cars")
+37: 	if v14 and p13:IsDescendantOf(v14) then
+38: 		return "Vehicles"
+39: 	end
+40: 	if p13:FindFirstAncestorWhichIsA("Tool") then
+41: 		return "Weapons"
+42: 	end
+43: 	local v15 = p13.Parent
+44: 	while v15 and v15 ~= game do
+45: 		local v16 = v15.Name
+46: 		if v16 == "GunAudioLocal" or (v16 == "HitAudio" or v16 == "MetalImpactSound") then
+47: 			return "Weapons"
+48: 		end
+49: 		v15 = v15.Parent
+50: 	end
+51: 	return "Effects"
+52: end
+53: local function v_u_21(p18) -- name: adoptGroup
+54: 	-- upvalues: (copy) v_u_7, (copy) v_u_12
+55: 	if p18 then
+56: 		for _, v19 in v_u_7 do
+57: 			if v19 ~= p18 then
+58: 				continue
